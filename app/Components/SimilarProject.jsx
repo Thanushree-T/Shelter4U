@@ -1,9 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Cards from './Cards.jsx'; 
-
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+import { useEffect, useState } from "react";
+import Cards from "./Cards.jsx";
 
 export default function SimilarProject({ id }) {
   // Local state to store fetched similar projects
@@ -15,7 +13,7 @@ export default function SimilarProject({ id }) {
 
     const fetchProjects = async () => {
       try {
-        const response = await fetch(`${baseUrl}/api/project-page/${id}/similar`);
+        const response = await fetch(`/api/project-page/${id}/similar`);
         const data = await response.json();
 
         if (!response.ok) {
@@ -24,7 +22,7 @@ export default function SimilarProject({ id }) {
           setProjects(data); // Set fetched projects
         }
       } catch (error) {
-        console.error('Error fetching similar projects:', error);
+        console.error("Error fetching similar projects:", error);
         setProjects([]); // Set empty on any error
       }
     };
@@ -38,10 +36,15 @@ export default function SimilarProject({ id }) {
         {/* If there are similar projects, render them in grid */}
         {Array.isArray(projects) && projects.length > 0 ? (
           <>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Similar Projects</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              Similar Projects
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {projects.slice(0,3).map((project) => (
-                <div key={project._id} className="hover:shadow-md bg-white rounded-xl shadow-lg">
+              {projects.slice(0, 3).map((project) => (
+                <div
+                  key={project._id}
+                  className="hover:shadow-md bg-white rounded-xl shadow-lg"
+                >
                   <Cards project={project} />
                 </div>
               ))}

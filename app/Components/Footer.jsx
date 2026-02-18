@@ -7,14 +7,12 @@ import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
 
 const Footer = () => {
   const [footerData, setFooterData] = useState(null);
-  // Use relative API path in dev if base URL is not provided
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
 
   // Fetch footer data on component mount
   useEffect(() => {
     const fetchFooterData = async () => {
       try {
-        const res = await fetch(`${baseUrl}/api/footer`);
+        const res = await fetch(`/api/footer`);
         if (!res.ok) throw new Error("Failed to fetch footer data");
         const data = await res.json();
         setFooterData(data.footer);
@@ -37,7 +35,6 @@ const Footer = () => {
       {/* Main content wrapper */}
       <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          
           {/* Contact Information Section */}
           <div>
             <p className="text-2xl font-bold mb-6 text-white">CONTACT US</p>
@@ -108,25 +105,31 @@ const Footer = () => {
 
           {/* Property by Location Section */}
           <div>
-            <p className="text-2xl font-bold mb-6 text-gray-100">PROPERTY BY LOCATION</p>
+            <p className="text-2xl font-bold mb-6 text-gray-100">
+              PROPERTY BY LOCATION
+            </p>
             <ul className="space-y-3">
-              {["Ahmedabad", "Pune", "Mumbai", "Gandhinagar"].map((city, index) => (
-                <li key={index} className="flex items-center group">
-                  <span className="text-lg mr-2 text-gray-400">›</span>
-                  <Link
-                    href={`/search?city=${city}`}
-                    className="text-gray-300 hover:text-purple-400 hover:underline"
-                  >
-                    {city}
-                  </Link>
-                </li>
-              ))}
+              {["Ahmedabad", "Pune", "Mumbai", "Gandhinagar"].map(
+                (city, index) => (
+                  <li key={index} className="flex items-center group">
+                    <span className="text-lg mr-2 text-gray-400">›</span>
+                    <Link
+                      href={`/search?city=${city}`}
+                      className="text-gray-300 hover:text-purple-400 hover:underline"
+                    >
+                      {city}
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
           </div>
 
           {/* Property by Type Section */}
           <div>
-            <p className="text-2xl font-bold mb-6 text-gray-100">PROPERTY BY TYPE</p>
+            <p className="text-2xl font-bold mb-6 text-gray-100">
+              PROPERTY BY TYPE
+            </p>
             <ul className="space-y-3">
               {["Residential", "Commercial", "Land"].map((type, index) => (
                 <li key={index} className="flex items-center group">
@@ -160,9 +163,21 @@ const Footer = () => {
           {/* Social Media Icons */}
           <div className="flex space-x-4 mt-4 md:mt-0">
             {[
-              { href: footerData.facebookLink, icon: <FaFacebookF />, label: "Facebook" },
-              { href: footerData.twitterLink, icon: <FaTwitter />, label: "Twitter" },
-              { href: footerData.instaLink, icon: <FaInstagram />, label: "Instagram" },
+              {
+                href: footerData.facebookLink,
+                icon: <FaFacebookF />,
+                label: "Facebook",
+              },
+              {
+                href: footerData.twitterLink,
+                icon: <FaTwitter />,
+                label: "Twitter",
+              },
+              {
+                href: footerData.instaLink,
+                icon: <FaInstagram />,
+                label: "Instagram",
+              },
             ].map(({ href, icon, label }, i) => (
               <a
                 key={i}

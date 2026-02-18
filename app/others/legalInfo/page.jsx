@@ -1,16 +1,18 @@
-// app/about/legal/page.jsx
+import { models } from "@/lib/connections.js";
+import { serializeMongo } from "@/lib/utils";
+
 import LegalInformationClient from "./LegalInformationClient.jsx";
 
-export const dynamic = 'force-dynamic';
+const { LegalInformation } = models;
+
+export const dynamic = "force-dynamic";
 
 export default async function LegalPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-  const res = await fetch(`${baseUrl}/api/others/LegalInfo`, { cache: 'no-store' });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch legal information");
+  try {
+    const legalInformation = await LegalInformation.findOne().lean();
+    return <LegalInformationClient data={serializeMongo(legalInformation)} />;
+  } catch (error) {
+    console.error("Error fetching legal information:", error);
+    return <LegalInformationClient data={null} />;
   }
-
-  const data = await res.json();
-  return <LegalInformationClient data={data.legalInformation} />;
 }

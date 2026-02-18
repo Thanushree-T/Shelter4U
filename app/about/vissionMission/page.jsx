@@ -1,15 +1,10 @@
-// import dynamic from "next/dynamic";
-
-// const VisionMissionClient = dynamic(() => import("./VissionMissionClient.jsx"), {
-//   ssr: true,
-//   loading: () => <p className="text-center text-gray-500">Loading Vision & Mission...</p>,
-// });
-
+import { models } from "@/lib/connections.js";
 import VisionMissionClient from "./VissionMissionClient.jsx";
 
-export const dynamic = 'force-dynamic';
+const { VisionMission } = models;
 
-//  Static SEO Tags
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata() {
   return {
     title: "Our Vision and Mission | Shelter4U",
@@ -43,35 +38,22 @@ export async function generateMetadata() {
         "We aim to provide affordable, transparent, and accessible real estate solutions across India.",
       images: ["/logo.png"],
     },
-    alternates: {
-      canonical: "https://shelter4u.in/about/visionMission",
-    },
-    robots: {
-      index: true,
-      follow: true,
-      nocache: false,
-    },
+    alternates: { canonical: "https://shelter4u.in/about/visionMission" },
+    robots: { index: true, follow: true, nocache: false },
   };
 }
 
 export default async function VisionMissionPage() {
-  const API = process.env.NEXT_PUBLIC_BASE_URL || "";
-
   try {
-    const res = await fetch(`${API}/api/about/vissionMission`, { cache: 'no-store' });
-
-    if (!res.ok) throw new Error("Failed to fetch");
-
-    const data = await res.json();
-    const visionData = data?.visionMission?.[0];
-
+    const visionMissionArr = await VisionMission.find().lean();
+    const visionData = visionMissionArr?.[0] || null;
     return <VisionMissionClient data={visionData} />;
   } catch (error) {
     console.error("VisionMission fetch error:", error.message);
     return (
       <div className="flex justify-center items-center h-64">
         <p className="text-red-600 font-bold">
-          Failed to load vision & mission data.
+          Failed to load vision &amp; mission data.
         </p>
       </div>
     );

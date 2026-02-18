@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import Marquee from "react-fast-marquee"; // For horizontal scrolling animation
@@ -27,13 +27,15 @@ const HomeFifthSection = ({ data }) => {
             >
               {/* Logo Image Container */}
               <div className="relative h-32 w-56">
-                <Image
-                  src={partner?.img} // Partner logo image
-                  alt={partner?.title || `partner-${index}`} // Accessible alt text
-                  fill // Uses layout fill to cover the container
-                  className="object-contain" // Maintains image aspect ratio
-                  sizes="(max-width: 768px) 150px, 224px" // Responsive size hint
-                />
+                {partner?.img && (
+                  <Image
+                    src={partner.img} // Partner logo image
+                    alt={partner?.title || `partner-${index}`} // Accessible alt text
+                    fill // Uses layout fill to cover the container
+                    className="object-contain" // Maintains image aspect ratio
+                    sizes="(max-width: 768px) 150px, 224px" // Responsive size hint
+                  />
+                )}
               </div>
             </div>
           ))}

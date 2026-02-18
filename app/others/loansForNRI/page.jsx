@@ -1,17 +1,18 @@
-// app/about/loan/page.jsx
+import { models } from "@/lib/connections.js";
+import { serializeMongo } from "@/lib/utils";
+
 import LoansForNrisClient from "./LoansForNrisClient";
 
-export const dynamic = 'force-dynamic';
+const { LoanForNRI } = models;
+
+export const dynamic = "force-dynamic";
 
 export default async function LoansForNrisPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-  const res = await fetch(`${baseUrl}/api/others/loansForNRI`, { cache: 'no-store' });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch loan data");
+  try {
+    const loanForNRI = await LoanForNRI.findOne().lean();
+    return <LoansForNrisClient data={serializeMongo(loanForNRI)} />;
+  } catch (error) {
+    console.error("Error fetching loan data:", error);
+    return <LoansForNrisClient data={null} />;
   }
-
-  const data = await res.json();
-
-  return <LoansForNrisClient data={data.loanForNRI} />;
 }

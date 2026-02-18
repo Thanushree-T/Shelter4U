@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
 // Import Lock icon from lucide-react for header visual
-import { Lock } from 'lucide-react';
+import { Lock } from "lucide-react";
 // Import motion from framer-motion for entrance animation
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 // Main component to render company profile sections with animation
 const CompanyProfileClient = ({ data }) => {
@@ -24,7 +24,7 @@ const CompanyProfileClient = ({ data }) => {
           </div>
         </div>
         {/* Hero heading text */}
-        <p className="text-2xl font-bold text-white">{data.hero.heading}</p>
+        <p className="text-2xl font-bold text-white">{data?.hero?.heading}</p>
       </div>
 
       {/* Content body with sections */}
@@ -32,7 +32,9 @@ const CompanyProfileClient = ({ data }) => {
         {data.sections.map((section, idx) => (
           <div key={idx} className="mb-10">
             {/* Section title */}
-            <p className="text-3xl font-bold text-navy-blue mb-6">{section.title}</p>
+            <p className="text-3xl font-bold text-navy-blue mb-6">
+              {section.title}
+            </p>
 
             {/* Paragraph and bullet containers */}
             <div className="space-y-4 text-gray-700 leading-relaxed">

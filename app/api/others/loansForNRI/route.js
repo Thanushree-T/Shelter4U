@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import { models } from "@/lib/connections.js";
-const {LoanForNRI} = models;
+const { LoanForNRI } = models;
 
 export async function GET() {
-    try {
-        const loanForNRI = await LoanForNRI.findOne();
-        return NextResponse.json({ success: true, loanForNRI }, { status: 200 });
-    } catch (error) {
-        console.error("Error fetching company profile:", error);
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-    }
+  try {
+    const loanForNRI = await LoanForNRI.findOne().lean();
+    return NextResponse.json({ success: true, loanForNRI }, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching loans for NRI:", error);
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 },
+    );
+  }
 }

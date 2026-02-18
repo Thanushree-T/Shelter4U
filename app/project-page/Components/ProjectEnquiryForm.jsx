@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import { MessageSquare, Check, X } from "lucide-react";
 
 const PropertyEnquiryForm = ({
-  isOpen,              // Boolean: controls whether the modal is shown
-  onClose,             // Function: to close the modal
-  projectId,           // String or ID: the current project ID
-  projectName,         // String: project name (not used in this form directly)
-  onSubmitSuccess,     // Callback: triggered on successful submission
-  onSubmitError,       // Callback: triggered on error
-  formSubmitted,       // Boolean: whether form was successfully submitted
+  isOpen, // Boolean: controls whether the modal is shown
+  onClose, // Function: to close the modal
+  projectId, // String or ID: the current project ID
+  projectName, // String: project name (not used in this form directly)
+  onSubmitSuccess, // Callback: triggered on successful submission
+  onSubmitError, // Callback: triggered on error
+  formSubmitted, // Boolean: whether form was successfully submitted
 }) => {
   // Local form state
   const [formData, setFormData] = useState({
@@ -18,12 +18,10 @@ const PropertyEnquiryForm = ({
     email: "",
     phone: "",
     message: "",
-    project: projectId,  // Include project ID in submission
+    project: projectId, // Include project ID in submission
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false); // Track form submission state
-
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
   // Handle changes in form fields
   const handleChange = (e) => {
@@ -37,7 +35,7 @@ const PropertyEnquiryForm = ({
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${baseUrl}/api/project-page/${projectId}`, {
+      const response = await fetch(`/api/project-page/${projectId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -141,7 +139,9 @@ const PropertyEnquiryForm = ({
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Email *</label>
+                <label className="block text-sm font-medium mb-2">
+                  Email *
+                </label>
                 <input
                   type="email"
                   name="email"
@@ -155,7 +155,9 @@ const PropertyEnquiryForm = ({
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Phone *</label>
+                <label className="block text-sm font-medium mb-2">
+                  Phone *
+                </label>
                 <input
                   type="tel"
                   name="phone"
@@ -169,7 +171,9 @@ const PropertyEnquiryForm = ({
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Message</label>
+                <label className="block text-sm font-medium mb-2">
+                  Message
+                </label>
                 <textarea
                   name="message"
                   value={formData.message}

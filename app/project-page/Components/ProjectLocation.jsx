@@ -5,14 +5,12 @@ const ProjectLocation = ({ project }) => {
     // Main container with styling
     <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
       {/* Section heading */}
-      <h2 className="text-2xl font-semibold mb-8 text-gray-900">
-        Location
-      </h2>
+      <h2 className="text-2xl font-semibold mb-8 text-gray-900">Location</h2>
 
       {/* Map container */}
       <div className="h-112 w-full bg-gray-100 rounded-xl mb-8 relative overflow-hidden border border-gray-200">
         {/* Conditionally render iframe if mapLink is available */}
-        {project?.mapLink && (
+        {project?.mapLink && project.mapLink.trim() !== "" && (
           <iframe
             src={project.mapLink} // Google Maps embed link
             width="800"

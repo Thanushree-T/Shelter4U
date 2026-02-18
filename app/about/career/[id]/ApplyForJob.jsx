@@ -54,13 +54,13 @@ export default function ApplyForJob({ id }) {
       const previewUrl = URL.createObjectURL(file);
       setResumePreview(previewUrl);
 
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         resume: file,
       }));
 
       // Clear any previous file validation errors
-      setError('');
+      setError("");
     }
   };
 
@@ -80,7 +80,7 @@ export default function ApplyForJob({ id }) {
 
     try {
       // Submit data to backend API endpoint
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/about/career/${id}`, {
+      const res = await fetch(`/api/about/career/${id}`, {
         method: "POST",
         body: submitData,
       });
@@ -98,16 +98,16 @@ export default function ApplyForJob({ id }) {
         email: application.email,
         mobile: application.mobile,
         about: application.about,
-        resume: application.resume, 
+        resume: application.resume,
         jobPosition: application.job?.position || "Not specified",
       };
 
       // Sending application confirmation email via EmailJS
       await emailjs.send(
-        "service_i0h7wzi",     // EmailJS Service ID
-        "template_uzk6ma1",    // EmailJS Template ID
+        "service_i0h7wzi", // EmailJS Service ID
+        "template_uzk6ma1", // EmailJS Template ID
         emailData,
-        "eLBnFuSkEAEzp1f01"     // EmailJS Public Key
+        "eLBnFuSkEAEzp1f01", // EmailJS Public Key
       );
 
       alert("Application submitted and email sent successfully!");
@@ -190,7 +190,7 @@ export default function ApplyForJob({ id }) {
                 src={resumePreview}
                 className="w-full h-96"
                 title="Resume Preview"
-                style={{ border: 'none' }}
+                style={{ border: "none" }}
               />
             </div>
             <div className="mt-2 flex items-center justify-between text-sm text-gray-600">

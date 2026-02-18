@@ -1,6 +1,10 @@
-import PrivacyPolicyClient from './PrivacyPolicyClient';
+import { models } from "@/lib/connections.js";
+import PrivacyPolicyClient from "./PrivacyPolicyClient";
 
-//SEO Tags
+const { PrivacyPolicy } = models;
+
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata() {
   return {
     title: "Privacy Policy | Shelter4U",
@@ -22,7 +26,7 @@ export async function generateMetadata() {
       type: "article",
       images: [
         {
-          url: "/logo.png", 
+          url: "/logo.png",
           width: 1200,
           height: 630,
           alt: "Shelter4U Privacy Policy",
@@ -36,26 +40,17 @@ export async function generateMetadata() {
         "Understand how Shelter4U collects, uses, and protects your personal data. Transparency and trust are our priorities.",
       images: ["/logo.png"],
     },
-    alternates: {
-      canonical: "https://shelter4u.in/about/privacyPolicy",
-    },
-    robots: {
-      index: true,
-      follow: true,
-    },
+    alternates: { canonical: "https://shelter4u.in/about/privacyPolicy" },
+    robots: { index: true, follow: true },
   };
 }
 
-export const dynamic = 'force-dynamic';
-
 export default async function PrivacyPolicyPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-  const res = await fetch(`${baseUrl}/api/about/privacyPolicy`, { cache: 'no-store' });
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch privacy policy');
+  try {
+    const privacyPolicy = await PrivacyPolicy.findOne().lean();
+    return <PrivacyPolicyClient data={privacyPolicy} />;
+  } catch (error) {
+    console.error("Error fetching privacy policy:", error);
+    return <PrivacyPolicyClient data={null} />;
   }
-
-  const data = await res.json();
-  return <PrivacyPolicyClient data={data.privacyPolicy} />;
 }

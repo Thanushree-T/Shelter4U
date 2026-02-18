@@ -35,7 +35,7 @@ const Inquiry = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/inquiry`,
+        `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/inquiry`,
         {
           method: "POST",
           headers: {
@@ -45,7 +45,7 @@ const Inquiry = () => {
             ...formData,
             timestamp: new Date().toISOString(), // Optional: add timestamp to form submission
           }),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -119,7 +119,11 @@ const Inquiry = () => {
               {/* Floating red orb top-left */}
               <motion.div
                 animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="absolute -top-6 -left-6 sm:-top-8 sm:-left-8 md:-top-10 md:-left-10 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full bg-gradient-to-br from-red-500 to-rose-600 opacity-20 z-0"
               />
 

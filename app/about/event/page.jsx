@@ -1,6 +1,10 @@
-import EventClient from './EventClient.jsx';
+import { models } from "@/lib/connections.js";
+import { serializeMongo } from "@/lib/utils";
 
-//SEO Tags
+import EventClient from "./EventClient.jsx";
+
+const { Event } = models;
+
 export async function generateMetadata() {
   return {
     title: "Events | Shelter4U",
@@ -17,7 +21,7 @@ export async function generateMetadata() {
     openGraph: {
       title: "Events | Shelter4U",
       description:
-        "Check out Shelter4U’s recent and upcoming events. Discover how we engage with clients and the real estate community.",
+        "Check out Shelter4U's recent and upcoming events. Discover how we engage with clients and the real estate community.",
       url: "https://shelter4u.in/about/event",
       type: "website",
       images: [
@@ -36,26 +40,17 @@ export async function generateMetadata() {
         "Discover exciting events and property launches hosted by Shelter4U.",
       images: ["/logo.png"],
     },
-    alternates: {
-      canonical: "https://shelter4u.in/about/event",
-    },
-    robots: {
-      index: true,
-      follow: true,
-    },
+    alternates: { canonical: "https://shelter4u.in/about/event" },
+    robots: { index: true, follow: true },
   };
 }
 
-
 export default async function EventPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-  const res = await fetch(`${baseUrl}/api/about/event`, { cache: 'no-store' });
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch events');
+  try {
+    const events = await Event.find().lean();
+    return <EventClient events={serializeMongo(events)} />;
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    return <EventClient events={[]} />;
   }
-
-  const data = await res.json();
-
-  return <EventClient events={data.event} />;
 }
