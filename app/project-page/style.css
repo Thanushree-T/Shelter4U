@@ -1,0 +1,222 @@
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  /* Hide spinners for number inputs globally */
+  input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+    appearance: textfield; /* Standard */
+  }
+  
+  /* Hide spinners in WebKit browsers (Chrome, Safari) */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Hide spinners */
+    margin: 0; /* Remove default margin */
+  }
+  
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  
+  .hover\:bg-gray-100:hover {
+    background-color: #f3f4f6;
+    transition: background-color 0.2s ease;
+  }
+  
+  .hover\:bg-gray-800:hover {
+    background-color: #1f2937;
+    transition: background-color 0.2s ease;
+  }
+  
+  .hover\:text-blue-800:hover {
+    color: #1e40af;
+    transition: color 0.2s ease;
+  }
+  
+  .hover\:text-red-700:hover {
+    color: #b91c1c;
+    transition: color 0.2s ease;
+  }
+  
+  /* Input styles */
+  .no-spinners::-webkit-inner-spin-button,
+  .no-spinners::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  .no-spinners {
+    appearance: textfield;
+  }
+  
+  /* Step indicator animation */
+  .transition-all {
+    transition-property: all;
+  }
+  
+  
+  .duration-300 {
+    transition-duration: 300ms;
+  }
+  
+  /* Modal z-index */
+  .z-50 {
+    z-index: 50;
+  }
+
+/* When the multiselect is focused, add shadow to the label container */
+.p-multiselect.p-focus {
+  box-shadow: 0 0 0 0.8px black;
+  outline: none;
+}
+
+.p-multiselect-item:hover {
+  background-color: #eeeeee;
+}
+
+
+.p-dropdown.p-focus {
+  box-shadow: 0 0 0 0.8px black;
+  outline: none;
+}
+
+.p-component.p-inputtext:focus {
+  box-shadow: 0 0 0 0.8px black !important;
+  outline: none;
+}
+
+.p-calendar.p-focus .p-inputtext{
+  box-shadow: 0 0 0 0.8px black;
+  outline: none;
+  border-right: none;
+}
+
+.p-calendar .p-datepicker-trigger {
+  color: black;
+  background-color: transparent;
+  border: 1px solid black;
+  border-left: none;
+}
+
+.p-calendar .p-datepicker-trigger:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.p-calendar .p-datepicker-trigger:hover {
+  background-color: #eeeeee;
+}
+
+.p-datepicker .p-monthpicker .p-monthpicker-month.p-highlight {
+    color: black;
+    background: #eee;
+}
+
+.p-datepicker .p-yearpicker .p-yearpicker-year.p-highlight{
+  color: black;
+  background: #eee;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-year:enabled:hover, .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month:enabled:hover{
+  color: black;
+  /* background: #eee; */
+}
+
+.p-datepicker:not(.p-disabled) .p-monthpicker .p-monthpicker-month:not(.p-disabled):focus, .p-datepicker:not(.p-disabled) .p-yearpicker .p-yearpicker-year:not(.p-disabled):focus{
+  box-shadow: none;
+  border: 2px solid black;
+}
+
+.p-datatable th {
+  padding: 1rem;
+  font-size: medium;
+  text-align: center;
+  justify-items: center;
+}
+
+.p-datatable td {
+  font-size: small;
+  text-align: center;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  
+  background-color: #e53935;
+  color: white;
+  font-weight: 500;
+  /* border: 1px solid black; */
+}
+
+.p-inputtextarea {
+  border-color: #000000;
+  background: transparent;
+}
+
+
+.p-chips-multiple-container {
+  background: transparent;
+  width: inherit;
+  border: 1px solid black;
+  outline: none;
+}
+
+.p-chips.p-focus .p-chips-multiple-container{
+  outline: none;
+  box-shadow: 0 0 0 0.8px black;
+}
+
+
+
+
+
+.p-datatable {
+  border-radius: 0.4  rem;
+  /* border: 1px solid #000000; */
+}
+
+.p-datatable-wrapper {
+  border-radius: 0.5rem;
+}
+
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight.p-focus {
+    background: rgba(238, 238, 238);
+}
+
+/* .p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
+    color: #f5f5f5;
+    background: #f5f5f5;
+} */
+
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
+    color: #000000;
+    background: #eee;
+}
+
+.p-checkbox-box{
+  background-color: white;
+  outline: none;
+  border: black 1.5px solid;
+}
+
+.p-checkbox-box > svg{
+  color: black;
+  font-weight: bolder;
+  stroke: #000000;
+  stroke-width: 0.05rem;
+}
+
+.p-checkbox input{
+  background-color: black;
+}
