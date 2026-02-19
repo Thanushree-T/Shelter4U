@@ -2,20 +2,14 @@
 "use client";
 
 import React from "react";
-import { Lock } from "lucide-react"; // Icon used in the hero section
-import { motion } from "framer-motion"; // Animation library for entry transitions
+import { Lock } from "lucide-react";
 
 const LoansForNrisClient = ({ data }) => {
   const { hero, sections } = data;
 
   return (
     // Wrapper with fade-in and slide-up animation on mount
-    <motion.div
-      initial={{ opacity: 0, y: -50 }} // Start hidden and above
-      animate={{ opacity: 1, y: 0 }}   // Animate to visible and neutral Y position
-      transition={{ duration: 0.5 }}   // Animation duration
-      className="min-h-screen bg-gray-100 flex flex-col items-center"
-    >
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
       {/* Hero Section */}
       {hero?.heading && hero.heading.trim() !== "" && (
         <div className="w-[80%] h-[30vh] bg-gradient-to-r from-gray-900 to-black py-6 text-center flex flex-col justify-center mt-10 rounded-3xl">
@@ -33,7 +27,6 @@ const LoansForNrisClient = ({ data }) => {
         <div className="w-[80%] px-6 py-8 space-y-10">
           {sections.map((section, idx) => (
             <div key={idx} className="space-y-6">
-              
               {/* Section Title */}
               {section.title?.trim() && (
                 <p className="text-3xl font-bold text-navy-blue">
@@ -97,7 +90,9 @@ const LoansForNrisClient = ({ data }) => {
                         {tableData.rows?.map((row, rIdx) => (
                           <tr
                             key={rIdx}
-                            className={rIdx % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                            className={
+                              rIdx % 2 === 0 ? "bg-gray-50" : "bg-white"
+                            }
                           >
                             {row.map((cell, cIdx) => (
                               <td
@@ -111,7 +106,7 @@ const LoansForNrisClient = ({ data }) => {
                       </tbody>
                     </table>
                   </div>
-                ) : null
+                ) : null,
               )}
 
               {/* Additional Content (below the main sections) */}
@@ -128,7 +123,7 @@ const LoansForNrisClient = ({ data }) => {
           ))}
         </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 

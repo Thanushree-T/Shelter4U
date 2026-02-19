@@ -1,7 +1,6 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 
 const InquiryForm = () => {
   // State to hold form input values
@@ -49,21 +48,28 @@ const InquiryForm = () => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.6 }}
-      className="w-full"
-    >
+    <div className="w-full">
       {/* Show success message after form is submitted */}
       {submitSuccess ? (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 sm:p-6 text-center">
           <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-            <svg className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+            <svg
+              className="w-6 h-6 sm:w-8 sm:h-8 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">Inquiry Sent!</h3>
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
+            Inquiry Sent!
+          </h3>
           <p className="text-gray-600">Our expert will contact you shortly</p>
         </div>
       ) : (
@@ -72,7 +78,9 @@ const InquiryForm = () => {
           <div className="space-y-4">
             {/* Name Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name
+              </label>
               <input
                 type="text"
                 name="name"
@@ -86,7 +94,9 @@ const InquiryForm = () => {
 
             {/* Email Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
@@ -100,7 +110,9 @@ const InquiryForm = () => {
 
             {/* Phone Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phone
+              </label>
               <input
                 type="tel"
                 name="mobile"
@@ -114,7 +126,9 @@ const InquiryForm = () => {
 
             {/* Message Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Message
+              </label>
               <textarea
                 name="message"
                 placeholder="Message"
@@ -141,7 +155,14 @@ const InquiryForm = () => {
                     fill="none"
                     viewBox="0 0 24 24"
                   >
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
                     <path
                       className="opacity-75"
                       fill="currentColor"
@@ -157,7 +178,7 @@ const InquiryForm = () => {
           </div>
         </form>
       )}
-    </motion.div>
+    </div>
   );
 };
 

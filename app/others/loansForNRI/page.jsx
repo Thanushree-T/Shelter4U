@@ -5,7 +5,8 @@ import LoansForNrisClient from "./LoansForNrisClient";
 
 const { LoanForNRI } = models;
 
-export const dynamic = "force-dynamic";
+// Static CMS content — revalidate every 24 hours (ISR)
+export const revalidate = 86400;
 
 export default async function LoansForNrisPage() {
   try {

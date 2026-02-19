@@ -3,7 +3,8 @@ import { serializeMongo } from "@/lib/utils";
 
 import CompanyProfileClient from "./CompanyProfileClient";
 
-export const dynamic = "force-dynamic";
+// Company profile is CMS content — revalidate every 24 hours (ISR)
+export const revalidate = 86400;
 
 const { CompanyProfile } = models;
 

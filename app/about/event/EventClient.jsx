@@ -1,22 +1,13 @@
-'use client'; // Enables client-side rendering in Next.js 13+ App Router
+"use client"; // Enables client-side rendering in Next.js 13+ App Router
 
-import React from 'react';
-// Importing an icon component (Lock) from lucide-react to visually enhance the UI
-import { Lock } from 'lucide-react';
-// Importing a reusable EventCard component to render individual event details
-import EventCard from './EventCard';
-// Importing motion from framer-motion for smooth entrance animations
-import { motion } from 'framer-motion';
+import React from "react";
+import { Lock } from "lucide-react";
+import EventCard from "./EventCard";
 
 export default function EventClient({ events }) {
   return (
     // Wrapper div with motion animation: fades in and slides up on mount
-    <motion.div
-      initial={{ opacity: 0, y: -50 }} // Starts invisible and slightly above
-      animate={{ opacity: 1, y: 0 }}   // Ends fully visible and at normal position
-      transition={{ duration: 0.5 }}   // Transition timing
-      className="min-h-screen bg-gray-100 flex flex-col items-center" // Full-height layout with background and centering
-    >
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
       {/* Hero Section */}
       <div className="w-[80%] h-[30vh] bg-gradient-to-r from-gray-900 to-black py-6 text-center flex flex-col justify-center mt-10 rounded-4xl">
         {/* Lock Icon wrapper for visual emphasis */}
@@ -41,6 +32,6 @@ export default function EventClient({ events }) {
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

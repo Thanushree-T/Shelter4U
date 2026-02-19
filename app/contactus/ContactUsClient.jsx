@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FaFacebookF, FaTwitter } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
 import { RiPhoneLine, RiMailLine, RiMapPinLine } from "react-icons/ri";
 
 import InquiryForm from "../Components/InquiryForm.jsx";
 
-export default function ContactUsPage() {
-  // State to hold contact details fetched from the backend
-  const [contactUs, setContactUs] = useState({
+// data is fetched server-side in page.jsx (SSG) and passed as a prop
+export default function ContactUsPage({ data }) {
+  const contactUs = data || {
     address: "",
     mail: [],
     contact: [],
@@ -17,7 +17,7 @@ export default function ContactUsPage() {
     twitterLink: "",
     instaLink: "",
     embedLink: "",
-  });
+  };
 
   // State to manage inquiry form data
   const [formData, setFormData] = useState({
@@ -31,22 +31,6 @@ export default function ContactUsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState("");
-
-  // Fetch footer/contact data on component mount
-  useEffect(() => {
-    const fetchFooter = async () => {
-      try {
-        const res = await fetch(`/api/footer`);
-        if (!res.ok) throw new Error("Failed to fetch footer data");
-        const data = await res.json();
-        setContactUs(data.footer || {});
-      } catch (err) {
-        console.error("Footer fetch failed:", err.message);
-      }
-    };
-
-    fetchFooter();
-  }, []);
 
   // Handle changes in input fields
   const handleChange = (e) => {

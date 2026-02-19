@@ -9,7 +9,34 @@ import HomeFifthSection from "./home/HomeFifthSection.jsx";
 import Recommended from "./home/Recommended.jsx";
 import { Suspense } from "react";
 
-export const dynamic = "force-dynamic";
+// Skeleton shown only while Recommended listings are loading
+const RecommendedSkeleton = () => (
+  <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
+    <div className="max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+        <div className="h-4 bg-gray-300 rounded w-1/3 animate-pulse" />
+        <div className="h-4 bg-gray-300 rounded w-1/6 mt-2 md:mt-0 animate-pulse" />
+      </div>
+      <div className="h-8 bg-gray-400 rounded w-1/2 mb-6 animate-pulse" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[...Array(3)].map((_, i) => (
+          <div
+            key={i}
+            className="bg-white rounded-xl shadow-lg p-4 space-y-4 animate-pulse"
+          >
+            <div className="h-48 bg-gray-200 rounded-lg" />
+            <div className="h-6 bg-gray-300 rounded w-3/4" />
+            <div className="h-4 bg-gray-300 rounded w-1/2" />
+            <div className="h-4 bg-gray-300 rounded w-1/3" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+// Page revalidates every hour — triggers ISR for listings
+export const revalidate = 3600;
 
 const {
   HomeFirstSection: HomeFirstSectionModel,
@@ -20,7 +47,6 @@ const {
   Project,
 } = models;
 
-// Static metadata — no DB call needed here
 export const metadata = {
   title: "Shelter4U",
   description:
@@ -70,7 +96,7 @@ export const metadata = {
   robots: { index: true, follow: true, nocache: false },
 };
 
-// Main Home Page — all DB queries run in parallel
+// Main Home Page — all DB queries run in parallel, ISR (1 hour)
 export default async function HomePage() {
   let homeFirstSectionData = null;
   let homeSecondSectionData = null;
@@ -88,11 +114,13 @@ export default async function HomePage() {
       homeFifthArr,
       recommended,
     ] = await Promise.all([
-      HomeFirstSectionModel.find().lean(),
-      HomeSecondSectionModel.find().lean(),
-      HomeThirdSectionModel.find().lean(),
-      HomeFourthSectionModel.find().lean(),
+      // Static sections — fetched once per ISR cycle, served from static cache
+      HomeFirstSectionModel.findOne().lean(),
+      HomeSecondSectionModel.findOne().lean(),
+      HomeThirdSectionModel.findOne().lean(),
+      HomeFourthSectionModel.findOne().lean(),
       HomeFifthSectionModel.find().lean(),
+      // Listings — updated every hour via page revalidate
       Project.find({ isRecommended: true })
         .populate("area", ["_id", "name"])
         .populate("builder", ["_id", "name"])
@@ -102,10 +130,10 @@ export default async function HomePage() {
         .lean(),
     ]);
 
-    homeFirstSectionData = serializeMongo(homeFirstArr[0] || null);
-    homeSecondSectionData = serializeMongo(homeSecondArr[0] || null);
-    homeThirdSectionData = serializeMongo(homeThirdArr[0] || null);
-    homeFourthSectionData = serializeMongo(homeFourthArr[0] || null);
+    homeFirstSectionData = serializeMongo(homeFirstArr || null);
+    homeSecondSectionData = serializeMongo(homeSecondArr || null);
+    homeThirdSectionData = serializeMongo(homeThirdArr || null);
+    homeFourthSectionData = serializeMongo(homeFourthArr || null);
     homeFifthSectionData = serializeMongo(homeFifthArr ?? []);
     recommendedProjects = serializeMongo(recommended ?? []);
   } catch (e) {
@@ -115,7 +143,7 @@ export default async function HomePage() {
   return (
     <>
       <HomeFirstSection data={homeFirstSectionData} />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<RecommendedSkeleton />}>
         <Recommended projects={recommendedProjects} />
       </Suspense>
       <HomeSecondSection data={homeSecondSectionData} />

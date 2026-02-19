@@ -5,6 +5,9 @@ import EventClient from "./EventClient.jsx";
 
 const { Event } = models;
 
+// Events are CMS content — revalidate every 24 hours (ISR)
+export const revalidate = 86400;
+
 export async function generateMetadata() {
   return {
     title: "Events | Shelter4U",

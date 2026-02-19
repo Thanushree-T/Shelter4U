@@ -5,6 +5,9 @@ import TeamClient from "./TeamClient";
 
 const { Team } = models;
 
+// Team members are CMS content — revalidate every 24 hours (ISR)
+export const revalidate = 86400;
+
 export async function generateMetadata() {
   return {
     title: "Meet Our Team | Shelter4U",

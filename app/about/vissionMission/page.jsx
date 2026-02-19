@@ -3,7 +3,8 @@ import VisionMissionClient from "./VissionMissionClient.jsx";
 
 const { VisionMission } = models;
 
-export const dynamic = "force-dynamic";
+// Vision & mission is editorial CMS content — revalidate every 24 hours (ISR)
+export const revalidate = 86400;
 
 export async function generateMetadata() {
   return {

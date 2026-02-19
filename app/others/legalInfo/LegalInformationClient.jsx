@@ -2,18 +2,12 @@
 "use client";
 
 import React from "react";
-import { Lock } from "lucide-react"; // Icon for visual representation
-import { motion } from "framer-motion"; // Animation library
+import { Lock } from "lucide-react";
 
 export default function LegalInformationClient({ data }) {
   return (
     // Animated wrapper using Framer Motion for fade-in effect
-    <motion.div
-      initial={{ opacity: 0, y: -50 }} // Initial animation state (invisible and shifted up)
-      animate={{ opacity: 1, y: 0 }} // Final animation state (visible and in position)
-      transition={{ duration: 0.5 }} // Animation duration
-      className="min-h-screen bg-gray-100 flex flex-col items-center"
-    >
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
       {/* Hero Section */}
       <div className="w-[80%] h-[30vh] bg-gradient-to-r from-gray-900 to-black py-6 text-center flex flex-col justify-center mt-10 rounded-4xl">
         {/* Lock icon */}
@@ -51,7 +45,9 @@ export default function LegalInformationClient({ data }) {
                 <ul className="list-decimal pl-6 space-y-2">
                   {section.bullets
                     .filter((item) => item.trim() !== "")
-                    .map((item, j) => <li key={j}>{item}</li>)}
+                    .map((item, j) => (
+                      <li key={j}>{item}</li>
+                    ))}
                 </ul>
               )}
             </div>
@@ -61,6 +57,6 @@ export default function LegalInformationClient({ data }) {
           </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 }

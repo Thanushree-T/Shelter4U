@@ -3,7 +3,8 @@ import PrivacyPolicyClient from "./PrivacyPolicyClient";
 
 const { PrivacyPolicy } = models;
 
-export const dynamic = "force-dynamic";
+// Privacy policy is legal text CMS content — revalidate every 24 hours (ISR)
+export const revalidate = 86400;
 
 export async function generateMetadata() {
   return {
