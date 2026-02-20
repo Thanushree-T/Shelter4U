@@ -44,6 +44,7 @@ export default function HomeSecondSection({ data }) {
                 className="object-cover"
                 style={{ objectPosition: "right top" }}
                 priority
+                sizes="(max-width: 640px) 300px, (max-width: 768px) 400px, 550px"
               />
             )}
           </div>
@@ -58,6 +59,7 @@ export default function HomeSecondSection({ data }) {
                 fill
                 style={{ objectPosition: "right bottom" }}
                 priority
+                sizes="(max-width: 640px) 150px, (max-width: 768px) 200px, 300px"
               />
             )}
           </div>

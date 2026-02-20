@@ -1,5 +1,6 @@
 import { models } from "@/lib/connections.js";
 import VisionMissionClient from "./VissionMissionClient.jsx";
+import { serializeMongo } from "@/lib/utils";
 
 const { VisionMission } = models;
 
@@ -48,7 +49,8 @@ export default async function VisionMissionPage() {
   try {
     const visionMissionArr = await VisionMission.find().lean();
     const visionData = visionMissionArr?.[0] || null;
-    return <VisionMissionClient data={visionData} />;
+    const serializedVisionData = serializeMongo(visionData);
+    return <VisionMissionClient data={serializedVisionData} />;
   } catch (error) {
     console.error("VisionMission fetch error:", error.message);
     return (

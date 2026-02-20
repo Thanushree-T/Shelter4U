@@ -5,6 +5,27 @@ import { serializeMongo } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ searchParams }) {
+  const params = await searchParams;
+  const parts = [];
+
+  if (params.projectType) parts.push(params.projectType);
+  if (params.city) parts.push(`in ${params.city}`);
+  if (params.q) parts.push(`- "${params.q}"`);
+
+  const title =
+    parts.length > 0 ? `Properties ${parts.join(" ")}` : "Search Properties";
+
+  return {
+    title: title,
+    description: `Find your dream property. Search results for ${parts.join(" ")} on Shelter4U.`,
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
+
 const { Project, City, State, Area, Builder } = models;
 
 async function fetchInitialProjects(searchParams) {

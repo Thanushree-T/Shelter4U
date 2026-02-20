@@ -17,10 +17,10 @@ import Image from "next/image";
 function Header() {
   // Get current pathname for active link highlighting
   const pathname = usePathname();
-  
+
   // State for mobile menu toggle
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+
   // State to track which dropdown is currently active (null, "aboutUs", "location", "type", "others")
   const [activeDropdown, setActiveDropdown] = useState(null);
 
@@ -36,6 +36,9 @@ function Header() {
    */
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Don't close dropdowns if mobile menu is open (mobile logic handles it differently)
+      if (isMenuOpen) return;
+
       // Check if click is outside all dropdown containers
       if (
         aboutUsRef.current &&
@@ -59,7 +62,7 @@ function Header() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [isMenuOpen]);
 
   /**
    * Toggle dropdown visibility
@@ -90,7 +93,6 @@ function Header() {
   return (
     <div className="sticky top-0 z-50 bg-white">
       <div className="flex flex-col xl:flex-row justify-between items-center px-4 md:px-8 py-3">
-        
         {/* Logo and Mobile Menu Button Container */}
         <div className="w-full xl:w-auto flex justify-between items-center">
           {/* Logo (uses two variants: icon on mobile, full on desktop) */}
@@ -118,11 +120,12 @@ function Header() {
               </span>
             </div>
           </Link>
-          
+
           {/* Mobile Menu Hamburger Button - only visible on mobile (xl:hidden) */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="xl:hidden text-2xl p-2 cursor-pointer text-red-600"
+            aria-label="Toggle mobile menu"
           >
             ☰
           </button>
@@ -130,7 +133,6 @@ function Header() {
 
         {/* Desktop Navigation Links - hidden on mobile, visible on xl screens and up */}
         <div className="hidden xl:flex space-x-1 lg:space-x-2">
-          
           {/* Home Link */}
           <Link
             href="/"
@@ -146,7 +148,7 @@ function Header() {
             className="relative"
             ref={aboutUsRef}
             onMouseEnter={() => setActiveDropdown("aboutUs")} // Open on hover
-            onMouseLeave={() => setActiveDropdown(null)}      // Close when mouse leaves
+            onMouseLeave={() => setActiveDropdown(null)} // Close when mouse leaves
           >
             {/* Dropdown Trigger Button */}
             <button className="px-3 py-2 relative group transition-colors duration-300 cursor-pointer flex items-center font-normal">
@@ -161,6 +163,7 @@ function Header() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -231,6 +234,7 @@ function Header() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -289,6 +293,7 @@ function Header() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -350,6 +355,7 @@ function Header() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -396,7 +402,6 @@ function Header() {
           } w-full xl:hidden mt-3 border-t border-gray-100 pt-3`}
         >
           <div className="flex flex-col items-start space-y-1 px-2">
-            
             {/* Mobile Home Link */}
             <Link
               href="/"
@@ -434,7 +439,9 @@ function Header() {
               </button>
 
               {/* Collapsible Dropdown Content - uses CSS transitions for smooth open/close */}
-              <div className={`transition-all duration-300 ${activeDropdown === "aboutUs" ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}>
+              <div
+                className={`transition-all duration-300 ${activeDropdown === "aboutUs" ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}
+              >
                 <div className="pl-4 py-1 bg-gray-50 rounded-md mt-1 mb-1 space-y-1">
                   <Link
                     href="/about/companyProfile"
@@ -506,7 +513,9 @@ function Header() {
                 </svg>
               </button>
 
-              <div className={`transition-all duration-300 ${activeDropdown === "location" ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}>
+              <div
+                className={`transition-all duration-300 ${activeDropdown === "location" ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}
+              >
                 <div className="pl-4 py-1 bg-gray-50 rounded-md mt-1 mb-1 space-y-1">
                   <Link
                     href="/search?city=ahmedabad"
@@ -564,7 +573,9 @@ function Header() {
                 </svg>
               </button>
 
-              <div className={`transition-all duration-300 ${activeDropdown === "type" ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}>
+              <div
+                className={`transition-all duration-300 ${activeDropdown === "type" ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}
+              >
                 <div className="pl-4 py-1 bg-gray-50 rounded-md mt-1 mb-1 space-y-1">
                   <Link
                     href="/search?projectType=Residential"
@@ -628,7 +639,9 @@ function Header() {
                 </svg>
               </button>
 
-              <div className={`transition-all duration-300 ${activeDropdown === "others" ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}>
+              <div
+                className={`transition-all duration-300 ${activeDropdown === "others" ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}
+              >
                 <div className="pl-4 py-1 bg-gray-50 rounded-md mt-1 mb-1 space-y-1">
                   <Link
                     href="/others/loansForNRI"
@@ -670,7 +683,7 @@ function Header() {
         .animate-fadeIn {
           animation: fadeIn 0.2s ease-in-out;
         }
-        
+
         /* Slide down animation (unused but available) */
         .animate-slideDown {
           animation: slideDown 0.3s ease-in-out;
@@ -687,7 +700,7 @@ function Header() {
             transform: translateY(0);
           }
         }
-        
+
         /* Keyframe for slide down effect */
         @keyframes slideDown {
           from {

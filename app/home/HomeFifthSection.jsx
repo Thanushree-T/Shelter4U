@@ -33,7 +33,7 @@ const HomeFifthSection = ({ data }) => {
                     alt={partner?.title || `partner-${index}`} // Accessible alt text
                     fill // Uses layout fill to cover the container
                     className="object-contain" // Maintains image aspect ratio
-                    sizes="(max-width: 768px) 150px, 224px" // Responsive size hint
+                    sizes="224px" // Fixed width container (w-56 = 14rem = 224px)
                   />
                 )}
               </div>

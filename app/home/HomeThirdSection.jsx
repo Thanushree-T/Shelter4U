@@ -82,6 +82,7 @@ export default function HomeThirdSection({ data }) {
                 className="object-cover"
                 style={{ objectPosition: "center 20%" }} // Slight top crop
                 priority // Load early for performance
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </motion.div>

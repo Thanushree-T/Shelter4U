@@ -48,9 +48,7 @@ const {
 } = models;
 
 export const metadata = {
-  title: "Shelter4U",
-  description:
-    "Discover the best zero brokerage flats, affordable properties, and premium projects by top builders in Ahmedabad, Gandhinagar, Pune, and Mumbai.",
+  // Title inherits from layout default
   keywords: [
     "zero brokerage properties",
     "affordable flats in Ahmedabad",
@@ -85,15 +83,7 @@ export const metadata = {
       },
     ],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Top Builder Projects in India | Shelter4U",
-    description:
-      "Recommended real estate from Shelter4U. Builder projects with zero brokerage across India.",
-    images: ["/logo.png"],
-  },
   alternates: { canonical: "https://shelter4u.in" },
-  robots: { index: true, follow: true, nocache: false },
 };
 
 // Main Home Page — all DB queries run in parallel, ISR (1 hour)

@@ -1,5 +1,6 @@
 import { models } from "@/lib/connections.js";
 import PrivacyPolicyClient from "./PrivacyPolicyClient";
+import { serializeMongo } from "@/lib/utils";
 
 const { PrivacyPolicy } = models;
 
@@ -49,7 +50,8 @@ export async function generateMetadata() {
 export default async function PrivacyPolicyPage() {
   try {
     const privacyPolicy = await PrivacyPolicy.findOne().lean();
-    return <PrivacyPolicyClient data={privacyPolicy} />;
+    const serializedPrivacyPolicy = serializeMongo(privacyPolicy);
+    return <PrivacyPolicyClient data={serializedPrivacyPolicy} />;
   } catch (error) {
     console.error("Error fetching privacy policy:", error);
     return <PrivacyPolicyClient data={null} />;

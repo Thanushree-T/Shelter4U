@@ -244,7 +244,7 @@ function HomeFirstSection({ data }) {
   return (
     <div className="overflow-x-hidden">
       {/* Location permission banner */}
-      {showLocationBanner && (
+      {/* {showLocationBanner && (
         <div className="w-full bg-blue-600 text-white px-4 py-3 flex items-center justify-between gap-3 z-50">
           <div className="flex items-center gap-3">
             <HiLocationMarker className="text-xl flex-shrink-0" />
@@ -266,7 +266,7 @@ function HomeFirstSection({ data }) {
             &times;
           </button>
         </div>
-      )}
+      )} */}
 
       {/* Main hero section container */}
       <div className="relative lg:static lg:min-h-[100vh]">

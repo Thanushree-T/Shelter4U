@@ -11,7 +11,7 @@ const LayoutPlans = ({ project, setShowFullForm }) => {
 
       {/* Grid for displaying layout plan cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-        {project.layoutPlans.map((plan, index) => (
+        {project?.layoutPlans?.map((plan, index) => (
           <div
             key={index}
             // Each card has border and hover effects
@@ -26,10 +26,9 @@ const LayoutPlans = ({ project, setShowFullForm }) => {
               {/* Plan image */}
               <img
                 src={
-                  plan.url ||
-                  "https://placehold.co/600x400?text=Coming+Soon"
+                  plan?.url || "https://placehold.co/600x400?text=Coming+Soon"
                 }
-                alt={plan.type}
+                alt={plan?.type}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
 
@@ -37,7 +36,7 @@ const LayoutPlans = ({ project, setShowFullForm }) => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
                 <div>
                   <h3 className="font-bold text-white text-lg">
-                    {plan.description}
+                    {plan?.description}
                   </h3>
                 </div>
               </div>
