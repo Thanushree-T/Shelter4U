@@ -6,7 +6,6 @@ import { Lock } from "lucide-react";
 
 const LoansForNrisClient = ({ data }) => {
   const { hero, sections } = data;
-
   return (
     // Wrapper with fade-in and slide-up animation on mount
     <div className="min-h-screen bg-gray-100 flex flex-col items-center">

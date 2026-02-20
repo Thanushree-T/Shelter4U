@@ -9,7 +9,8 @@
     "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider next dev",
     "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider next build",
     "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postbuild": "node scripts/fetch-dynamic-paths.mjs && next-sitemap"
   },
   "dependencies": {
     "axios": "^1.10.0",
@@ -23,6 +24,7 @@
     "lucide-react": "^0.522.0",
     "mongoose": "^8.16.0",
     "next": "^15.5.12",
+    "next-sitemap": "^4.2.3",
     "nextjs-toploader": "^3.9.17",
     "nodemailer": "^7.0.3",
     "primeicons": "^7.0.0",

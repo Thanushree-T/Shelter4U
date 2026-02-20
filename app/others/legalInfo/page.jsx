@@ -9,11 +9,11 @@ const { LegalInformation } = models;
 export const revalidate = 86400;
 
 export default async function LegalPage() {
-  try {
-    const legalInformation = await LegalInformation.findOne().lean();
-    return <LegalInformationClient data={serializeMongo(legalInformation)} />;
-  } catch (error) {
-    console.error("Error fetching legal information:", error);
-    return <LegalInformationClient data={null} />;
+  const legalInformation = await LegalInformation.findOne().lean();
+
+  if (!legalInformation) {
+    throw new Error("Legal information not found");
   }
+
+  return <LegalInformationClient data={serializeMongo(legalInformation)} />;
 }

@@ -9,11 +9,11 @@ const { LoanForNRI } = models;
 export const revalidate = 86400;
 
 export default async function LoansForNrisPage() {
-  try {
-    const loanForNRI = await LoanForNRI.findOne().lean();
-    return <LoansForNrisClient data={serializeMongo(loanForNRI)} />;
-  } catch (error) {
-    console.error("Error fetching loan data:", error);
-    return <LoansForNrisClient data={null} />;
+  const loanForNRI = await LoanForNRI.findOne().lean();
+
+  if (!loanForNRI) {
+    throw new Error("Loan for NRI data not found");
   }
+
+  return <LoansForNrisClient data={serializeMongo(loanForNRI)} />;
 }
