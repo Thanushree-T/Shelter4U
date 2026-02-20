@@ -1,9 +1,9 @@
-'use client'; // Enables use of client-only features in Next.js
+"use client"; // Enables use of client-only features in Next.js
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion'; // For animations
-import Image from 'next/image';
-import { MdOutlineArrowDropDown, MdChecklistRtl } from 'react-icons/md';
+import React, { useState } from "react";
+import { motion } from "framer-motion"; // For animations
+import Image from "next/image";
+import { MdOutlineArrowDropDown, MdChecklistRtl } from "react-icons/md";
 
 // Accordion component used to render multiple collapsible sections
 const CustomAccordion = ({ items }) => {
@@ -20,7 +20,7 @@ const CustomAccordion = ({ items }) => {
         <div
           key={i}
           className={`bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-300 ${
-            i === openIndex ? 'shadow-lg' : ''
+            i === openIndex ? "shadow-lg" : ""
           }`}
         >
           {/* Accordion Header */}
@@ -43,7 +43,7 @@ const CustomAccordion = ({ items }) => {
               <MdOutlineArrowDropDown
                 size={20}
                 className={`text-red-600 transition-transform duration-300 ${
-                  i === openIndex ? 'rotate-180' : '' // Rotate arrow if open
+                  i === openIndex ? "rotate-180" : "" // Rotate arrow if open
                 }`}
               />
             </div>
@@ -66,23 +66,23 @@ export default function HomeThirdSection({ data }) {
   return (
     <section className="w-full mt-10 mb-10 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-8">
-        
         {/* Image Section (Right on large screens) */}
         <div className="w-full lg:w-1/2 custom-center">
           <motion.div
-            initial={{ x: '7rem', opacity: 0 }} // Start animation off-screen
+            initial={{ x: "7rem", opacity: 0 }} // Start animation off-screen
             animate={{ x: 0, opacity: 1 }} // Animate to visible state
-            transition={{ duration: 2, type: 'ease' }} // Smooth transition
+            transition={{ duration: 2, type: "ease" }} // Smooth transition
             className="w-full max-w-[35rem] h-[37rem] overflow-hidden rounded-t-[20rem] relative z-20 mx-auto flex justify-center items-center"
           >
             <div className="w-full h-full flex items-center justify-center relative">
               <Image
-                src={data?.img || '/company.png'} // Fallback image
+                src={data?.img || "/image.png"} // Fallback image
                 alt="company"
                 fill // Fill the container
                 className="object-cover"
-                style={{ objectPosition: 'center 20%' }} // Slight top crop
+                style={{ objectPosition: "center 20%" }} // Slight top crop
                 priority // Load early for performance
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </motion.div>
@@ -92,7 +92,7 @@ export default function HomeThirdSection({ data }) {
         <div className="w-full lg:w-1/2 flex flex-col gap-4">
           {/* Title */}
           <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
-            <span className="text-red-600">{data?.redTxt}</span>{' '}
+            <span className="text-red-600">{data?.redTxt}</span>{" "}
             {data?.blackTxt}
           </p>
 

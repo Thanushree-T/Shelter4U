@@ -8,12 +8,12 @@ import AmenitiesSection from "../Components/ProjectAmenities.jsx";
 import ProjectGallery from "../Components/ProjectGallery.jsx";
 import ProjectLocation from "../Components/ProjectLocation.jsx";
 import ProjectSpecificationTable from "../Components/ProjectSpecification.jsx";
-import ProjectHeroSlider from "../Components/ProjectPageHeroSilder.jsx"; 
+import ProjectHeroSlider from "../Components/ProjectPageHeroSilder.jsx";
 import ProjectHighlights from "../Components/overview/ProjectHighlights.jsx";
 import ProjectDescription from "../Components/overview/ProjectDescription.jsx";
 import ProjectLayoutPlans from "../Components/overview/ProjectLayoutPlans.jsx";
 import ProjectBrochure from "../Components/ProjectBroucher.jsx";
-import ProjectInquiryCard from "../Components/ProjectInquiryCard.jsx";  
+import ProjectInquiryCard from "../Components/ProjectInquiryCard.jsx";
 import PropertyEnquiryForm from "../Components/ProjectEnquiryForm.jsx";
 import ProjectChatOnWhatsApp from "../Components/ProjectChatOnWhatsApp.jsx";
 import SimilarProject from "../../Components/SimilarProject.jsx";
@@ -33,13 +33,13 @@ const ProjectClientPage = ({ project }) => {
   //  Image navigation handlers
   const nextImage = () => {
     setCurrentImageIndex((prev) =>
-      prev === project.coverImages.length - 1 ? 0 : prev + 1
+      prev === project?.coverImages?.length - 1 ? 0 : prev + 1,
     );
   };
 
   const prevImage = () => {
     setCurrentImageIndex((prev) =>
-      prev === 0 ? project.coverImages.length - 1 : prev - 1
+      prev === 0 ? project?.coverImages?.length - 1 : prev - 1,
     );
   };
 
@@ -72,7 +72,10 @@ const ProjectClientPage = ({ project }) => {
                 <ProjectDescription project={project} />
 
                 {/* Layout Plans Section */}
-                <ProjectLayoutPlans project={project} setShowFullForm={setShowFullForm} />
+                <ProjectLayoutPlans
+                  project={project}
+                  setShowFullForm={setShowFullForm}
+                />
               </>
             )}
 
@@ -88,17 +91,13 @@ const ProjectClientPage = ({ project }) => {
             {/* Gallery Tab Content */}
             {activeTab === "gallery" && (
               <ProjectGallery
-                galleryImages={project.galleryImages}
+                galleryImages={project?.galleryImages}
                 openImageExpanded={openImageExpanded}
               />
             )}
 
             {/* Location Tab Content */}
-            {activeTab === "location" && (
-              <ProjectLocation
-                project={project}
-              />
-            )}
+            {activeTab === "location" && <ProjectLocation project={project} />}
 
             {/* Project Specifications Table Tab */}
             {activeTab === "specifications" && (
@@ -107,8 +106,8 @@ const ProjectClientPage = ({ project }) => {
                   <div>
                     <h3 className="text-lg font-medium mb-6 text-gray-900">
                       <ProjectSpecificationTable
-                        specifications={project.projectSpecification}
-                        status={project.status}
+                        specifications={project?.projectSpecification}
+                        status={project?.status}
                       />
                     </h3>
                   </div>
@@ -120,11 +119,11 @@ const ProjectClientPage = ({ project }) => {
           {/* Right Column - Sidebar */}
           <div className="space-y-8">
             {/* Brochure Download Card */}
-           
+
             <ProjectBrochure
               project={project}
               setShowFullForm={setShowFullForm}
-            /> 
+            />
 
             {/* Enquire now */}
             <ProjectInquiryCard setShowFullForm={setShowFullForm} />
@@ -138,24 +137,23 @@ const ProjectClientPage = ({ project }) => {
         </div>
 
         {/* <SimilarProject /> */}
-        <SimilarProject id={project._id} />
-
+        <SimilarProject id={project?._id} />
       </div>
 
-     {showFullForm && (
-      <PropertyEnquiryForm
-        isOpen={showFullForm}
-        onClose={() => {
-          setShowFullForm(false);
-          setFormSubmitted(false); // Reset
-        }}
-        projectId={project._id}
-        projectName={project.projectName}
-        onSubmitSuccess={() => setFormSubmitted(true)}
-        onSubmitError={(msg) => console.error("Enquiry Error:", msg)}
-        formSubmitted={formSubmitted}
-      />
-    )}
+      {showFullForm && (
+        <PropertyEnquiryForm
+          isOpen={showFullForm}
+          onClose={() => {
+            setShowFullForm(false);
+            setFormSubmitted(false); // Reset
+          }}
+          projectId={project._id}
+          projectName={project.projectName}
+          onSubmitSuccess={() => setFormSubmitted(true)}
+          onSubmitError={(msg) => console.error("Enquiry Error:", msg)}
+          formSubmitted={formSubmitted}
+        />
+      )}
 
       {/* Expanded Image Modal */}
       {expandedImage && (

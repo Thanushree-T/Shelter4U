@@ -1,17 +1,19 @@
-// app/about/loan/page.jsx
+import { models } from "@/lib/connections.js";
+import { serializeMongo } from "@/lib/utils";
+
 import LoansForNrisClient from "./LoansForNrisClient";
 
-export const dynamic = 'force-dynamic';
+const { LoanForNRI } = models;
+
+// Static CMS content — revalidate every 24 hours (ISR)
+export const revalidate = 86400;
 
 export default async function LoansForNrisPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-  const res = await fetch(`${baseUrl}/api/others/loansForNRI`, { cache: 'no-store' });
+  const loanForNRI = await LoanForNRI.findOne().lean();
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch loan data");
+  if (!loanForNRI) {
+    throw new Error("Loan for NRI data not found");
   }
 
-  const data = await res.json();
-
-  return <LoansForNrisClient data={data.loanForNRI} />;
+  return <LoansForNrisClient data={serializeMongo(loanForNRI)} />;
 }

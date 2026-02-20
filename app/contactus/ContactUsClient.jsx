@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FaFacebookF, FaTwitter } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
 import { RiPhoneLine, RiMailLine, RiMapPinLine } from "react-icons/ri";
 
 import InquiryForm from "../Components/InquiryForm.jsx";
 
-export default function ContactUsPage() {
-  // State to hold contact details fetched from the backend
-  const [contactUs, setContactUs] = useState({
+// data is fetched server-side in page.jsx (SSG) and passed as a prop
+export default function ContactUsPage({ data }) {
+  const contactUs = data || {
     address: "",
     mail: [],
     contact: [],
@@ -17,7 +17,7 @@ export default function ContactUsPage() {
     twitterLink: "",
     instaLink: "",
     embedLink: "",
-  });
+  };
 
   // State to manage inquiry form data
   const [formData, setFormData] = useState({
@@ -31,24 +31,6 @@ export default function ContactUsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  // Use relative API path in dev if base URL is not provided
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-
-  // Fetch footer/contact data on component mount
-  useEffect(() => {
-    const fetchFooter = async () => {
-      try {
-        const res = await fetch(`${baseUrl}/api/footer`);
-        if (!res.ok) throw new Error("Failed to fetch footer data");
-        const data = await res.json();
-        setContactUs(data.footer || {});
-      } catch (err) {
-        console.error("Footer fetch failed:", err.message);
-      }
-    };
-
-    fetchFooter();
-  }, []);
 
   // Handle changes in input fields
   const handleChange = (e) => {
@@ -63,21 +45,19 @@ export default function ContactUsPage() {
     setSubmitError("");
 
     try {
-      const response = await fetch(
-        `${baseUrl}/api/inquiry`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...formData,
-            timestamp: new Date().toISOString(),
-          }),
-        }
-      );
+      const response = await fetch(`/api/inquiry`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          timestamp: new Date().toISOString(),
+        }),
+      });
 
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
 
       setSubmitSuccess(true);
       setFormData({ name: "", email: "", mobile: "", message: "" });
@@ -96,7 +76,8 @@ export default function ContactUsPage() {
         <div className="w-full md:w-1/2 md:pr-8">
           <p className="text-4xl font-bold text-gray-800 mb-4">Contact Us</p>
           <p className="text-gray-500 mb-8">
-            Feel free to contact us. We're ready to help you find your dream home.
+            Feel free to contact us. We're ready to help you find your dream
+            home.
           </p>
 
           {/* Contact Info Grid */}
@@ -109,7 +90,9 @@ export default function ContactUsPage() {
               <div>
                 <h4 className="font-semibold">Phone Number</h4>
                 {contactUs.contact.map((phone, i) => (
-                  <p key={i} className="text-sm text-gray-500">{phone}</p>
+                  <p key={i} className="text-sm text-gray-500">
+                    {phone}
+                  </p>
                 ))}
               </div>
             </div>
@@ -120,9 +103,13 @@ export default function ContactUsPage() {
                 <RiMailLine />
               </div>
               <div className="flex-1 min-w-[200px]">
-                <h4 className="font-semibold text-base md:text-lg">Email Address</h4>
+                <h4 className="font-semibold text-base md:text-lg">
+                  Email Address
+                </h4>
                 {contactUs.mail.map((email, i) => (
-                  <p key={i} className="text-sm text-gray-500 break-all">{email}</p>
+                  <p key={i} className="text-sm text-gray-500 break-all">
+                    {email}
+                  </p>
                 ))}
               </div>
             </div>
@@ -145,20 +132,32 @@ export default function ContactUsPage() {
           <div className="flex items-center text-2xl gap-4 flex-wrap">
             <p className="font-semibold">Social Media</p>
             {contactUs.facebookLink && (
-              <a href={contactUs.facebookLink} target="_blank" rel="noopener noreferrer"
-                 className="bg-red-100 text-red-600 text-xl p-3 rounded-md">
+              <a
+                href={contactUs.facebookLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-red-100 text-red-600 text-xl p-3 rounded-md"
+              >
                 <FaFacebookF />
               </a>
             )}
             {contactUs.twitterLink && (
-              <a href={contactUs.twitterLink} target="_blank" rel="noopener noreferrer"
-                 className="bg-red-100 text-red-600 text-xl p-3 rounded-md">
+              <a
+                href={contactUs.twitterLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-red-100 text-red-600 text-xl p-3 rounded-md"
+              >
                 <FaTwitter />
               </a>
             )}
             {contactUs.instaLink && (
-              <a href={contactUs.instaLink} target="_blank" rel="noopener noreferrer"
-                 className="bg-red-100 text-red-600 text-xl p-3 rounded-md">
+              <a
+                href={contactUs.instaLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-red-100 text-red-600 text-xl p-3 rounded-md"
+              >
                 <FaInstagram />
               </a>
             )}
@@ -181,7 +180,7 @@ export default function ContactUsPage() {
       </div>
 
       {/* Google Map Embed (optional) */}
-      {contactUs.embedLink && (
+      {contactUs.embedLink && contactUs.embedLink.trim() !== "" && (
         <div className="w-full mt-8">
           <iframe
             src={contactUs.embedLink}

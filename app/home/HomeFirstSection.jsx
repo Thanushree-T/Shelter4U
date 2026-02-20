@@ -6,18 +6,19 @@ import { HiLocationMarker } from "react-icons/hi";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import { Dropdown } from "primereact/dropdown";
-import '../project-page/style.css';
+import Image from "next/image";
+import "../project-page/style.css";
 
 /**
  * HomeFirstSection Component
- * 
+ *
  * A comprehensive hero section component for a real estate website that includes:
  * - Animated typing text display
  * - Search functionality with autocomplete
  * - Background image overlay
  * - Statistical counters
  * - Responsive design
- * 
+ *
  * @param {Object} data - Configuration object containing:
  *   - firstLine: First line of animated text
  *   - secondLine: Second line of animated text
@@ -26,19 +27,18 @@ import '../project-page/style.css';
  *   - paragraphTwo: Second descriptive paragraph
  *   - counts: Array of statistical data for counters
  */
-function HomeFirstSection( { data } ) {
+function HomeFirstSection({ data }) {
   // Next.js router for navigation
   const router = useRouter();
-  
+
   // State for search functionality
   const [location, setLocation] = useState(""); // User input for location search
   const [cities, setCities] = useState([]); // Array of available cities
   const [selectedCity, setSelectedCity] = useState(null); // Selected city from dropdown
   const [isClient, setIsClient] = useState(false); // Client-side rendering flag for hydration
-  
-  // Base URL for API calls from environment variables (fallback to relative in dev)
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-  
+  const [locationStatus, setLocationStatus] = useState(""); // Status message for geolocation
+  const [showLocationBanner, setShowLocationBanner] = useState(false); // Controls the location permission banner
+
   // State for search autocomplete suggestions
   const [suggestions, setSuggestions] = useState({
     value: "", // Current search value
@@ -62,28 +62,43 @@ function HomeFirstSection( { data } ) {
    */
   useEffect(() => {
     setIsClient(true);
+    // Show the banner only if geolocation permission hasn't been granted yet
+    if (typeof window !== "undefined" && navigator.permissions) {
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then((result) => {
+          if (result.state === "prompt") {
+            setShowLocationBanner(true);
+          }
+        })
+        .catch(() => {
+          setShowLocationBanner(true); // show by default if permissions API fails
+        });
+    } else if (typeof window !== "undefined") {
+      setShowLocationBanner(true);
+    }
   }, []);
 
   /**
    * Handle search form submission
    * Constructs URL parameters and navigates to search results page
-   * 
+   *
    * @param {Event} e - Form submission event
    */
   const handleSearch = (e) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    
+
     // Add location parameter if provided
     if (location && location.trim()) {
       params.set("q", location.trim());
     }
-    
+
     // Add city parameter if selected and not "All Cities"
     if (selectedCity && selectedCity !== "All Cities") {
       params.set("city", selectedCity);
     }
-    
+
     // Navigate to search results page with parameters
     router.push(`/search?${params.toString()}`);
   };
@@ -99,24 +114,24 @@ function HomeFirstSection( { data } ) {
   useEffect(() => {
     // Guard clause: don't run if data isn't available
     if (!firstLine || !secondLine) return;
-    
+
     const handleTyping = () => {
       // Typing first line
       if (currentIndex < firstLine.length) {
         setDisplayText((prevText) => prevText + firstLine[currentIndex]);
         setCurrentIndex((prevIndex) => prevIndex + 1);
-      } 
+      }
       // Add line break after first line
       else if (currentIndex === firstLine.length) {
         setDisplayText((prevText) => prevText + "\n");
         setCurrentIndex((prevIndex) => prevIndex + 1);
-      } 
+      }
       // Typing second line
       else if (currentIndex < firstLine.length + secondLine.length + 1) {
         const secondLineIndex = currentIndex - firstLine.length - 1;
         setDisplayText((prevText) => prevText + secondLine[secondLineIndex]);
         setCurrentIndex((prevIndex) => prevIndex + 1);
-      } 
+      }
       // Typing complete - reset after delay
       else {
         setTypingComplete(true);
@@ -141,56 +156,142 @@ function HomeFirstSection( { data } ) {
    */
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (searchLocationRef.current && !searchLocationRef.current.contains(event.target)) {
+      if (
+        searchLocationRef.current &&
+        !searchLocationRef.current.contains(event.target)
+      ) {
         setSuggestions({ value: "", areas: [], projects: [], cities: [] });
       }
     };
-    
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Effect to fetch cities from API
+  // Effect to fetch cities from API and then auto-detect current city via geolocation
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const response = await fetch(`${baseUrl}/api/city`);
+        const response = await fetch(`/api/city`);
         let citiesData = await response.json();
-        citiesData.unshift({"name":"All Cities"}); // Add "All Cities" option at the beginning
+        citiesData?.unshift({ name: "All Cities" }); // Add "All Cities" option at the beginning
         setCities(citiesData);
+        return citiesData; // return so geolocation can match against it
       } catch (error) {
         console.error("Error fetching cities:", error);
-        setCities([]); // Set empty array on error
+        setCities([]);
+        return [];
       }
     };
-    
-    fetchCities();
-  }, [baseUrl]);
+
+    const detectCity = async (citiesData) => {
+      if (!navigator.geolocation) return;
+
+      // setLocationStatus("Detecting your city…");
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            const { latitude, longitude } = position.coords;
+            // Reverse-geocode using OpenStreetMap Nominatim (free, no API key)
+            const res = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
+              { headers: { "Accept-Language": "en" } },
+            );
+            const geo = await res.json();
+            // For Indian addresses Nominatim puts the city in state_district
+            // (e.g. "Ahmedabad"), while county is taluka-level ("Ghatlodiya Taluka").
+            // Priority: city → state_district → town → county
+            const detectedCity =
+              geo?.address?.city ||
+              geo?.address?.state_district ||
+              geo?.address?.town ||
+              geo?.address?.county ||
+              null;
+
+            if (detectedCity) {
+              // Try to find a case-insensitive match in the fetched cities list
+              const match = citiesData.find(
+                (c) =>
+                  c.name && c.name.toLowerCase() === detectedCity.toLowerCase(),
+              );
+              if (match) {
+                setSelectedCity(match.name);
+                // setLocationStatus(`${match.name} detected!`);
+                setShowLocationBanner(false);
+              } else {
+                setLocationStatus(""); // no match — leave dropdown on "All Cities"
+              }
+            } else {
+              setLocationStatus("");
+            }
+          } catch {
+            setLocationStatus(""); // silent fail
+          }
+        },
+        () => {
+          // User denied or error — silent fail, dropdown stays on "All Cities"
+          setLocationStatus("");
+          setShowLocationBanner(false);
+        },
+        { timeout: 8000 },
+      );
+    };
+
+    fetchCities().then(detectCity);
+  }, []);
 
   return (
     <div className="overflow-x-hidden">
+      {/* Location permission banner */}
+      {/* {showLocationBanner && (
+        <div className="w-full bg-blue-600 text-white px-4 py-3 flex items-center justify-between gap-3 z-50">
+          <div className="flex items-center gap-3">
+            <HiLocationMarker className="text-xl flex-shrink-0" />
+            <div>
+              <p className="font-semibold text-sm sm:text-base">
+                To continue, we need access to your location.
+              </p>
+              <p className="text-xs sm:text-sm text-blue-100">
+                Location access helps provide accurate services. Please click
+                &ldquo;Allow&rdquo; when your browser asks for permission.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowLocationBanner(false)}
+            aria-label="Dismiss location banner"
+            className="flex-shrink-0 text-white/80 hover:text-white text-xl leading-none"
+          >
+            &times;
+          </button>
+        </div>
+      )} */}
+
       {/* Main hero section container */}
       <div className="relative lg:static lg:min-h-[100vh]">
-        
-        {/* Background image with overlay */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('${data?.img}')`,
-            backgroundPosition: "center bottom",
-          }}
-        >
-          {/* Gradient overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/80"></div>
-        </div>
+        {/* Background image — Next.js <Image priority> preloads at SSG time, no blink */}
+        {data?.img && (
+          <div className="absolute inset-0">
+            <Image
+              src={data.img}
+              alt="Hero background"
+              fill
+              priority
+              quality={85}
+              className="object-cover object-bottom"
+              sizes="100vw"
+            />
+            {/* Gradient overlay for better text readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/80" />
+          </div>
+        )}
 
         {/* Main content area with increased padding bottom for more space */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-48 relative z-10">
           <div className="grid lg:grid-cols-2 gap-8 items-start">
-            
             {/* Left content section */}
             <div className="space-y-8 lg:mt-0">
-              
               {/* Animated typing text container with fixed height to prevent layout shifts */}
               <div className="min-h-[80px] sm:min-h-[150px] md:min-h-[150px]">
                 <h1 className="text-2xl sm:text-5xl md:text-5xl lg:text-5xl font-bold text-gray-700 leading-tight whitespace-pre-line">
@@ -200,7 +301,7 @@ function HomeFirstSection( { data } ) {
                   <span className="typing-cursor inline-block w-[1ch]">|</span>
                 </h1>
               </div>
-              
+
               {/* Descriptive paragraphs with glass morphism effect */}
               <div className="space-y-6 max-w-xl">
                 {data?.paragraphOne && (
@@ -218,37 +319,49 @@ function HomeFirstSection( { data } ) {
 
             {/* Right content - Search card with sticky positioning on large screens */}
             <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 w-full lg:sticky lg:top-20">
-              
               {/* Search card header */}
               <div className="flex items-center justify-between mb-4 sm:mb-6">
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
                   Search
                 </h3>
               </div>
-              
+
               {/* Search form */}
-              <form
-                onSubmit={handleSearch}
-                className="space-y-4 sm:space-y-6"
-              >
-                
+              <form onSubmit={handleSearch} className="space-y-4 sm:space-y-6">
                 {/* City selection dropdown */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                    City
-                  </label>
-                  <Dropdown
-                    className="w-full border border-gray-300 rounded-lg text-sm sm:text-base p-dropdown-input-text:py-2 sm:p-dropdown-input-text:py-3"
-                    value={selectedCity? selectedCity : "All Cities"}
-                    onChange={(e) => setSelectedCity(e.value)}
-                    options={cities.map((c) => ({
-                      label: c.name,
-                      value: c.name
-                    }))}
-                    placeholder="Select City"
-                    checkmark={true}
-                    highlightOnSelect={false}
-                  />
+                  <div className="flex items-center justify-between mb-1 sm:mb-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      City
+                    </label>
+                    {/* Geolocation status badge */}
+                    {locationStatus && (
+                      <span className="text-xs text-blue-600 flex items-center gap-1">
+                        <HiLocationMarker className="inline" />
+                        {locationStatus}
+                      </span>
+                    )}
+                  </div>
+                  {/* Only render Dropdown after cities are fetched to prevent hydration flash */}
+                  {isClient && cities.length > 0 ? (
+                    <Dropdown
+                      className="w-full border border-gray-300 rounded-lg text-sm sm:text-base p-dropdown-input-text:py-2 sm:p-dropdown-input-text:py-3"
+                      value={selectedCity ? selectedCity : "All Cities"}
+                      onChange={(e) => setSelectedCity(e.value)}
+                      options={cities.map((c) => ({
+                        label: c.name,
+                        value: c.name,
+                      }))}
+                      placeholder="Select City"
+                      checkmark={true}
+                      highlightOnSelect={false}
+                    />
+                  ) : (
+                    /* Skeleton placeholder while cities load */
+                    <div className="w-full border border-gray-300 rounded-lg py-2 sm:py-3 px-3 bg-gray-50 text-gray-400 text-sm sm:text-base animate-pulse">
+                      All Cities
+                    </div>
+                  )}
                 </div>
 
                 {/* Location input with autocomplete functionality */}
@@ -259,7 +372,7 @@ function HomeFirstSection( { data } ) {
                   <div className="relative">
                     {/* Location marker icon */}
                     <HiLocationMarker className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg sm:text-xl" />
-                    
+
                     {/* Location input field */}
                     <input
                       type="text"
@@ -282,7 +395,7 @@ function HomeFirstSection( { data } ) {
                         // Fetch autocomplete suggestions from API
                         try {
                           const res = await fetch(
-                            `${baseUrl}/api/search/autocomplete?q=${value}`
+                            `/api/search/autocomplete?q=${value}`,
                           );
                           const data = await res.json();
                           setSuggestions({ ...data, value: value });
@@ -300,14 +413,13 @@ function HomeFirstSection( { data } ) {
                       placeholder="Enter your desired location"
                     />
                   </div>
-                  
+
                   {/* Autocomplete suggestions dropdown */}
                   {((suggestions.areas && suggestions.areas.length > 0) ||
                     (suggestions.projects && suggestions.projects.length > 0) ||
                     (suggestions.cities && suggestions.cities.length > 0) ||
                     suggestions.value) && (
                     <div className="absolute top-full mt-1 sm:mt-2 w-full bg-white shadow-lg rounded-md z-50 max-h-60 sm:max-h-64 overflow-y-auto border border-gray-200">
-                      
                       {/* General search option */}
                       {suggestions.value && (
                         <div
@@ -315,7 +427,7 @@ function HomeFirstSection( { data } ) {
                           onClick={() => {
                             const params = new URLSearchParams();
                             params.set("q", suggestions.value);
-                            if (selectedCity && selectedCity !== "All Cities") {  
+                            if (selectedCity && selectedCity !== "All Cities") {
                               params.set("city", selectedCity);
                             }
                             router.push(`/search?${params.toString()}`);
@@ -330,7 +442,7 @@ function HomeFirstSection( { data } ) {
                           Search for "{suggestions.value}"
                         </div>
                       )}
-                      
+
                       {/* Areas suggestions section */}
                       {suggestions.areas.length > 0 && (
                         <>
@@ -343,7 +455,10 @@ function HomeFirstSection( { data } ) {
                               onClick={() => {
                                 const params = new URLSearchParams();
                                 params.set("area", area.name);
-                                if (selectedCity && selectedCity !== "All Cities") {
+                                if (
+                                  selectedCity &&
+                                  selectedCity !== "All Cities"
+                                ) {
                                   params.set("city", selectedCity);
                                 }
                                 router.push(`/search?${params.toString()}`);
@@ -361,7 +476,7 @@ function HomeFirstSection( { data } ) {
                           ))}
                         </>
                       )}
-                      
+
                       {/* Cities suggestions section */}
                       {suggestions.cities.length > 0 && (
                         <>
@@ -389,7 +504,7 @@ function HomeFirstSection( { data } ) {
                           ))}
                         </>
                       )}
-                      
+
                       {/* Projects suggestions section */}
                       {suggestions.projects.length > 0 && (
                         <>
@@ -443,15 +558,15 @@ function HomeFirstSection( { data } ) {
                   <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
                     {/* Use CountUp animation only on client side to prevent hydration issues */}
                     {isClient ? (
-                        <CountUp
+                      <CountUp
                         start={item.start || 0} // Starting number (default 0)
                         end={item.end} // Ending number
                         duration={item.duration || 2.5} // Animation duration (default 2.5s)
                         separator="," // Thousands separator
                         useEasing={true} // Smooth easing animation
-                        />
+                      />
                     ) : (
-                        item.end // Show final number immediately on server-side
+                      item.end // Show final number immediately on server-side
                     )}
                     <span className="text-white">+</span>
                   </h3>
@@ -496,7 +611,7 @@ function HomeFirstSection( { data } ) {
             line-height: 1.4;
           }
         }
-        
+
         /* Extra small screen adjustments */
         @media (max-width: 420px) {
           .text-2xl.sm\:text-3xl.md\:text-4xl.lg\:text-5xl {
@@ -513,7 +628,7 @@ function HomeFirstSection( { data } ) {
           padding-top: 0.5rem; /* Corresponds to py-2 */
           padding-bottom: 0.5rem; /* Corresponds to py-2 */
         }
-        
+
         /* Responsive padding for dropdown on larger screens */
         @media (min-width: 640px) {
           :global(.p-dropdown .p-dropdown-label) {

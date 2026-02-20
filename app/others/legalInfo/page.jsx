@@ -1,16 +1,19 @@
-// app/about/legal/page.jsx
+import { models } from "@/lib/connections.js";
+import { serializeMongo } from "@/lib/utils";
+
 import LegalInformationClient from "./LegalInformationClient.jsx";
 
-export const dynamic = 'force-dynamic';
+const { LegalInformation } = models;
+
+// Static CMS content — revalidate every 24 hours (ISR)
+export const revalidate = 86400;
 
 export default async function LegalPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-  const res = await fetch(`${baseUrl}/api/others/LegalInfo`, { cache: 'no-store' });
+  const legalInformation = await LegalInformation.findOne().lean();
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch legal information");
+  if (!legalInformation) {
+    throw new Error("Legal information not found");
   }
 
-  const data = await res.json();
-  return <LegalInformationClient data={data.legalInformation} />;
+  return <LegalInformationClient data={serializeMongo(legalInformation)} />;
 }

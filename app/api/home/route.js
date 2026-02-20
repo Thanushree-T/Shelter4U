@@ -6,16 +6,24 @@ const {
   HomeSecondSection,
   HomeThirdSection,
   HomeFourthSection,
-  HomeFifthSection
+  HomeFifthSection,
 } = models;
 
 export async function GET() {
   try {
-    const HomeFirstSectionData = await HomeFirstSection.find();
-    const HomeSecondSectionData = await HomeSecondSection.find();
-    const HomeThirdSectionData = await HomeThirdSection.find();
-    const HomeFourthSectionData = await HomeFourthSection.find();
-    const HomeFifthSectionData = await HomeFifthSection.find();
+    const [
+      HomeFirstSectionData,
+      HomeSecondSectionData,
+      HomeThirdSectionData,
+      HomeFourthSectionData,
+      HomeFifthSectionData,
+    ] = await Promise.all([
+      HomeFirstSection.find().lean(),
+      HomeSecondSection.find().lean(),
+      HomeThirdSection.find().lean(),
+      HomeFourthSection.find().lean(),
+      HomeFifthSection.find().lean(),
+    ]);
 
     const finalData = {
       HomeFirstSectionData,
@@ -23,15 +31,14 @@ export async function GET() {
       HomeThirdSectionData,
       HomeFourthSectionData,
       HomeFifthSectionData,
-    };    
+    };
 
     return NextResponse.json({ success: true, finalData }, { status: 200 });
   } catch (error) {
     console.error("Error fetching home sections:", error);
     return NextResponse.json(
       { success: false, error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-

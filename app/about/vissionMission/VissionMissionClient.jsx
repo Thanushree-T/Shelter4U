@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { Lock } from "lucide-react"; // Lock icon used in header section
-import { motion } from "framer-motion"; // Animation for smooth appearance
+import { Lock } from "lucide-react";
 
 export default function VisionMissionClient({ data }) {
   // Fallback if no data is provided
@@ -19,12 +18,7 @@ export default function VisionMissionClient({ data }) {
 
   return (
     // Animated wrapper for initial transition
-    <motion.div
-      initial={{ opacity: 0, y: -50 }} // Starting opacity and vertical offset
-      animate={{ opacity: 1, y: 0 }}   // Final animation state
-      transition={{ duration: 0.5 }}   // Duration of animation
-      className="min-h-screen bg-gray-100 flex flex-col items-center"
-    >
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
       {/* Hero Header Section */}
       <div className="w-[80%] h-[30vh] bg-gradient-to-r from-gray-900 to-black py-6 text-center flex flex-col justify-center mt-10 rounded-3xl">
         <div className="flex justify-center mb-4">
@@ -48,7 +42,9 @@ export default function VisionMissionClient({ data }) {
 
             {/* Optional vision/mission statements */}
             {section.visionMissionText?.map((text, tIdx) => (
-              <p key={tIdx} className="text-xl font-semibold text-navy-blue">{text}</p>
+              <p key={tIdx} className="text-xl font-semibold text-navy-blue">
+                {text}
+              </p>
             ))}
 
             {/* Filter and render non-empty paragraphs */}
@@ -83,6 +79,6 @@ export default function VisionMissionClient({ data }) {
           </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 }

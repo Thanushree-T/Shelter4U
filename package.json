@@ -6,14 +6,16 @@
     "node": ">=18.17.0"
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider next dev",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider next build",
+    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider next start",
+    "lint": "next lint",
+    "postbuild": "node scripts/fetch-dynamic-paths.mjs && next-sitemap"
   },
   "dependencies": {
     "axios": "^1.10.0",
     "cloudinary": "^2.7.0",
+    "clsx": "^2.1.1",
     "dotenv": "^16.5.0",
     "emailjs-com": "^3.2.0",
     "express": "^5.1.0",
@@ -22,6 +24,8 @@
     "lucide-react": "^0.522.0",
     "mongoose": "^8.16.0",
     "next": "^15.5.12",
+    "next-sitemap": "^4.2.3",
+    "nextjs-toploader": "^3.9.17",
     "nodemailer": "^7.0.3",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.6",
@@ -30,13 +34,15 @@
     "react-dom": "^19.0.0",
     "react-fast-marquee": "^1.6.5",
     "react-icons": "^5.5.0",
+    "tailwind-merge": "^3.4.1",
     "vercel": "^32.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.4",
+    "cross-env": "^10.1.0",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^0.2.4",
     "tailwindcss": "^4"
   }
 }

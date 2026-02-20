@@ -29,11 +29,11 @@ const ProjectHeroSlider = ({
         {/* Display current image or fallback */}
         <img
           src={
-            project.coverImages[currentImageIndex]?.url ||
+            project?.coverImages[currentImageIndex]?.url ||
             "https://placehold.co/600x400?text=Coming+Soon"
           }
           alt={
-            project.coverImages[currentImageIndex]?.description ||
+            project?.coverImages[currentImageIndex]?.description ||
             "Expanded Image"
           }
           className="w-full h-full object-cover transition-opacity duration-500"
@@ -60,7 +60,7 @@ const ProjectHeroSlider = ({
 
         {/* Image indicators (dots) */}
         <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-2">
-          {project.coverImages.map((_, index) => (
+          {project?.coverImages?.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentImageIndex(index)}
@@ -78,7 +78,7 @@ const ProjectHeroSlider = ({
           <div className="max-w-2xl">
             {/* Display project type tags */}
             <div className="flex flex-wrap gap-2">
-              {Array.isArray(project.projectType) &&
+              {Array.isArray(project?.projectType) &&
                 project.projectType.map((type) => (
                   <span
                     key={type}
@@ -91,10 +91,10 @@ const ProjectHeroSlider = ({
 
             {/* Display possession status tags */}
             <div className="flex flex-wrap gap-2 mt-2">
-              {Array.isArray(project.projectSpecification) &&
+              {Array.isArray(project?.projectSpecification) &&
                 [
                   ...new Set(
-                    project.projectSpecification.map((spec) => spec.status)
+                    project?.projectSpecification?.map((spec) => spec.status),
                   ),
                 ].map((status) => (
                   <span
@@ -108,15 +108,17 @@ const ProjectHeroSlider = ({
 
             {/* Project name */}
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 leading-tight tracking-tight">
-              {project.projectName}
+              {project?.projectName}
             </h1>
 
             {/* Price display */}
             <div className="text-lg sm:text-xl font-bold text-white mb-1">
-              {Array.isArray(project.projectSpecification) &&
-              project.projectSpecification.length > 0 ? (
+              {Array.isArray(project?.projectSpecification) &&
+              project?.projectSpecification?.length > 0 ? (
                 <>
-                  {formatToIndianUnits(project.projectSpecification[0]?.price)}{" "}
+                  {formatToIndianUnits(
+                    project?.projectSpecification[0]?.price,
+                  )}{" "}
                 </>
               ) : (
                 <p className="text-sm font-medium text-gray-300">On Request</p>
@@ -127,7 +129,7 @@ const ProjectHeroSlider = ({
             <div className="flex items-center text-white/90">
               <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2" strokeWidth={2} />
               <span className="text-sm sm:text-base">
-                {project.area?.name}, {project.city?.name}
+                {project?.area?.name}, {project?.city?.name}
               </span>
             </div>
           </div>

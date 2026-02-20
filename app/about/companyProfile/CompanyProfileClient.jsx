@@ -1,20 +1,12 @@
-'use client';
+"use client";
 
-// Import Lock icon from lucide-react for header visual
-import { Lock } from 'lucide-react';
-// Import motion from framer-motion for entrance animation
-import { motion } from 'framer-motion';
+import { Lock } from "lucide-react";
 
 // Main component to render company profile sections with animation
 const CompanyProfileClient = ({ data }) => {
   return (
     // Animated container with slide-in effect
-    <motion.div
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gray-100 flex flex-col items-center"
-    >
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
       {/* Hero section with gradient background and centered content */}
       <div className="w-[80%] h-[30vh] bg-gradient-to-r from-gray-900 to-black py-6 text-center flex flex-col justify-center mt-10 rounded-4xl">
         <div className="flex justify-center mb-4">
@@ -24,7 +16,7 @@ const CompanyProfileClient = ({ data }) => {
           </div>
         </div>
         {/* Hero heading text */}
-        <p className="text-2xl font-bold text-white">{data.hero.heading}</p>
+        <p className="text-2xl font-bold text-white">{data?.hero?.heading}</p>
       </div>
 
       {/* Content body with sections */}
@@ -32,7 +24,9 @@ const CompanyProfileClient = ({ data }) => {
         {data.sections.map((section, idx) => (
           <div key={idx} className="mb-10">
             {/* Section title */}
-            <p className="text-3xl font-bold text-navy-blue mb-6">{section.title}</p>
+            <p className="text-3xl font-bold text-navy-blue mb-6">
+              {section.title}
+            </p>
 
             {/* Paragraph and bullet containers */}
             <div className="space-y-4 text-gray-700 leading-relaxed">
@@ -69,7 +63,7 @@ const CompanyProfileClient = ({ data }) => {
           </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 };
 

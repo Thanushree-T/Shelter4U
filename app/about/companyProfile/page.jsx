@@ -1,20 +1,12 @@
-import CompanyProfileClient from './CompanyProfileClient';
+import { models } from "@/lib/connections.js";
+import { serializeMongo } from "@/lib/utils";
 
-export const dynamic = 'force-dynamic';
+import CompanyProfileClient from "./CompanyProfileClient";
 
-export default async function CompanyProfilePage() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+// Company profile is CMS content — revalidate every 24 hours (ISR)
+export const revalidate = 86400;
 
-  const res = await fetch(`${baseUrl}/api/about/companyProfile`, { cache: 'no-store' });
-
-
-  if (!res.ok) {
-      throw new Error('Failed to fetch company profile');
-  }
-  const data = await res.json();
-
-  return <CompanyProfileClient data={data.companyProfile} />;
-}
+const { CompanyProfile } = models;
 
 export const generateMetadata = () => ({
   title: "Company Profile | Shelter4U",
@@ -28,7 +20,7 @@ export const generateMetadata = () => ({
     "trusted property dealers Pune",
     "affordable housing Mumbai",
     "real estate platform Gandhinagar",
-    "buy property online India",  
+    "buy property online India",
   ],
   openGraph: {
     title: "Company Profile | Shelter4U",
@@ -36,12 +28,7 @@ export const generateMetadata = () => ({
       "Know more about Shelter4U's mission and services. We bring you verified, affordable, and zero brokerage properties.",
     url: "https://shelter4u.in/about/companyProfile",
     images: [
-      {
-        url: "/logo.png", 
-        width: 1200,
-        height: 630,
-        alt: "Shelter4U Logo",
-      },
+      { url: "/logo.png", width: 1200, height: 630, alt: "Shelter4U Logo" },
     ],
   },
   twitter: {
@@ -51,16 +38,16 @@ export const generateMetadata = () => ({
       "Discover Shelter4U, a real estate platform focused on zero brokerage housing solutions in major Indian cities.",
     images: ["/logo.png"],
   },
-  alternates: {
-    canonical: "https://shelter4u.in/about/companyProfile",
-  },
-  robots: {
-      index: true,      
-      follow: true,      
-      nocache: false,    
-  },
-
+  alternates: { canonical: "https://shelter4u.in/about/companyProfile" },
+  robots: { index: true, follow: true, nocache: false },
 });
 
-
-
+export default async function CompanyProfilePage() {
+  try {
+    const companyProfile = await CompanyProfile.findOne().lean();
+    return <CompanyProfileClient data={serializeMongo(companyProfile)} />;
+  } catch (error) {
+    console.error("Error fetching company profile:", error);
+    return <CompanyProfileClient data={null} />;
+  }
+}
