@@ -48,8 +48,13 @@ const SearchPageClient = ({ initialProjects = [] }) => {
     city: searchParams.get("city") || "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchRef = useRef(null);
+  const loader = useRef(null);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -117,9 +122,100 @@ const SearchPageClient = ({ initialProjects = [] }) => {
   }, [filters.minBudget]);
   // *** END OF LOGIC ***
 
+  const fetchProjects = async (params, isLoadMore = false) => {
+    if (isLoadMore) {
+      setLoadingMore(true);
+    } else {
+      setLoading(true);
+    }
+
+    try {
+      const response = await fetch(`/api/search?${params.toString()}`);
+      if (!response.ok) throw new Error("Failed to fetch projects");
+      const data = await response.json();
+
+      if (isLoadMore) {
+        setProjects((prev) => [...prev, ...data.projects]);
+      } else {
+        setProjects(data.projects);
+      }
+      setHasMore(data.hasMore);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    } finally {
+      if (isLoadMore) {
+        setLoadingMore(false);
+      } else {
+        setLoading(false);
+      }
+    }
+  };
+
   useEffect(() => {
     setProjects(initialProjects);
   }, [initialProjects]);
+
+  // Sync state with URL params (e.g. when navigating via Header links)
+  useEffect(() => {
+    const newFilters = {
+      projectType: searchParams.get("projectType") || "",
+      status: searchParams.get("status") || "",
+      minBudget: searchParams.get("minBudget") || "",
+      maxBudget: searchParams.get("maxBudget") || "",
+      unitType: searchParams.get("unitType") || "",
+      city: searchParams.get("city") || "",
+    };
+    setFilters(newFilters);
+    setSearchQuery(searchParams.get("q") || "");
+
+    // Only fetch if we are on the client and not on initial render (where initialProjects covers us)
+    // However, in Next.js, searchParams change on navigation.
+    // If initialProjects changes, the first useEffect handles it.
+    // If searchParams change WITHOUT page reload (client navigation), we fetch.
+    if (isClient) {
+      setPage(1);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", "1");
+      params.set("limit", "12");
+      fetchProjects(params);
+    }
+  }, [searchParams, isClient]);
+
+  // Load more when page changes
+  useEffect(() => {
+    if (page > 1 && isClient) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", page.toString());
+      params.set("limit", "12");
+      fetchProjects(params, true);
+    }
+  }, [page, isClient]);
+
+  // Intersection Observer for Infinite Scroll
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: "20px",
+      threshold: 1.0,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      const target = entries[0];
+      if (target.isIntersecting && hasMore && !loading && !loadingMore) {
+        setPage((prev) => prev + 1);
+      }
+    }, options);
+
+    if (loader.current) {
+      observer.observe(loader.current);
+    }
+
+    return () => {
+      if (loader.current) {
+        observer.unobserve(loader.current);
+      }
+    };
+  }, [hasMore, loading, loadingMore]);
 
   const buildQueryString = (newValues) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -410,13 +506,16 @@ const SearchPageClient = ({ initialProjects = [] }) => {
         </form>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects && projects.length > 0 ? (
+          {loading ? (
+            /* Show skeletons while fetching */
+            [...Array(6)].map((_, i) => <CardSkeleton key={i} />)
+          ) : projects && projects.length > 0 ? (
             projects.map((project) => (
               <div
                 key={project._id}
                 className="bg-white rounded-xl shadow-lg transform hover:-translate-y-1 transition-transform duration-300"
               >
-                {isClient ? <Cards project={project} /> : <CardSkeleton />}
+                <Cards project={project} />
               </div>
             ))
           ) : (
@@ -429,6 +528,22 @@ const SearchPageClient = ({ initialProjects = [] }) => {
                 location.
               </p>
             </div>
+          )}
+        </div>
+
+        {/* Loader ref for intersection observer and loading state */}
+        <div ref={loader} className="mt-8 flex justify-center w-full">
+          {loadingMore && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+              {[...Array(3)].map((_, i) => (
+                <CardSkeleton key={`more-skeleton-${i}`} />
+              ))}
+            </div>
+          )}
+          {!hasMore && projects.length > 0 && (
+            <p className="text-gray-500 font-medium py-4">
+              You've seen all properties matching your search.
+            </p>
           )}
         </div>
       </div>

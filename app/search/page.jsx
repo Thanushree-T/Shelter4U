@@ -149,6 +149,7 @@ async function fetchInitialProjects(searchParams) {
     const projects = await Project.find(filters)
       .populate("builder area state city")
       .sort({ createdAt: -1 })
+      .limit(12)
       .lean();
 
     return projects;
