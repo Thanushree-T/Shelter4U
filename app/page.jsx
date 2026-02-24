@@ -83,7 +83,7 @@ export const metadata = {
       },
     ],
   },
-  alternates: { canonical: "https://shelter4u.in" },
+  alternates: { canonical: "/" },
 };
 
 // Main Home Page — all DB queries run in parallel, ISR (1 hour)

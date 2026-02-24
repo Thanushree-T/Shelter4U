@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import { Dropdown } from "primereact/dropdown";
 import Image from "next/image";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 import "../project-page/style.css";
 
 /**
@@ -274,7 +275,10 @@ function HomeFirstSection({ data }) {
         {data?.img && (
           <div className="absolute inset-0">
             <Image
-              src={data.img}
+              src={optimizeCloudinaryUrl(data.img, {
+                width: 1920,
+                height: 1080,
+              })}
               alt="Hero background"
               fill
               priority

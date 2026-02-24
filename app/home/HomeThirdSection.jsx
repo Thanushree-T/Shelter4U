@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion"; // For animations
 import Image from "next/image";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 import { MdOutlineArrowDropDown, MdChecklistRtl } from "react-icons/md";
 
 // Accordion component used to render multiple collapsible sections
@@ -76,7 +77,12 @@ export default function HomeThirdSection({ data }) {
           >
             <div className="w-full h-full flex items-center justify-center relative">
               <Image
-                src={data?.img || "/image.png"} // Fallback image
+                src={
+                  optimizeCloudinaryUrl(data?.img, {
+                    width: 700,
+                    height: 900,
+                  }) || "/image.png"
+                } // Fallback image
                 alt="company"
                 fill // Fill the container
                 className="object-cover"

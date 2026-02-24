@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 import {
   FiMapPin,
   FiGrid,
@@ -17,7 +19,7 @@ import {
 import { FaRupeeSign } from "react-icons/fa";
 import { useState } from "react";
 
-const Cards = ({ project }) => {
+const Cards = ({ project, priority = false }) => {
   const [unit, setUnit] = useState("");
 
   // Extract necessary fields from the project object
@@ -90,16 +92,23 @@ const Cards = ({ project }) => {
           {/* Image section with overlay */}
           <div className="relative h-60 w-full overflow-hidden group">
             <Link
-              href={`/project-page/${slug}`}
+              href={`/project-page/${encodeURIComponent(slug)}`}
               className="w-full h-full block"
             >
-              <img
+              <Image
                 src={
-                  coverImages[0]?.url ||
-                  "https://placehold.co/600x400?text=Coming+Soon"
+                  optimizeCloudinaryUrl(coverImages[0]?.url, {
+                    width: 600,
+                    height: 400,
+                  }) || "https://placehold.co/600x400?text=Coming+Soon"
                 }
                 alt={projectName}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                quality={75}
+                priority={priority}
+                loading={priority ? undefined : "lazy"}
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
               {/* Hover overlay for viewing details */}
               <div className="absolute inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center opacity-0 group-hover:opacity-70 transition-opacity duration-300">
@@ -202,7 +211,7 @@ const Cards = ({ project }) => {
           <div className="px-5 pb-5 pt-3">
             <div className="flex justify-between">
               <Link
-                href={`/project-page/${slug}`}
+                href={`/project-page/${encodeURIComponent(slug)}`}
                 className="text-red-600 text-sm font-medium flex items-center hover:text-red-800 transition-colors"
               >
                 <FiEye className="mr-1" /> View Details

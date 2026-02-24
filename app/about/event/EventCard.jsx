@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { X, Calendar, MapPin, Users, Camera } from "lucide-react";
+import Image from "next/image";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
-const EventCard = ({ event }) => {
+const EventCard = ({ event, priority = false }) => {
   const [showImages, setShowImages] = useState(false);
 
   // Optimize Cloudinary URL with transformations
-  const optimizeImageUrl = (url) => {
-    if (!url || !url.includes("cloudinary.com")) return url;
-    const parts = url.split("/upload/");
-    return `${parts[0]}/upload/w_600,h_400,c_fill,q_auto,f_auto/${parts[1]}`;
-  };
+  const optimizeImageUrl = (url) =>
+    optimizeCloudinaryUrl(url, { width: 600, height: 400 });
 
   // Fallback image - using a reliable source
   const fallbackImage = "https://placehold.co/600x400?text=Event+Image";
@@ -54,26 +53,35 @@ const EventCard = ({ event }) => {
 
       <div className="group relative max-w-xs">
         {/* Main Card */}
-        <div className="relative bg-gray-900 rounded-xl overflow-hidden border border-red-900 shadow-md transition-all duration-500 transform hover:-translate-y-2 border border-red-100/50">
-          
+        <div className="relative bg-gray-900 rounded-xl overflow-hidden border border-red-100/50 shadow-md transition-all duration-500 transform hover:-translate-y-2">
           {/* Image Container */}
           <div className="relative overflow-hidden">
             <div className="aspect-[4/3] relative">
-              <img
-                className={"w-full h-full object-cover transition-all duration-700 group-hover:scale-110"}
-                src={event.coverImage ? optimizeImageUrl(event.coverImage) : fallbackImage}
+              <Image
+                className={
+                  "object-cover transition-all duration-700 group-hover:scale-110"
+                }
+                src={
+                  event.coverImage
+                    ? optimizeImageUrl(event.coverImage)
+                    : fallbackImage
+                }
                 alt={event.title || "Event image"}
-                loading="lazy"
+                fill
+                sizes="(max-width: 640px) 90vw, 320px"
+                quality={75}
+                priority={priority}
+                loading={priority ? undefined : "lazy"}
               />
-              
+
               {/* Gradient Overlay */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
+
               {/* Photo Count Badge */}
               {event.images && event.images.length > 0 && (
                 <button
                   onClick={(e) => {
-                    console.log('Photo button clicked!'); // Debug log
+                    console.log("Photo button clicked!"); // Debug log
                     e.stopPropagation();
                     setShowImages(true);
                   }}
@@ -84,7 +92,6 @@ const EventCard = ({ event }) => {
                   View All Photos
                 </button>
               )}
-              
             </div>
           </div>
 
@@ -103,7 +110,7 @@ const EventCard = ({ event }) => {
         <div
           className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4 custom-fade-in"
           onClick={() => {
-            console.log('Modal backdrop clicked - closing modal');
+            console.log("Modal backdrop clicked - closing modal");
             setShowImages(false);
           }}
         >
@@ -115,16 +122,20 @@ const EventCard = ({ event }) => {
             <div className="bg-gray-900 px-8 py-6 text-white relative overflow-hidden">
               <button
                 onClick={() => {
-                  console.log('Close button clicked');
+                  console.log("Close button clicked");
                   setShowImages(false);
                 }}
                 className="cursor-pointer absolute top-6 right-6 text-white/80 hover:text-white hover:bg-white/20 p-2 rounded-full transition-all duration-200 z-10"
               >
                 <X className="h-6 w-6" />
               </button>
-              <h3 className="text-2xl font-bold pr-16">{event.title || "Event"} Gallery</h3>
-              <p className="text-red-100 mt-1">{event.images.length} photo{event.images.length > 1 ? 's' : ''}</p>
-              
+              <h3 className="text-2xl font-bold pr-16">
+                {event.title || "Event"} Gallery
+              </h3>
+              <p className="text-red-100 mt-1">
+                {event.images.length} photo{event.images.length > 1 ? "s" : ""}
+              </p>
+
               {/* Decorative elements */}
               <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
               <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-white/5 rounded-full blur-xl" />
@@ -134,12 +145,18 @@ const EventCard = ({ event }) => {
             <div className="p-8 overflow-y-auto max-h-[70vh]">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {event.images.map((url, index) => (
-                  <div key={index} className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                    <img
+                  <div
+                    key={index}
+                    className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 h-48"
+                  >
+                    <Image
                       src={optimizeImageUrl(url)}
                       alt={`Event image ${index + 1}`}
-                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      quality={75}
                       loading="lazy"
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="absolute bottom-4 left-4 text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">

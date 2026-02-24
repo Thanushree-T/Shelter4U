@@ -1,5 +1,7 @@
 "use client";
 import { Expand } from "lucide-react";
+import Image from "next/image";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 const ProjectGallery = ({ galleryImages = [], openImageExpanded }) => {
   return (
@@ -19,11 +21,17 @@ const ProjectGallery = ({ galleryImages = [], openImageExpanded }) => {
             onClick={() => openImageExpanded(image)}
           >
             {/* Gallery Image */}
-            <img
+            <Image
               src={
-                image?.url || "https://placehold.co/600x400?text=Coming+Soon"
+                optimizeCloudinaryUrl(image?.url, {
+                  width: 600,
+                  height: 400,
+                }) || "https://placehold.co/600x400?text=Coming+Soon"
               }
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              alt="Gallery image"
+              fill
+              sizes="(max-width: 640px) 100vw, 50vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-110"
             />
 
             {/* Overlay for image description */}

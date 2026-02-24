@@ -40,7 +40,7 @@ export async function generateMetadata() {
         "We aim to provide affordable, transparent, and accessible real estate solutions across India.",
       images: ["/logo.png"],
     },
-    alternates: { canonical: "https://shelter4u.in/about/visionMission" },
+    alternates: { canonical: "/about/vissionMission" },
     robots: { index: true, follow: true, nocache: false },
   };
 }

@@ -17,7 +17,7 @@ export const metadata = {
     title: "Inquiry | Shelter4U",
     description:
       "Have questions about a property? Submit an inquiry and our expert team will get back to you.",
-    url: "https://shelter4u.in/Inquiry",
+    url: "/Inquiry",
     type: "website",
     images: [
       { url: "/logo.png", width: 1200, height: 630, alt: "Shelter4U Inquiry" },
@@ -29,7 +29,7 @@ export const metadata = {
     description: "Contact Shelter4U. Our expert will contact you shortly.",
     images: ["/logo.png"],
   },
-  alternates: { canonical: "https://shelter4u.in/Inquiry" },
+  alternates: { canonical: "/Inquiry" },
   robots: { index: true, follow: true },
 };
 
