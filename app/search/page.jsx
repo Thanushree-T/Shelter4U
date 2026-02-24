@@ -23,6 +23,9 @@ export async function generateMetadata({ searchParams }) {
       index: true,
       follow: true,
     },
+    // All search query-param variants canonicalize to the base /search URL
+    // This fixes Screaming Frog "Canonicals: Missing" for all search filter combinations
+    alternates: { canonical: "/search" },
   };
 }
 

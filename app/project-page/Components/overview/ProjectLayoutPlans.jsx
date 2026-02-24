@@ -1,5 +1,7 @@
 "use client";
 import { Expand } from "lucide-react";
+import Image from "next/image";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 const LayoutPlans = ({ project, setShowFullForm }) => {
   return (
@@ -24,12 +26,17 @@ const LayoutPlans = ({ project, setShowFullForm }) => {
             {/* Image container */}
             <div className="h-64 relative">
               {/* Plan image */}
-              <img
+              <Image
                 src={
-                  plan?.url || "https://placehold.co/600x400?text=Coming+Soon"
+                  optimizeCloudinaryUrl(plan?.url, {
+                    width: 600,
+                    height: 400,
+                  }) || "https://placehold.co/600x400?text=Coming+Soon"
                 }
-                alt={plan?.type}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                alt={plan?.type || "Layout plan"}
+                fill
+                sizes="(max-width: 640px) 100vw, 50vw"
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
 
               {/* Overlay with plan description */}

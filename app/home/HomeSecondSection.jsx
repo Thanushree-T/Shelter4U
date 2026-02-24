@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 export default function HomeSecondSection({ data }) {
   const router = useRouter(); // Router hook to programmatically navigate between pages
@@ -38,7 +39,10 @@ export default function HomeSecondSection({ data }) {
           <div className="relative w-full max-w-[300px] sm:max-w-[400px] h-[350px] sm:h-[400px] md:h-[550px] mr-0 sm:mr-4 md:mr-[90px]">
             {data?.bigImg && (
               <Image
-                src={data.bigImg}
+                src={optimizeCloudinaryUrl(data.bigImg, {
+                  width: 600,
+                  height: 800,
+                })}
                 alt="Modern white apartment building"
                 fill
                 className="object-cover"
@@ -53,7 +57,10 @@ export default function HomeSecondSection({ data }) {
           <div className="absolute -bottom-16 sm:-bottom-20 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-5 w-[150px] h-[150px] sm:w-[200px] sm:h-[300px] md:w-[250px] md:h-[350px] lg:w-[300px] lg:h-[450px]">
             {data?.smallImg && (
               <Image
-                src={data.smallImg}
+                src={optimizeCloudinaryUrl(data.smallImg, {
+                  width: 400,
+                  height: 600,
+                })}
                 alt="Modern apartment building with red accents"
                 className="object-cover border-[8px] sm:border-[12px] border-white shadow-2xl"
                 fill

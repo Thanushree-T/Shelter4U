@@ -5,10 +5,30 @@ import ProjectClientPage from "./ProjectClientPage";
 
 const { Project } = models;
 
-// Shared DB fetch — Next.js deduplicates this automatically within a single request
+// ISR: revalidate every 24 hours — content updates propagate within a day
+export const revalidate = 86400;
+
+// Pre-generate all project pages at build time so the <title> is always
+// inside <head> in the static HTML — fixing Screaming Frog's "Title outside <head>" issue.
+// Any new projects added after build will be generated on first request (fallback: "blocking").
+export async function generateStaticParams() {
+  try {
+    const projects = await Project.find({}, "slug").lean();
+    return projects.map((p) => ({ slug: p.slug }));
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
+
+// Shared DB fetch used by both generateMetadata and the page component
+// Decodes URL-encoded slug (e.g. %26 → &) before querying MongoDB,
+// so projects with special characters in slugs are found correctly.
 async function getProject(slug) {
   try {
-    const project = await Project.findOne({ slug })
+    // Decode the slug to handle URL encoding (e.g. slugs with & stored in DB)
+    const decodedSlug = decodeURIComponent(slug);
+    const project = await Project.findOne({ slug: decodedSlug })
       .populate("area", ["_id", "name"])
       .populate("builder", ["_id", "name"])
       .populate("state", ["_id", "name"])
@@ -50,7 +70,7 @@ export async function generateMetadata({ params }) {
       description:
         project.description ||
         `Explore features, location, and gallery of ${project.projectName}.`,
-      url: `https://shelter4u.in/project-page/${slug}`,
+      url: `/project-page/${slug}`,
       type: "article",
       images: [
         {
@@ -69,7 +89,7 @@ export async function generateMetadata({ params }) {
         `Get full details on ${project.projectName}, listed on Shelter4U.`,
       images: [project.coverImages?.[0]?.url || "/logo.png"],
     },
-    alternates: { canonical: `https://shelter4u.in/project-page/${slug}` },
+    alternates: { canonical: `/project-page/${slug}` },
     robots: { index: true, follow: true },
   };
 }

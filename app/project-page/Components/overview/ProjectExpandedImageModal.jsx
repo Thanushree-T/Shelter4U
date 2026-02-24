@@ -1,6 +1,8 @@
 "use client";
 
 import { X } from "lucide-react";
+import Image from "next/image";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 const ExpandedImageModal = ({ expandedImage, closeImageExpanded }) => {
   return (
@@ -19,13 +21,17 @@ const ExpandedImageModal = ({ expandedImage, closeImageExpanded }) => {
           {/* Image container with max width and height */}
           <div className="relative w-full max-w-6xl h-[90vh]">
             {/* Image itself */}
-            <img
+            <Image
               src={
-                expandedImage?.url ||
-                "https://placehold.co/600x400?text=Coming+Soon"
+                optimizeCloudinaryUrl(expandedImage?.url, {
+                  width: 1400,
+                  height: 900,
+                }) || "https://placehold.co/600x400?text=Coming+Soon"
               }
               alt={expandedImage?.description || "Expanded Image"}
-              className="w-full h-full object-contain"
+              fill
+              sizes="100vw"
+              className="object-contain"
             />
 
             {/* Image description below the image, centered */}

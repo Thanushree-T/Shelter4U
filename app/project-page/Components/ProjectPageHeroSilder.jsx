@@ -1,6 +1,8 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import Image from "next/image";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 const ProjectHeroSlider = ({
   project,
@@ -27,49 +29,60 @@ const ProjectHeroSlider = ({
       {/* Image container */}
       <div className="h-[70vh] w-full overflow-hidden relative">
         {/* Display current image or fallback */}
-        <img
+        <Image
           src={
-            project?.coverImages[currentImageIndex]?.url ||
-            "https://placehold.co/600x400?text=Coming+Soon"
+            optimizeCloudinaryUrl(
+              project?.coverImages[currentImageIndex]?.url,
+              { width: 1200, height: 800 },
+            ) || "https://placehold.co/600x400?text=Coming+Soon"
           }
           alt={
             project?.coverImages[currentImageIndex]?.description ||
             "Expanded Image"
           }
-          className="w-full h-full object-cover transition-opacity duration-500"
+          fill
+          sizes="100vw"
+          priority
+          className="object-cover transition-opacity duration-500"
         />
 
         {/* Overlay gradient for text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
 
-        {/* Left navigation arrow */}
-        <button
-          onClick={prevImage}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/30 backdrop-blur-sm rounded-full p-3 hover:bg-white/40 transition-all"
-        >
-          <ChevronLeft className="h-8 w-8 text-white" strokeWidth={2} />
-        </button>
-
-        {/* Right navigation arrow */}
-        <button
-          onClick={nextImage}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/30 backdrop-blur-sm rounded-full p-3 hover:bg-white/40 transition-all"
-        >
-          <ChevronRight className="h-8 w-8 text-white" strokeWidth={2} />
-        </button>
-
-        {/* Image indicators (dots) */}
-        <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-2">
-          {project?.coverImages?.map((_, index) => (
+        {project?.coverImages?.length > 1 && (
+          <>
+            {/* Left navigation arrow */}
             <button
-              key={index}
-              onClick={() => setCurrentImageIndex(index)}
-              className={`w-3 h-3 rounded-full transition-all hidden sm:flex ${
-                index === currentImageIndex ? "bg-red-500 w-6" : "bg-white/50"
-              }`}
-            />
-          ))}
-        </div>
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/30 backdrop-blur-sm rounded-full p-3 hover:bg-white/40 transition-all"
+            >
+              <ChevronLeft className="h-8 w-8 text-white" strokeWidth={2} />
+            </button>
+
+            {/* Right navigation arrow */}
+            <button
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/30 backdrop-blur-sm rounded-full p-3 hover:bg-white/40 transition-all"
+            >
+              <ChevronRight className="h-8 w-8 text-white" strokeWidth={2} />
+            </button>
+
+            {/* Image indicators (dots) */}
+            <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-2">
+              {project?.coverImages?.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all hidden sm:flex ${
+                    index === currentImageIndex
+                      ? "bg-red-500 w-6"
+                      : "bg-white/50"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Text overlay content (bottom area) */}
@@ -106,9 +119,9 @@ const ProjectHeroSlider = ({
                 ))}
             </div>
 
-            {/* Project name */}
+            {/* Project name — always present for SEO (h1 must not be empty) */}
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 leading-tight tracking-tight">
-              {project?.projectName}
+              {project?.projectName || "Property Details"}
             </h1>
 
             {/* Price display */}

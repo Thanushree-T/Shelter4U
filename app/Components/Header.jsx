@@ -678,7 +678,7 @@ function Header() {
       </div>
 
       {/* CSS Animations - Custom keyframe animations for dropdown effects */}
-      <style jsx>{`
+      <style>{`
         /* Fade in animation for desktop dropdowns */
         .animate-fadeIn {
           animation: fadeIn 0.2s ease-in-out;

@@ -21,7 +21,7 @@ export const metadata = {
     title: "Careers | Shelter4U",
     description:
       "Build your career with Shelter4U - India's trusted zero-brokerage real estate platform.",
-    url: "https://shelter4u.in/about/career",
+    url: "/about/career",
     images: [
       { url: "/logo.png", width: 1200, height: 630, alt: "Shelter4U Careers" },
     ],
@@ -33,7 +33,7 @@ export const metadata = {
       "Join the Shelter4U team and help people find their dream homes across India.",
     images: ["/logo.png"],
   },
-  alternates: { canonical: "https://shelter4u.in/about/career" },
+  alternates: { canonical: "/about/career" },
   robots: { index: true, follow: true },
 };
 

@@ -25,7 +25,7 @@ export async function generateMetadata() {
       title: "Events | Shelter4U",
       description:
         "Check out Shelter4U's recent and upcoming events. Discover how we engage with clients and the real estate community.",
-      url: "https://shelter4u.in/about/event",
+      url: "/about/event",
       type: "website",
       images: [
         {
@@ -43,7 +43,7 @@ export async function generateMetadata() {
         "Discover exciting events and property launches hosted by Shelter4U.",
       images: ["/logo.png"],
     },
-    alternates: { canonical: "https://shelter4u.in/about/event" },
+    alternates: { canonical: "/about/event" },
     robots: { index: true, follow: true },
   };
 }

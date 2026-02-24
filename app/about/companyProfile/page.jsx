@@ -26,7 +26,7 @@ export const generateMetadata = () => ({
     title: "Company Profile | Shelter4U",
     description:
       "Know more about Shelter4U's mission and services. We bring you verified, affordable, and zero brokerage properties.",
-    url: "https://shelter4u.in/about/companyProfile",
+    url: "/about/companyProfile",
     images: [
       { url: "/logo.png", width: 1200, height: 630, alt: "Shelter4U Logo" },
     ],
@@ -38,7 +38,7 @@ export const generateMetadata = () => ({
       "Discover Shelter4U, a real estate platform focused on zero brokerage housing solutions in major Indian cities.",
     images: ["/logo.png"],
   },
-  alternates: { canonical: "https://shelter4u.in/about/companyProfile" },
+  alternates: { canonical: "/about/companyProfile" },
   robots: { index: true, follow: true, nocache: false },
 });
 

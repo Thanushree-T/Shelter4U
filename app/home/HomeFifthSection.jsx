@@ -3,6 +3,7 @@
 import React from "react";
 import Marquee from "react-fast-marquee"; // For horizontal scrolling animation
 import Image from "next/image";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 const HomeFifthSection = ({ data }) => {
   // Ensure data is a valid array before mapping
@@ -29,7 +30,11 @@ const HomeFifthSection = ({ data }) => {
               <div className="relative h-32 w-56">
                 {partner?.img && (
                   <Image
-                    src={partner.img} // Partner logo image
+                    src={optimizeCloudinaryUrl(partner.img, {
+                      width: 300,
+                      height: 200,
+                      crop: "pad",
+                    })} // Partner logo image
                     alt={partner?.title || `partner-${index}`} // Accessible alt text
                     fill // Uses layout fill to cover the container
                     className="object-contain" // Maintains image aspect ratio

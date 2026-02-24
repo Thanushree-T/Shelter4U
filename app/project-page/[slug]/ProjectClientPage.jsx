@@ -2,21 +2,64 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
+import Image from "next/image";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 import ProjectTabSwitcher from "../Components/ProjectPageTabSwitcher.jsx";
-import AmenitiesSection from "../Components/ProjectAmenities.jsx";
-import ProjectGallery from "../Components/ProjectGallery.jsx";
-import ProjectLocation from "../Components/ProjectLocation.jsx";
-import ProjectSpecificationTable from "../Components/ProjectSpecification.jsx";
 import ProjectHeroSlider from "../Components/ProjectPageHeroSilder.jsx";
 import ProjectHighlights from "../Components/overview/ProjectHighlights.jsx";
 import ProjectDescription from "../Components/overview/ProjectDescription.jsx";
 import ProjectLayoutPlans from "../Components/overview/ProjectLayoutPlans.jsx";
-import ProjectBrochure from "../Components/ProjectBroucher.jsx";
-import ProjectInquiryCard from "../Components/ProjectInquiryCard.jsx";
-import PropertyEnquiryForm from "../Components/ProjectEnquiryForm.jsx";
-import ProjectChatOnWhatsApp from "../Components/ProjectChatOnWhatsApp.jsx";
-import SimilarProject from "../../Components/SimilarProject.jsx";
+import dynamic from "next/dynamic";
+
+const AmenitiesSection = dynamic(
+  () => import("../Components/ProjectAmenities.jsx"),
+  {
+    loading: () => (
+      <div className="h-64 bg-gray-100 rounded-2xl animate-pulse"></div>
+    ),
+  },
+);
+const ProjectGallery = dynamic(
+  () => import("../Components/ProjectGallery.jsx"),
+  {
+    loading: () => (
+      <div className="h-64 bg-gray-100 rounded-2xl animate-pulse"></div>
+    ),
+  },
+);
+const ProjectLocation = dynamic(
+  () => import("../Components/ProjectLocation.jsx"),
+  {
+    loading: () => (
+      <div className="h-64 bg-gray-100 rounded-2xl animate-pulse"></div>
+    ),
+  },
+);
+const ProjectSpecificationTable = dynamic(
+  () => import("../Components/ProjectSpecification.jsx"),
+  {
+    loading: () => (
+      <div className="h-64 bg-gray-100 rounded-2xl animate-pulse"></div>
+    ),
+  },
+);
+
+const ProjectBrochure = dynamic(
+  () => import("../Components/ProjectBroucher.jsx"),
+);
+const ProjectInquiryCard = dynamic(
+  () => import("../Components/ProjectInquiryCard.jsx"),
+);
+const PropertyEnquiryForm = dynamic(
+  () => import("../Components/ProjectEnquiryForm.jsx"),
+);
+const ProjectChatOnWhatsApp = dynamic(
+  () => import("../Components/ProjectChatOnWhatsApp.jsx"),
+);
+const SimilarProject = dynamic(
+  () => import("../../Components/SimilarProject.jsx"),
+);
 
 const ProjectClientPage = ({ project }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -136,7 +179,7 @@ const ProjectClientPage = ({ project }) => {
           </div>
         </div>
 
-        {/* <SimilarProject /> */}
+        {/* Similar Projects Section (Lazy Loaded) */}
         <SimilarProject id={project?._id} />
       </div>
 
@@ -166,12 +209,17 @@ const ProjectClientPage = ({ project }) => {
           </button>
 
           <div className="relative w-full max-w-6xl h-[90vh]">
-            <img
+            <Image
               src={
-                expandedImage?.url ||
-                "https://placehold.co/600x400?text=Coming+Soon"
+                optimizeCloudinaryUrl(expandedImage?.url, {
+                  width: 1400,
+                  height: 900,
+                }) || "https://placehold.co/600x400?text=Coming+Soon"
               }
-              className="w-full h-full object-contain"
+              alt="Expanded Image"
+              fill
+              sizes="100vw"
+              className="object-contain"
             />
           </div>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import InquiryForm from "../Components/InquiryForm.jsx";
 
 const InquiryClient = () => {
@@ -74,12 +75,17 @@ const InquiryClient = () => {
           <div className="w-full lg:w-1/2 flex justify-center items-center mt-8 lg:mt-0">
             <div className="relative w-[250px] h-[250px] xs:w-[300px] xs:h-[300px] sm:w-[350px] sm:h-[350px] md:w-[400px] md:h-[400px] lg:w-[450px] lg:h-[450px] xl:w-[500px] xl:h-[500px]">
               <div className="absolute inset-0 rounded-full overflow-hidden border-4 sm:border-8 border-white shadow-2xl z-10">
-                <img
-                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
-                  alt="Modern luxury home"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent" />
+                <div className="relative w-full h-full">
+                  <Image
+                    src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
+                    alt="Modern luxury home"
+                    fill
+                    sizes="(max-width: 640px) 250px, (max-width: 1024px) 450px, 500px"
+                    priority
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent" />
+                </div>
               </div>
               {/* Static decorative orbs */}
               <div className="absolute -top-6 -left-6 w-24 h-24 rounded-full bg-gradient-to-br from-red-500 to-rose-600 opacity-20 z-0" />

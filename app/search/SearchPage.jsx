@@ -127,6 +127,9 @@ const SearchPageClient = ({ initialProjects = [] }) => {
       setLoadingMore(true);
     } else {
       setLoading(true);
+      // Reset hasMore immediately so the observer cannot fire while
+      // the fresh results are still in-flight.
+      setHasMore(false);
     }
 
     try {
@@ -134,12 +137,15 @@ const SearchPageClient = ({ initialProjects = [] }) => {
       if (!response.ok) throw new Error("Failed to fetch projects");
       const data = await response.json();
 
+      // Only enable infinite scroll when there are actual results.
+      const nextHasMore = data.hasMore && data.projects.length > 0;
+
       if (isLoadMore) {
         setProjects((prev) => [...prev, ...data.projects]);
       } else {
         setProjects(data.projects);
       }
-      setHasMore(data.hasMore);
+      setHasMore(nextHasMore);
     } catch (error) {
       console.error("Error fetching projects:", error);
     } finally {
@@ -193,6 +199,9 @@ const SearchPageClient = ({ initialProjects = [] }) => {
 
   // Intersection Observer for Infinite Scroll
   useEffect(() => {
+    // Don't attach the observer at all when there's nothing more to load.
+    if (!hasMore || projects.length === 0) return;
+
     const options = {
       root: null,
       rootMargin: "20px",
@@ -215,7 +224,7 @@ const SearchPageClient = ({ initialProjects = [] }) => {
         observer.unobserve(loader.current);
       }
     };
-  }, [hasMore, loading, loadingMore]);
+  }, [hasMore, loading, loadingMore, projects.length]);
 
   const buildQueryString = (newValues) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -375,7 +384,9 @@ const SearchPageClient = ({ initialProjects = [] }) => {
                           key={project._id}
                           onClick={() =>
                             handleSuggestionClick(() =>
-                              router.push(`/project-page/${project._id}`),
+                              router.push(
+                                `/project-page/${encodeURIComponent(project._id)}`,
+                              ),
                             )
                           }
                           className="px-4 py-2 hover:bg-gray-100 text-sm cursor-pointer"
@@ -510,12 +521,12 @@ const SearchPageClient = ({ initialProjects = [] }) => {
             /* Show skeletons while fetching */
             [...Array(6)].map((_, i) => <CardSkeleton key={i} />)
           ) : projects && projects.length > 0 ? (
-            projects.map((project) => (
+            projects.map((project, index) => (
               <div
                 key={project._id}
                 className="bg-white rounded-xl shadow-lg transform hover:-translate-y-1 transition-transform duration-300"
               >
-                <Cards project={project} />
+                <Cards project={project} priority={index < 4} />
               </div>
             ))
           ) : (

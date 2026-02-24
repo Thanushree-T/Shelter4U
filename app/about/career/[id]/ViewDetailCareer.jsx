@@ -32,7 +32,7 @@ export default function ViewDetailCareer({ id }) {
       {/* Job Info Card */}
       <div className="bg-white rounded-2xl p-8 space-y-6">
         {/* Job Title */}
-        <h1 className="text-2xl !text-red-600">{career?.position}</h1>
+        <h1 className="text-2xl !text-red-600">{career?.position || ""}</h1>
 
         {/* Job Summary */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-800 text-base">

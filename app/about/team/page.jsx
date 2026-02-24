@@ -25,7 +25,7 @@ export async function generateMetadata() {
       title: "Meet Our Team | Shelter4U",
       description:
         "Discover the professionals making real estate easy at Shelter4U. We're a team driven by integrity and transparency.",
-      url: "https://shelter4u.in/about/team",
+      url: "/about/team",
       type: "profile",
       images: [
         { url: "/logo.png", width: 1200, height: 630, alt: "Shelter4U Team" },
@@ -38,7 +38,7 @@ export async function generateMetadata() {
         "The Shelter4U team is here to guide you in your property journey. Get to know the faces behind the service.",
       images: ["/logo.png"],
     },
-    alternates: { canonical: "https://shelter4u.in/about/team" },
+    alternates: { canonical: "/about/team" },
     robots: { index: true, follow: true },
   };
 }

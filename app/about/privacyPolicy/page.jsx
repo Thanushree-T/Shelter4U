@@ -24,7 +24,7 @@ export async function generateMetadata() {
       title: "Privacy Policy | Shelter4U",
       description:
         "Learn about Shelter4U's commitment to protecting your personal information in the real estate ecosystem.",
-      url: "https://shelter4u.in/about/privacyPolicy",
+      url: "/about/privacyPolicy",
       type: "article",
       images: [
         {
@@ -42,7 +42,7 @@ export async function generateMetadata() {
         "Understand how Shelter4U collects, uses, and protects your personal data. Transparency and trust are our priorities.",
       images: ["/logo.png"],
     },
-    alternates: { canonical: "https://shelter4u.in/about/privacyPolicy" },
+    alternates: { canonical: "/about/privacyPolicy" },
     robots: { index: true, follow: true },
   };
 }

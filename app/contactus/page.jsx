@@ -23,7 +23,7 @@ export const metadata = {
     title: "Contact Us",
     description:
       "Get in touch with Shelter4U. We're here to help you with all your real estate needs. Zero brokerage and expert assistance guaranteed.",
-    url: "https://shelter4u.in/contactus",
+    url: "/contactus",
     type: "website",
     images: [
       {
@@ -41,7 +41,7 @@ export const metadata = {
       "Need help with buying or selling property? Contact Shelter4U for fast, transparent, and zero-brokerage services.",
     images: ["/logo.png"],
   },
-  alternates: { canonical: "https://shelter4u.in/contactus" },
+  alternates: { canonical: "/contactus" },
   robots: { index: true, follow: true },
 };
 
