@@ -47,7 +47,7 @@ const ProjectHeroSlider = ({
         />
 
         {/* Overlay gradient for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
+        {/* <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" /> */}
 
         {project?.coverImages?.length > 1 && (
           <>

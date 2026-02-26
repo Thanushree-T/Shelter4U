@@ -1,7 +1,7 @@
 import { models } from "@/lib/connections.js";
 import { serializeMongo } from "@/lib/utils";
 
-import HomeFirstSection from "./home/HomeFirstSection.jsx";
+import HomeHeroSection from "./home/HomeHeroSection.jsx";
 import HomeSecondSection from "./home/HomeSecondSection.jsx";
 import HomeThirdSection from "./home/HomeThirdSection.jsx";
 import HomeFourthSection from "./home/HomeFourthSection.jsx";
@@ -56,19 +56,15 @@ export const metadata = {
   keywords: [
     "zero brokerage properties",
     "affordable flats in Ahmedabad",
-    "premium projects in Pune",
     "Gandhinagar real estate",
-    "verified properties Mumbai",
     "zero brokerage property",
     "property in budget",
     "properties in Gandhinagar",
-    "properties in Pune",
-    "properties in Mumbai",
     "properties in Ahmedabad",
     "affordable housing projects in Ahmedabad",
     "verified real estate listings",
     "buy house in Ahmedabad",
-    "low budget property in Mumbai",
+    "buy house in Gandhinagar",
     "flats without brokerage",
     "Shelter4U real estate",
     "perfect project hub",
@@ -77,7 +73,7 @@ export const metadata = {
   openGraph: {
     title: "Top Recommended Projects | Shelter4U",
     description:
-      "Explore affordable, verified real estate listings from top builders. Flats available in Ahmedabad, Gandhinagar, Pune, and Mumbai with zero brokerage.",
+      "Explore affordable, verified real estate listings from top builders. Flats available in Ahmedabad & Gandhinagar with zero brokerage.",
     images: [
       {
         url: "/logo.png",
@@ -129,7 +125,7 @@ export default async function HomePage() {
         { $match: { area: { $exists: true, $ne: null } } },
         { $group: { _id: "$area", count: { $sum: 1 } } },
         { $sort: { count: -1 } },
-        { $limit: 5 },
+        { $limit: 6 },
       ]),
     ]);
 
@@ -182,7 +178,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <HomeFirstSection data={homeFirstSectionData} />
+      <HomeHeroSection data={homeFirstSectionData} />
       <Suspense fallback={<RecommendedSkeleton />}>
         <Recommended projects={recommendedProjects} />
       </Suspense>

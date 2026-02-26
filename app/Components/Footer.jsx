@@ -109,19 +109,17 @@ const Footer = () => {
               PROPERTY BY LOCATION
             </p>
             <ul className="space-y-3">
-              {["Ahmedabad", "Pune", "Mumbai", "Gandhinagar"].map(
-                (city, index) => (
-                  <li key={index} className="flex items-center group">
-                    <span className="text-lg mr-2 text-gray-400">›</span>
-                    <Link
-                      href={`/search?city=${city}`}
-                      className="text-gray-300 hover:text-purple-400 hover:underline"
-                    >
-                      {city}
-                    </Link>
-                  </li>
-                ),
-              )}
+              {["Ahmedabad", "Gandhinagar"].map((city, index) => (
+                <li key={index} className="flex items-center group">
+                  <span className="text-lg mr-2 text-gray-400">›</span>
+                  <Link
+                    href={`/search?city=${city}`}
+                    className="text-gray-300 hover:text-purple-400 hover:underline"
+                  >
+                    {city}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

@@ -354,7 +354,7 @@ const SearchPageClient = ({ initialProjects = [] }) => {
             Find Your <span className="text-red-600">Dream</span> Property
           </h1>
           <p className="max-w-2xl mx-auto text-lg text-gray-600">
-            Discover the perfect property that matches your lifestyle and budget
+            With zero brokerage charges
           </p>
         </div>
 
