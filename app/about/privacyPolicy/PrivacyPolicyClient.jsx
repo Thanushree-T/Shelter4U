@@ -23,7 +23,7 @@ const PrivacyPolicyClient = ({ data }) => {
                 />
               </div>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300 mb-4 tracking-tight px-4">
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300 pb-4 tracking-tight px-4">
               {data.hero?.heading || "Privacy Policy"}
             </h1>
             <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto px-4 font-medium">
@@ -34,7 +34,7 @@ const PrivacyPolicyClient = ({ data }) => {
       </div>
 
       {/* Content section containing all paragraphs and bullets */}
-      <div className="w-[80%] px-6 py-8">
+      <div className="w-full max-w-7xl px-10 sm:px-12 lg:px-14 py-10 space-y-10">
         {data.sections.map((section, index) => (
           <div key={index} className="space-y-4 mb-10">
             {/* Section title */}

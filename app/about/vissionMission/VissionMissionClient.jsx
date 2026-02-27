@@ -31,7 +31,7 @@ export default function VisionMissionClient({ data }) {
                 <Target className="text-white" size={36} strokeWidth={1.5} />
               </div>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300 mb-4 tracking-tight px-4">
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300 pb-4 tracking-tight px-4">
               {hero?.heading || "Our Vision & Mission"}
             </h1>
             <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto px-4 font-medium">
@@ -42,7 +42,7 @@ export default function VisionMissionClient({ data }) {
       </div>
 
       {/* Main Content Sections */}
-      <div className="w-[80%] px-6 py-8 space-y-10">
+      <div className="w-full max-w-7xl px-10 sm:px-12 lg:px-14 py-10 space-y-10">
         {sections?.map((section, idx) => (
           <div key={idx} className="space-y-4">
             {/* Section title */}

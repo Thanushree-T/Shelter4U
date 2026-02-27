@@ -22,7 +22,7 @@ const TeamClient = ({ teamMembers }) => {
                   <Users className="text-white" size={36} strokeWidth={1.5} />
                 </div>
               </div>
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300 mb-4 tracking-tight px-4">
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300 pb-4 tracking-tight px-4">
                 Meet Our Team
               </h1>
               <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto px-4 font-medium">
