@@ -33,6 +33,25 @@ const CardSkeleton = () => (
   </div>
 );
 
+// Static map — lives outside the component so it's never recreated
+const UNIT_TYPES_BY_PROJECT_TYPE = {
+  Residential: ["1BHK", "2BHK", "3BHK", "4BHK", "5BHK", "6BHK", "Villas"],
+  Commercial: ["Shops", "Offices"],
+  Land: ["Plots"],
+  "": [
+    "1BHK",
+    "2BHK",
+    "3BHK",
+    "4BHK",
+    "5BHK",
+    "6BHK",
+    "Shops",
+    "Offices",
+    "Villas",
+    "Plots",
+  ],
+};
+
 const SearchPageClient = ({ initialProjects = [] }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -70,16 +89,11 @@ const SearchPageClient = ({ initialProjects = [] }) => {
 
   const projectType = ["Residential", "Commercial", "Land"];
   const projectStatus = ["Under Construction", "Ready to Move"];
-  const unitType = [
-    "1BHK",
-    "2BHK",
-    "3BHK",
-    "4BHK",
-    "Shops",
-    "Offices",
-    "Villas",
-    "Plots",
-  ];
+
+  // Direct lookup from the stable constant above the component
+  const availableUnitTypes =
+    UNIT_TYPES_BY_PROJECT_TYPE[filters.projectType] ??
+    UNIT_TYPES_BY_PROJECT_TYPE[""];
 
   const basePriceOptions = [
     { value: "2500000", label: "25 Lakh" },
@@ -239,15 +253,16 @@ const SearchPageClient = ({ initialProjects = [] }) => {
   };
 
   const handleFilterChange = (filterName, value) => {
-    // *** UX IMPROVEMENT: Auto-clear conflicting selections ***
     const newFilters = { ...filters, [filterName]: value };
+
+    // Auto-clear price conflicts
     if (
       filterName === "minBudget" &&
       value &&
       newFilters.maxBudget &&
       parseInt(value, 10) >= parseInt(newFilters.maxBudget, 10)
     ) {
-      newFilters.maxBudget = ""; // Clear max if min is >= max
+      newFilters.maxBudget = "";
     }
     if (
       filterName === "maxBudget" &&
@@ -255,13 +270,30 @@ const SearchPageClient = ({ initialProjects = [] }) => {
       newFilters.minBudget &&
       parseInt(value, 10) <= parseInt(newFilters.minBudget, 10)
     ) {
-      newFilters.minBudget = ""; // Clear min if max is <= min
+      newFilters.minBudget = "";
     }
+
+    // When project type changes, reset unitType if it's no longer valid
+    if (filterName === "projectType") {
+      const allowed =
+        UNIT_TYPES_BY_PROJECT_TYPE[value] ?? UNIT_TYPES_BY_PROJECT_TYPE[""];
+      if (newFilters.unitType && !allowed.includes(newFilters.unitType)) {
+        newFilters.unitType = "";
+      }
+    }
+
     setFilters(newFilters);
-    // *** END OF UX IMPROVEMENT ***
 
     if (filterName !== "minBudget" && filterName !== "maxBudget") {
-      const newQuery = buildQueryString({ [filterName]: value, q: "" });
+      const newQuery = buildQueryString({
+        [filterName]: value,
+        // also pass cleared unitType if it was reset
+        ...(filterName === "projectType" &&
+        newFilters.unitType !== filters.unitType
+          ? { unitType: newFilters.unitType }
+          : {}),
+        q: "",
+      });
       router.push(`/search?${newQuery}`);
     }
   };
@@ -322,7 +354,7 @@ const SearchPageClient = ({ initialProjects = [] }) => {
             Find Your <span className="text-red-600">Dream</span> Property
           </h1>
           <p className="max-w-2xl mx-auto text-lg text-gray-600">
-            Discover the perfect property that matches your lifestyle and budget
+            With zero brokerage charges
           </p>
         </div>
 
@@ -468,7 +500,7 @@ const SearchPageClient = ({ initialProjects = [] }) => {
                   className="text-sm font-medium text-gray-800 focus:outline-none rounded-md py-1 pl-3 pr-8 w-full appearance-none bg-white transition-colors"
                 >
                   <option value="">Any</option>
-                  {unitType.map((option) => (
+                  {availableUnitTypes.map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>

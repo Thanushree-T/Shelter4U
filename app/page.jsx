@@ -1,12 +1,15 @@
 import { models } from "@/lib/connections.js";
 import { serializeMongo } from "@/lib/utils";
 
-import HomeFirstSection from "./home/HomeFirstSection.jsx";
+import HomeHeroSection from "./home/HomeHeroSection.jsx";
 import HomeSecondSection from "./home/HomeSecondSection.jsx";
 import HomeThirdSection from "./home/HomeThirdSection.jsx";
 import HomeFourthSection from "./home/HomeFourthSection.jsx";
 import HomeFifthSection from "./home/HomeFifthSection.jsx";
 import Recommended from "./home/Recommended.jsx";
+import ExploreByLocalities from "./home/ExploreByLocalities.jsx";
+import PropertyOptions from "./home/PropertyOptions.jsx";
+import FAQ from "./home/FAQ.jsx";
 import { Suspense } from "react";
 
 // Skeleton shown only while Recommended listings are loading
@@ -45,6 +48,7 @@ const {
   HomeFourthSection: HomeFourthSectionModel,
   HomeFifthSection: HomeFifthSectionModel,
   Project,
+  Area,
 } = models;
 
 export const metadata = {
@@ -52,19 +56,15 @@ export const metadata = {
   keywords: [
     "zero brokerage properties",
     "affordable flats in Ahmedabad",
-    "premium projects in Pune",
     "Gandhinagar real estate",
-    "verified properties Mumbai",
     "zero brokerage property",
     "property in budget",
     "properties in Gandhinagar",
-    "properties in Pune",
-    "properties in Mumbai",
     "properties in Ahmedabad",
     "affordable housing projects in Ahmedabad",
     "verified real estate listings",
     "buy house in Ahmedabad",
-    "low budget property in Mumbai",
+    "buy house in Gandhinagar",
     "flats without brokerage",
     "Shelter4U real estate",
     "perfect project hub",
@@ -73,7 +73,7 @@ export const metadata = {
   openGraph: {
     title: "Top Recommended Projects | Shelter4U",
     description:
-      "Explore affordable, verified real estate listings from top builders. Flats available in Ahmedabad, Gandhinagar, Pune, and Mumbai with zero brokerage.",
+      "Explore affordable, verified real estate listings from top builders. Flats available in Ahmedabad & Gandhinagar with zero brokerage.",
     images: [
       {
         url: "/logo.png",
@@ -94,6 +94,7 @@ export default async function HomePage() {
   let homeFourthSectionData = null;
   let homeFifthSectionData = [];
   let recommendedProjects = [];
+  let topLocalityData = [];
 
   try {
     const [
@@ -103,6 +104,7 @@ export default async function HomePage() {
       homeFourthArr,
       homeFifthArr,
       recommended,
+      topAreaIds,
     ] = await Promise.all([
       // Static sections — fetched once per ISR cycle, served from static cache
       HomeFirstSectionModel.findOne().lean(),
@@ -118,6 +120,13 @@ export default async function HomePage() {
         .populate("city", ["_id", "name"])
         .sort({ createdAt: -1 })
         .lean(),
+      // Top 5 localities by project count
+      Project.aggregate([
+        { $match: { area: { $exists: true, $ne: null } } },
+        { $group: { _id: "$area", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 6 },
+      ]),
     ]);
 
     homeFirstSectionData = serializeMongo(homeFirstArr || null);
@@ -126,16 +135,56 @@ export default async function HomePage() {
     homeFourthSectionData = serializeMongo(homeFourthArr || null);
     homeFifthSectionData = serializeMongo(homeFifthArr ?? []);
     recommendedProjects = serializeMongo(recommended ?? []);
+
+    // Build locality data: for each top area, fetch area name + its projects
+    if (topAreaIds && topAreaIds.length > 0) {
+      const areaIds = topAreaIds.map((a) => a._id);
+
+      const [areasArr, localityProjectsArr] = await Promise.all([
+        Area.find({ _id: { $in: areaIds } }).lean(),
+        Project.find({ area: { $in: areaIds } })
+          .populate("area", ["_id", "name"])
+          .populate("builder", ["_id", "name"])
+          .select(["projectName", "slug", "minPrice", "area", "builder", "_id"])
+          .lean(),
+      ]);
+
+      // Map area _id → name
+      const areaMap = {};
+      areasArr.forEach((a) => {
+        areaMap[a._id.toString()] = a.name;
+      });
+
+      // Build per-area project lists, preserving the sorted order from topAreaIds
+      topLocalityData = topAreaIds
+        .map((topArea) => {
+          const areaIdStr = topArea._id.toString();
+          const areaProjects = localityProjectsArr.filter(
+            (p) => p.area && p.area._id && p.area._id.toString() === areaIdStr,
+          );
+          return {
+            areaId: areaIdStr,
+            areaName: areaMap[areaIdStr] || "Unknown",
+            projects: areaProjects,
+          };
+        })
+        .filter((loc) => loc.areaName !== "Unknown");
+
+      topLocalityData = serializeMongo(topLocalityData);
+    }
   } catch (e) {
     console.error("Error loading Home data:", e);
   }
 
   return (
     <>
-      <HomeFirstSection data={homeFirstSectionData} />
+      <HomeHeroSection data={homeFirstSectionData} />
       <Suspense fallback={<RecommendedSkeleton />}>
         <Recommended projects={recommendedProjects} />
       </Suspense>
+      <ExploreByLocalities localityData={topLocalityData} />
+      <PropertyOptions />
+      <FAQ />
       <HomeSecondSection data={homeSecondSectionData} />
       <HomeThirdSection data={homeThirdSectionData} />
       <HomeFourthSection data={homeFourthSectionData} />

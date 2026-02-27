@@ -21,7 +21,7 @@ export const metadata = {
     template: "%s | Shelter4U",
   },
   description:
-    "Discover the best zero brokerage flats, affordable properties, and premium projects by top builders in Ahmedabad, Gandhinagar, Pune, and Mumbai.",
+    "Discover the best zero brokerage flats, affordable properties, and premium projects by top builders in Ahmedabad & Gandhinagar.",
   keywords: [
     "zero brokerage properties",
     "affordable flats",
@@ -32,7 +32,7 @@ export const metadata = {
   openGraph: {
     title: "Shelter4U - Zero Brokerage Real Estate Platform",
     description:
-      "Explore affordable, verified real estate listings from top builders. Flats available in Ahmedabad, Gandhinagar, Pune, and Mumbai with zero brokerage.",
+      "Explore affordable, verified real estate listings from top builders. Flats available in Ahmedabad & Gandhinagar with zero brokerage.",
     url: "https://shelter4u.in",
     siteName: "Shelter4U",
     images: [

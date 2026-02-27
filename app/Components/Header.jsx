@@ -260,18 +260,6 @@ function Header() {
                 >
                   Gandhinagar
                 </Link>
-                <Link
-                  href="/search?city=pune"
-                  className="block px-4 py-2 text-sm hover:bg-red-50 hover:text-red-600 text-gray-700 font-normal"
-                >
-                  Pune
-                </Link>
-                <Link
-                  href="/search?city=mumbai"
-                  className="block px-4 py-2 text-sm hover:bg-red-50 hover:text-red-600 text-gray-700 font-normal"
-                >
-                  Mumbai
-                </Link>
               </div>
             )}
           </div>
@@ -523,20 +511,6 @@ function Header() {
                     className="block px-3 py-1.5 text-sm hover:bg-red-50 hover:text-red-600 text-gray-700 rounded-md font-normal"
                   >
                     Ahmedabad
-                  </Link>
-                  <Link
-                    href="/search?city=pune"
-                    onClick={closeMobileMenu}
-                    className="block px-3 py-1.5 text-sm hover:bg-red-50 hover:text-red-600 text-gray-700 rounded-md font-normal"
-                  >
-                    Pune
-                  </Link>
-                  <Link
-                    href="/search?city=mumbai"
-                    onClick={closeMobileMenu}
-                    className="block px-3 py-1.5 text-sm hover:bg-red-50 hover:text-red-600 text-gray-700 rounded-md font-normal"
-                  >
-                    Mumbai
                   </Link>
                   <Link
                     href="/search?city=gandhinagar"

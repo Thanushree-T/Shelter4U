@@ -51,15 +51,15 @@ const EventCard = ({ event, priority = false }) => {
         `}
       </style>
 
-      <div className="group relative max-w-xs">
+      <div className="group relative w-full">
         {/* Main Card */}
-        <div className="relative bg-gray-900 rounded-xl overflow-hidden border border-red-100/50 shadow-md transition-all duration-500 transform hover:-translate-y-2">
+        <div className="relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
           {/* Image Container */}
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-hidden w-full">
             <div className="aspect-[4/3] relative">
               <Image
                 className={
-                  "object-cover transition-all duration-700 group-hover:scale-110"
+                  "object-cover transition-transform duration-700 group-hover:scale-105"
                 }
                 src={
                   event.coverImage
@@ -75,7 +75,7 @@ const EventCard = ({ event, priority = false }) => {
               />
 
               {/* Gradient Overlay */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-transparent to-transparent opacity-80 transition-opacity duration-300" />
 
               {/* Photo Count Badge */}
               {event.images && event.images.length > 0 && (
@@ -85,22 +85,20 @@ const EventCard = ({ event, priority = false }) => {
                     e.stopPropagation();
                     setShowImages(true);
                   }}
-                  className="absolute top-4 right-4 bg-gray-900 hover:bg-gray-700 backdrop-blur-sm text-white px-3 py-2 rounded-2xl text-sm font-medium cursor-pointer transition-all duration-300 hover:scale-105 flex items-center gap-2 shadow-lg z-10"
+                  className="absolute top-4 right-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black hover:bg-gray-700 backdrop-blur-md border border-white/20 text-white px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide cursor-pointer transition-all duration-300 hover:scale-105 flex items-center gap-1.5 shadow-lg z-10"
                 >
-                  <Camera className="h-4 w-4" />
-                  {/* {event.images.length} */}
-                  View All Photos
+                  <Camera className="h-3.5 w-3.5" />
+                  View Photos
                 </button>
               )}
             </div>
-          </div>
 
-          {/* Content */}
-          <div className="p-6 relative">
-            {/* Title */}
-            <h3 className="font-bold text-xl text-white mb-3 custom-line-clamp-2 duration-300">
-              {event.title || "Untitled Event"}
-            </h3>
+            {/* Title Overlay onto Image */}
+            <div className="absolute bottom-0 left-0 w-full p-5 flex items-end">
+              <h3 className="font-bold text-lg leading-tight text-white custom-line-clamp-2 transform group-hover:-translate-y-1 transition-transform duration-300">
+                {event.title || "Untitled Event"}
+              </h3>
+            </div>
           </div>
         </div>
       </div>
@@ -115,34 +113,30 @@ const EventCard = ({ event, priority = false }) => {
           }}
         >
           <div
-            className="bg-white/95 backdrop-blur-xl rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden relative shadow-2xl border border-red-100/50 custom-scale-in"
+            className="bg-white rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-hidden relative shadow-2xl border border-gray-100 custom-scale-in flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="bg-gray-900 px-8 py-6 text-white relative overflow-hidden">
+            <div className="bg-gradient-to-r from-gray-900 to-black px-6 sm:px-8 py-6 text-white relative shrink-0">
               <button
                 onClick={() => {
                   console.log("Close button clicked");
                   setShowImages(false);
                 }}
-                className="cursor-pointer absolute top-6 right-6 text-white/80 hover:text-white hover:bg-white/20 p-2 rounded-full transition-all duration-200 z-10"
+                className="cursor-pointer absolute top-1/2 -translate-y-1/2 right-6 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all duration-200 z-10"
               >
-                <X className="h-6 w-6" />
+                <X className="h-5 w-5" />
               </button>
-              <h3 className="text-2xl font-bold pr-16">
-                {event.title || "Event"} Gallery
+              <h3 className="text-xl sm:text-2xl font-bold pr-16 line-clamp-1">
+                {event.title || "Event Gallery"}
               </h3>
-              <p className="text-red-100 mt-1">
-                {event.images.length} photo{event.images.length > 1 ? "s" : ""}
+              <p className="text-gray-400 text-sm mt-1 font-medium tracking-wide">
+                {event.images.length} PHOTO{event.images.length > 1 ? "S" : ""}
               </p>
-
-              {/* Decorative elements */}
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-              <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-white/5 rounded-full blur-xl" />
             </div>
 
             {/* Modal Content */}
-            <div className="p-8 overflow-y-auto max-h-[70vh]">
+            <div className="p-6 sm:p-8 overflow-y-auto grow bg-gray-50/50">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {event.images.map((url, index) => (
                   <div

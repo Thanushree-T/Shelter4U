@@ -1,26 +1,36 @@
 "use client";
 
-import { Lock } from "lucide-react";
+import { Building2 } from "lucide-react";
 
 // Main component to render company profile sections with animation
 const CompanyProfileClient = ({ data }) => {
   return (
-    // Animated container with slide-in effect
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
-      {/* Hero section with gradient background and centered content */}
-      <div className="w-[80%] h-[30vh] bg-gradient-to-r from-gray-900 to-black py-6 text-center flex flex-col justify-center mt-10 rounded-4xl">
-        <div className="flex justify-center mb-4">
-          {/* Icon container */}
-          <div className="bg-gray-800 rounded-full p-3">
-            <Lock className="text-white" size={32} />
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center pb-20">
+      {/* Premium Hero Section */}
+      <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 mt-10">
+        <div className="relative w-full overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black py-16 sm:py-24 text-center flex flex-col justify-center rounded-3xl shadow-2xl border border-gray-800">
+          {/* Decorative glows */}
+          <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-96 h-96 bg-red-600/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-64 h-64 bg-red-800/20 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 flex flex-col items-center">
+            <div className="inline-flex justify-center mb-6">
+              <div className="bg-gradient-to-br from-red-500 to-red-700 rounded-2xl p-4 shadow-lg shadow-red-500/30 transform hover:scale-105 transition-transform duration-300">
+                <Building2 className="text-white" size={36} strokeWidth={1.5} />
+              </div>
+            </div>
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300 pb-4 tracking-tight px-4">
+              {data?.hero?.heading || "Company Profile"}
+            </h1>
+            <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto px-4 font-medium">
+              Learn about who we are, what drives us, and how we deliver value.
+            </p>
           </div>
         </div>
-        {/* Hero heading text */}
-        <p className="text-2xl font-bold text-white">{data?.hero?.heading}</p>
       </div>
 
       {/* Content body with sections */}
-      <div className="w-[80%] px-6 py-8">
+      <div className="w-full max-w-7xl px-10 sm:px-12 lg:px-14 py-10 space-y-10">
         {data.sections.map((section, idx) => (
           <div key={idx} className="mb-10">
             {/* Section title */}
