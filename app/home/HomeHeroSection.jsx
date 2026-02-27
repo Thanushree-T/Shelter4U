@@ -640,6 +640,7 @@ export default function HomeHeroSection({ data }) {
   const [minBudget, setMinBudget] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
   const [modalFilters, setModalFilters] = useState({});
+  const [isSearching, setIsSearching] = useState(false);
   const [suggestions, setSuggestions] = useState({
     areas: [],
     projects: [],
@@ -801,7 +802,7 @@ export default function HomeHeroSection({ data }) {
       propertyTypes: modalFilters.propertyTypes,
       possessions: modalFilters.possessions,
     });
-    window.open(`/search?${qs}`, "_blank");
+    router.push(`/search?${qs}`);
   };
 
   // ── Modal filter apply ──
@@ -817,7 +818,7 @@ export default function HomeHeroSection({ data }) {
       propertyTypes: filters.propertyTypes,
       possessions: filters.possessions,
     });
-    window.open(`/search?${qs}`, "_blank");
+    router.push(`/search?${qs}`);
   };
 
   return (
@@ -1084,10 +1085,20 @@ export default function HomeHeroSection({ data }) {
                       <div className="flex gap-3 pt-1">
                         <button
                           type="submit"
-                          className="flex-1 bg-red-600 hover:bg-red-700 active:scale-[0.98] text-white text-sm font-bold py-3 rounded-xl transition-all duration-150 cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-red-600/30"
+                          disabled={isSearching}
+                          className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-75 disabled:cursor-not-allowed active:scale-[0.98] text-white text-sm font-bold py-3 rounded-xl transition-all duration-150 flex items-center justify-center gap-2 shadow-lg shadow-red-600/30"
                         >
-                          <FiSearch size={15} />
-                          Search Properties
+                          {isSearching ? (
+                            <>
+                              <div className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                              Finding...
+                            </>
+                          ) : (
+                            <>
+                              <FiSearch size={15} />
+                              Search Properties
+                            </>
+                          )}
                         </button>
                         <button
                           type="button"
