@@ -861,20 +861,35 @@ export default function HomeHeroSection({ data }) {
                 {/* ── LEFT: Headline + paragraphs ── */}
                 <div className="space-y-6">
                   {/* Badge */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <span className="inline-flex items-center gap-2 bg-red-600/90 text-white text-xs font-bold px-4 py-1.5 rounded-full backdrop-blur-sm shadow">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                      1000+ Verified Properties
-                    </span>
-                  </motion.div>
-
+                  <div className="flex items-center gap-2">
+                    <motion.div
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <span className="inline-flex items-center gap-2 bg-red-600/90 text-white text-xs font-bold px-4 py-1.5 rounded-full backdrop-blur-sm shadow">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                        1000+ Verified Properties
+                      </span>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: 0.08 }}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => router.push("/search")}
+                        className="inline-flex items-center gap-2 bg-red-600/90 text-white text-xs font-bold px-4 py-1.5 rounded-full backdrop-blur-sm shadow hover:bg-red-600 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse flex-shrink-0" />
+                        Zero Brokerage Charges
+                      </button>
+                    </motion.div>
+                  </div>
                   {/* Typing headline */}
                   <motion.div
-                    className="min-h-[100px] sm:min-h-[160px]"
+                    className="h-[130px] sm:h-[200px] lg:h-[240px] flex items-start"
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: 0.05 }}
@@ -884,6 +899,8 @@ export default function HomeHeroSection({ data }) {
                       <span className="typing-cursor inline-block w-[2px] h-[1em] align-middle bg-red-400 ml-1" />
                     </h1>
                   </motion.div>
+
+                  {/* Zero Brokerage Badge */}
 
                   {/* Paragraphs */}
                   <motion.div

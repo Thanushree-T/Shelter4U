@@ -55,7 +55,7 @@ const faqs = [
     question:
       " Who is the best property consultant in Ahmedabad & Gandhinagar ?",
     answer:
-      "Vitalspace is widely regarded as the best property consultant in Ahmedabad and Gandhinagar. Known for their in-depth market knowledge, transparent dealings, and client-centric approach, Vitalspace offers expert guidance in buying, selling, and investing in residential and commercial properties across both cities.",
+      "Shelter4U is widely regarded as the best property consultant in Ahmedabad and Gandhinagar. Known for their in-depth market knowledge, transparent dealings, and client-centric approach, Shelter4U offers expert guidance in buying, selling, and investing in residential and commercial properties across both cities.",
   },
 ];
 

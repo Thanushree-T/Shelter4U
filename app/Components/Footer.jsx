@@ -41,7 +41,7 @@ const Footer = () => {
             <div className="space-y-4">
               {/* Address */}
               <div className="flex items-start group">
-                <MapPin className="h-12 w-12 mr-2 mt-1 text-gray-400 group-hover:text-purple-400" />
+                <MapPin className="h-12 w-12 mr-2 -mt-2 text-gray-400 group-hover:text-purple-400" />
                 <p className="text-gray-300 group-hover:text-white">
                   {footerData.address}
                 </p>
