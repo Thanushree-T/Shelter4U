@@ -184,7 +184,7 @@ export default async function HomePage() {
       </Suspense>
       <ExploreByLocalities localityData={topLocalityData} />
       <PropertyOptions />
-      <FAQ />
+      {/* <FAQ /> */}
       <HomeSecondSection data={homeSecondSectionData} />
       <HomeThirdSection data={homeThirdSectionData} />
       <HomeFourthSection data={homeFourthSectionData} />
