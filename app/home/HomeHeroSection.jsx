@@ -642,30 +642,13 @@ export default function HomeHeroSection({ data }) {
   const [modalFilters, setModalFilters] = useState({});
   const [isSearching, setIsSearching] = useState(false);
   const [suggestions, setSuggestions] = useState({
+    value: "",
     areas: [],
     projects: [],
     cities: [],
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchRef = useRef(null);
-
-  // ── Autocomplete panel coords (fixed-positioned) ──
-  const [autocompleteCoords, setAutocompleteCoords] = useState({
-    top: 0,
-    left: 0,
-    width: 0,
-  });
-
-  const updateAutocompleteCoords = useCallback(() => {
-    if (searchRef.current) {
-      const rect = searchRef.current.getBoundingClientRect();
-      setAutocompleteCoords({
-        top: rect.bottom + 8,
-        left: rect.left,
-        width: Math.max(rect.width, 320),
-      });
-    }
-  }, []);
 
   // ── Active filter count ──
   const activeFilterCount = [
@@ -711,38 +694,30 @@ export default function HomeHeroSection({ data }) {
     }
   }, [currentIndex, typingComplete, firstLine, secondLine]);
 
-  // ── Close autocomplete on outside click / scroll ──
+  // ── Close autocomplete on outside click ──
   useEffect(() => {
     const handler = (e) => {
-      if (searchRef.current && !searchRef.current.contains(e.target))
-        setShowSuggestions(false);
-    };
-    const handleScroll = (e) => {
-      if (showSuggestions) {
-        if (
-          searchRef.current &&
-          (searchRef.current.contains(e.target) ||
-            e.target === searchRef.current)
-        )
-          return;
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
         setShowSuggestions(false);
       }
     };
     document.addEventListener("mousedown", handler);
-    window.addEventListener("scroll", handleScroll, true);
     return () => {
       document.removeEventListener("mousedown", handler);
-      window.removeEventListener("scroll", handleScroll, true);
     };
-  }, [showSuggestions]);
+  }, []);
 
   // ── Search input change ──
   const handleSearchByChange = async (e) => {
     const val = e.target.value;
     setSearchBy(val);
-    if (val.length < 2) {
-      setSuggestions({ areas: [], projects: [], cities: [] });
-      setShowSuggestions(false);
+    if (val.length < 3) {
+      setSuggestions({ value: val, areas: [], projects: [], cities: [] });
+      if (val) {
+        setShowSuggestions(true);
+      } else {
+        setShowSuggestions(false);
+      }
       return;
     }
     try {
@@ -750,10 +725,10 @@ export default function HomeHeroSection({ data }) {
         `/api/search/autocomplete?q=${encodeURIComponent(val)}`,
       );
       const data = await res.json();
-      setSuggestions(data);
-      updateAutocompleteCoords();
+      setSuggestions({ ...data, value: val });
       setShowSuggestions(true);
     } catch {
+      setSuggestions({ value: "", areas: [], projects: [], cities: [] });
       setShowSuggestions(false);
     }
   };
@@ -788,6 +763,7 @@ export default function HomeHeroSection({ data }) {
   // ── Main search submit ──
   const handleSearch = (e) => {
     e.preventDefault();
+    setIsSearching(true);
     const city = modalFilters.city || selectedCity;
     const q = modalFilters.q || searchBy;
     const bhk =
@@ -809,6 +785,7 @@ export default function HomeHeroSection({ data }) {
   const handleModalApply = (filters) => {
     setModalFilters(filters);
     setFilterOpen(false);
+    setIsSearching(true);
     const qs = buildParams({
       city: filters.city,
       q: filters.q,
@@ -869,7 +846,7 @@ export default function HomeHeroSection({ data }) {
                     >
                       <span className="inline-flex items-center gap-2 bg-red-600/90 text-white text-xs font-bold px-4 py-1.5 rounded-full backdrop-blur-sm shadow">
                         <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                        1000+ Verified Properties
+                        The Perfect Property Hub
                       </span>
                     </motion.div>
                     <motion.div
@@ -984,9 +961,9 @@ export default function HomeHeroSection({ data }) {
                             onFocus={() => {
                               if (
                                 suggestions.areas?.length > 0 ||
-                                suggestions.projects?.length > 0
+                                suggestions.projects?.length > 0 ||
+                                suggestions.value
                               ) {
-                                updateAutocompleteCoords();
                                 setShowSuggestions(true);
                               }
                             }}
@@ -1011,63 +988,100 @@ export default function HomeHeroSection({ data }) {
                         {showSuggestions &&
                           (suggestions.areas?.length > 0 ||
                             suggestions.projects?.length > 0 ||
-                            suggestions.cities?.length > 0) && (
+                            suggestions.cities?.length > 0 ||
+                            suggestions.value) && (
                             <div
-                              style={{
-                                position: "fixed",
-                                top: autocompleteCoords.top,
-                                left: autocompleteCoords.left,
-                                width: autocompleteCoords.width,
-                                zIndex: 9999,
-                              }}
-                              className="bg-white shadow-2xl rounded-xl max-h-56 overflow-y-auto border border-gray-100"
+                              className="absolute top-full left-0 mt-2 w-full z-[9999] bg-white shadow-2xl rounded-xl max-h-56 overflow-y-auto border border-gray-100"
                               onScroll={(e) => e.stopPropagation()}
                             >
-                              {suggestions.areas?.map((area) => (
+                              {/* General search option */}
+                              {/* {suggestions.value && (
                                 <button
-                                  key={area._id}
                                   type="button"
-                                  className="w-full text-left px-4 py-2.5 hover:bg-red-50 text-sm text-gray-700 flex items-center gap-2 transition-colors hover:text-red-600"
+                                  className="w-full text-left px-4 py-2.5 hover:bg-gray-100 text-sm text-gray-700 transition-colors cursor-pointer"
                                   onClick={() => {
-                                    setSearchBy(area.name);
+                                    setSearchBy(suggestions.value);
                                     setShowSuggestions(false);
                                   }}
                                 >
-                                  <FiMapPin
-                                    size={12}
-                                    className="text-gray-400 flex-shrink-0"
-                                  />
-                                  {area.name}
+                                  Search for "{suggestions.value}"
                                 </button>
-                              ))}
-                              {suggestions.cities?.map((city) => (
-                                <button
-                                  key={city._id}
-                                  type="button"
-                                  className="w-full text-left px-4 py-2.5 hover:bg-red-50 text-sm text-gray-700 transition-colors hover:text-red-600"
-                                  onClick={() => {
-                                    setSelectedCity(city.name);
-                                    setShowSuggestions(false);
-                                  }}
-                                >
-                                  {city.name}
-                                </button>
-                              ))}
-                              {suggestions.projects?.map((project) => (
-                                <button
-                                  key={project._id}
-                                  type="button"
-                                  className="w-full text-left px-4 py-2.5 hover:bg-red-50 text-sm text-gray-700 transition-colors hover:text-red-600"
-                                  onClick={() => {
-                                    router.push(
-                                      `/project-page/${encodeURIComponent(project.slug || project._id)}`,
-                                    );
-                                    setShowSuggestions(false);
-                                  }}
-                                >
-                                  {project.projectName}
-                                </button>
-                              ))}
+                              )} */}
+
+                              {/* Areas suggestions section */}
+                              {suggestions.areas?.length > 0 && (
+                                <>
+                                  <div className="px-4 py-1.5 border-t border-gray-100 text-[11px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50/50">
+                                    Areas
+                                  </div>
+                                  {suggestions.areas.map((area) => (
+                                    <button
+                                      key={area._id}
+                                      type="button"
+                                      className="w-full text-left px-4 py-2.5 hover:bg-red-50 text-sm text-gray-700 flex items-center gap-2 transition-colors hover:text-red-600 cursor-pointer"
+                                      onClick={() => {
+                                        setSearchBy(area.name);
+                                        setShowSuggestions(false);
+                                      }}
+                                    >
+                                      <FiMapPin
+                                        size={12}
+                                        className="text-gray-400 flex-shrink-0"
+                                      />
+                                      {area.name}
+                                    </button>
+                                  ))}
+                                </>
+                              )}
+
+                              {/* Cities suggestions section */}
+                              {suggestions.cities?.length > 0 && (
+                                <>
+                                  <div className="px-4 py-1.5 border-t border-gray-100 text-[11px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50/50">
+                                    Cities
+                                  </div>
+                                  {suggestions.cities.map((city) => (
+                                    <button
+                                      key={city._id}
+                                      type="button"
+                                      className="w-full text-left px-4 py-2.5 hover:bg-red-50 text-sm text-gray-700 transition-colors hover:text-red-600 cursor-pointer"
+                                      onClick={() => {
+                                        setSelectedCity(city.name);
+                                        setShowSuggestions(false);
+                                      }}
+                                    >
+                                      {city.name}
+                                    </button>
+                                  ))}
+                                </>
+                              )}
+
+                              {/* Projects suggestions section */}
+                              {suggestions.projects?.length > 0 && (
+                                <>
+                                  <div className="px-4 py-1.5 border-t border-gray-100 text-[11px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50/50">
+                                    Projects
+                                  </div>
+                                  {suggestions.projects.map((project) => (
+                                    <button
+                                      key={project._id}
+                                      type="button"
+                                      className="w-full text-left px-4 py-2.5 hover:bg-red-50 text-sm text-gray-700 transition-colors hover:text-red-600 cursor-pointer"
+                                      onClick={() => {
+                                        setIsSearching(true);
+                                        router.push(
+                                          `/project-page/${encodeURIComponent(
+                                            project.slug || project._id,
+                                          )}`,
+                                        );
+                                        setShowSuggestions(false);
+                                      }}
+                                    >
+                                      {project.projectName}
+                                    </button>
+                                  ))}
+                                </>
+                              )}
                             </div>
                           )}
                       </div>
