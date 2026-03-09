@@ -101,7 +101,7 @@ function Header() {
               {/* Mobile icon logo */}
               <span className="block md:hidden">
                 <Image
-                  src="/image.png"
+                  src="/NewLogo.png"
                   alt="Shelter4U"
                   width={40}
                   height={40}
@@ -111,10 +111,10 @@ function Header() {
               {/* Desktop full logo */}
               <span className="hidden md:block">
                 <Image
-                  src="/image.png"
+                  src="/NewLogo.png"
                   alt="Shelter4U"
-                  width={100}
-                  height={40}
+                  width={90}
+                  height={35}
                   priority
                 />
               </span>

@@ -107,16 +107,16 @@ export default function PropertyOptions() {
       <div className="max-w-7xl mx-auto pb-6 sm:p-8">
         {/* Heading */}
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">
-          Property Options in {CITY}
+          Quick Property Search in {CITY}
         </h2>
 
         {/* 4-column grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {columns.map((col) => (
             <div key={col.heading}>
-              <p className="text-sm font-semibold text-gray-900 mb-3">
+              {/* <p className="text-sm font-semibold text-gray-900 mb-3">
                 {col.heading}
-              </p>
+              </p> */}
               <ul className="space-y-2">
                 {col.links.map((link, i) => (
                   <li key={i}>

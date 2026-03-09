@@ -12,6 +12,7 @@ import {
   FiGrid,
   FiTag,
   FiClock,
+  FiArrowUp,
 } from "react-icons/fi";
 
 // Skeleton placeholder shown while client hydrates (matches Cards dimensions)
@@ -75,6 +76,7 @@ const SearchPageClient = ({ initialProjects = [] }) => {
   const searchRef = useRef(null);
   const loader = useRef(null);
   const [isClient, setIsClient] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -346,8 +348,25 @@ const SearchPageClient = ({ initialProjects = [] }) => {
     }
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 relative">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl lg:text-6xl mb-4">
@@ -590,6 +609,21 @@ const SearchPageClient = ({ initialProjects = [] }) => {
           )}
         </div>
       </div>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-[90px] right-[28px] bg-red-600 text-white w-12 h-12 rounded-full shadow-[0_10px_40px_-10px_rgba(220,38,38,0.7)] hover:bg-red-700 hover:scale-110 hover:-translate-y-1 active:scale-95 transition-all duration-300 z-[100] cursor-pointer group flex items-center justify-center border-2 border-white"
+          aria-label="Scroll to top"
+          type="button"
+        >
+          <FiArrowUp
+            className="w-5 h-5 group-hover:-translate-y-1 transition-transform duration-300"
+            strokeWidth={2.5}
+          />
+        </button>
+      )}
     </div>
   );
 };

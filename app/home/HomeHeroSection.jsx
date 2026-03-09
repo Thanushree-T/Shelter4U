@@ -21,6 +21,7 @@ import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
    Static Data
 ───────────────────────────────────────────────────────────── */
 const CITIES = ["Ahmedabad", "Gandhinagar"];
+const PROPERTY_CATEGORIES = ["Residential", "Commercial", "Weekend Plots"];
 
 const BHK_OPTIONS = [
   { label: "1 BHK", value: "1BHK" },
@@ -55,8 +56,9 @@ const POPULAR_LOCALITIES = [
   "Vaishnodevi",
   "Gota",
   "Jagatpur",
-  "Iscon-Ambli",
-  "Bodakdev",
+  "Ambli",
+  "Gift City",
+  "Zundal",
 ];
 
 /* ─────────────────────────────────────────────────────────────
@@ -635,6 +637,7 @@ export default function HomeHeroSection({ data }) {
 
   // ── Search state ──
   const [selectedCity, setSelectedCity] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [searchBy, setSearchBy] = useState("");
   const [selectedBhk, setSelectedBhk] = useState("");
   const [minBudget, setMinBudget] = useState("");
@@ -742,6 +745,7 @@ export default function HomeHeroSection({ data }) {
     max,
     propertyTypes,
     possessions,
+    category,
   } = {}) => {
     const params = new URLSearchParams();
     if (city) params.set("city", city);
@@ -749,7 +753,17 @@ export default function HomeHeroSection({ data }) {
     if (bhk) params.set("unitType", bhk);
     if (min) params.set("minBudget", min);
     if (max) params.set("maxBudget", max);
-    if (propertyTypes?.length) params.set("projectType", propertyTypes[0]);
+
+    // Filter panel array vs our explicit category selection
+    let defaultProjectType = category;
+    if (category === "Weekend Plots") defaultProjectType = "Land";
+
+    if (propertyTypes?.length) {
+      params.set("projectType", propertyTypes[0]);
+    } else if (defaultProjectType) {
+      params.set("projectType", defaultProjectType);
+    }
+
     if (possessions?.length)
       params.set(
         "status",
@@ -777,6 +791,7 @@ export default function HomeHeroSection({ data }) {
       max: modalFilters.maxBudget,
       propertyTypes: modalFilters.propertyTypes,
       possessions: modalFilters.possessions,
+      category: selectedCategory,
     });
     router.push(`/search?${qs}`);
   };
@@ -794,6 +809,7 @@ export default function HomeHeroSection({ data }) {
       max: filters.maxBudget,
       propertyTypes: filters.propertyTypes,
       possessions: filters.possessions,
+      category: selectedCategory,
     });
     router.push(`/search?${qs}`);
   };
@@ -838,7 +854,7 @@ export default function HomeHeroSection({ data }) {
                 {/* ── LEFT: Headline + paragraphs ── */}
                 <div className="space-y-6">
                   {/* Badge */}
-                  <div className="flex items-center gap-2">
+                  {/* <div className="flex items-center gap-2">
                     <motion.div
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -863,7 +879,7 @@ export default function HomeHeroSection({ data }) {
                         Zero Brokerage Charges
                       </button>
                     </motion.div>
-                  </div>
+                  </div> */}
                   {/* Typing headline */}
                   <motion.div
                     className="h-[130px] sm:h-[200px] lg:h-[240px] flex items-start"
@@ -934,6 +950,33 @@ export default function HomeHeroSection({ data }) {
                               }
                               className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all duration-150 cursor-pointer ${
                                 selectedCity === c
+                                  ? "bg-red-600 text-white border-red-600 shadow-md"
+                                  : "bg-white text-gray-700 border-gray-200 hover:border-red-300 hover:text-red-600"
+                              }`}
+                            >
+                              {c}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Property Category select pills */}
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">
+                          Property Type
+                        </label>
+                        <div className="flex gap-2">
+                          {PROPERTY_CATEGORIES.map((c) => (
+                            <button
+                              key={c}
+                              type="button"
+                              onClick={() =>
+                                setSelectedCategory(
+                                  selectedCategory === c ? "" : c,
+                                )
+                              }
+                              className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all duration-150 cursor-pointer ${
+                                selectedCategory === c
                                   ? "bg-red-600 text-white border-red-600 shadow-md"
                                   : "bg-white text-gray-700 border-gray-200 hover:border-red-300 hover:text-red-600"
                               }`}

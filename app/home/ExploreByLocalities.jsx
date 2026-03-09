@@ -28,7 +28,7 @@ export default function ExploreByLocalities({ localityData = [] }) {
       <div className="max-w-7xl mx-auto rounded-xl pb-6 sm:p-8">
         {/* Section heading */}
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5">
-          Explore New Projects by Localities
+          Explore Projects by Location
         </h2>
 
         {/* Locality tabs */}

@@ -81,7 +81,7 @@ export default function HomeThirdSection({ data }) {
                   optimizeCloudinaryUrl(data?.img, {
                     width: 700,
                     height: 900,
-                  }) || "/image.png"
+                  }) || "/NewLogo.png"
                 } // Fallback image
                 alt="company"
                 fill // Fill the container
