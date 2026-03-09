@@ -15,7 +15,7 @@ const HomeFifthSection = ({ data }) => {
         {/* Section Heading */}
         <div className="flex flex-col items-center justify-center mb-12">
           <p className="text-3xl font-bold text-gray-800 sm:text-4xl mb-2 text-center">
-            Our Authorized Developers
+            Authorized Channel Partners Of
           </p>
         </div>
 
