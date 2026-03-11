@@ -31,15 +31,13 @@ const UNIT_TYPES_BY_CATEGORY = {
     { label: "4 BHK", value: "4BHK" },
     { label: "5 BHK", value: "5BHK" },
     { label: "6 BHK", value: "6BHK" },
-    { label: "Villas", value: "Villas" }
+    { label: "Villas", value: "Villas" },
   ],
   Commercial: [
-    { label: "Shops", value: "Shops" },
-    { label: "Offices", value: "Offices" }
+    { label: "Showroom", value: "Showroom" },
+    { label: "Office", value: "Office" },
   ],
-  "Weekend Plots": [
-    { label: "Plots", value: "Plots" }
-  ],
+  "Weekend Plots": [{ label: "Plots", value: "Plots" }],
   "": [
     { label: "1 BHK", value: "1BHK" },
     { label: "2 BHK", value: "2BHK" },
@@ -49,8 +47,8 @@ const UNIT_TYPES_BY_CATEGORY = {
     { label: "6 BHK", value: "6BHK" },
     { label: "Villas", value: "Villas" },
     { label: "Shops", value: "Shops" },
-    { label: "Offices", value: "Offices" },
-    { label: "Plots", value: "Plots" }
+    { label: "Office", value: "Office" },
+    { label: "Plots", value: "Plots" },
   ],
 };
 
@@ -693,7 +691,10 @@ export default function HomeHeroSection({ data }) {
 
   // ── Reset Unit Type if invalid for category ──
   useEffect(() => {
-    if (selectedBhk && !availableUnitTypes.some(opt => opt.value === selectedBhk)) {
+    if (
+      selectedBhk &&
+      !availableUnitTypes.some((opt) => opt.value === selectedBhk)
+    ) {
       setSelectedBhk("");
     }
   }, [selectedCategory, selectedBhk, availableUnitTypes]);
@@ -1190,7 +1191,7 @@ export default function HomeHeroSection({ data }) {
                         <button
                           type="submit"
                           disabled={isSearching}
-                          className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-75 disabled:cursor-not-allowed active:scale-[0.98] text-white text-sm font-bold py-3 rounded-xl transition-all duration-150 flex items-center justify-center gap-2 shadow-lg shadow-red-600/30"
+                          className="flex-1 bg-red-600 cursor-pointer hover:bg-red-700 disabled:opacity-75 disabled:cursor-not-allowed active:scale-[0.98] text-white text-sm font-bold py-3 rounded-xl transition-all duration-150 flex items-center justify-center gap-2 shadow-lg shadow-red-600/30"
                         >
                           {isSearching ? (
                             <>
