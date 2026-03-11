@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
-import { models } from "@/lib/connections.js";
+import { models, connectToDBs } from "@/lib/connections.js";
 const { Area, Builder, Project, City, State } = models;
 
 export async function GET(req) {
   try {
+    await connectToDBs();
+
     const { searchParams } = new URL(req.url);
     const filters = {};
 
@@ -123,7 +125,7 @@ export async function GET(req) {
       if (cityDoc) {
         filters.city = cityDoc._id;
       } else {
-        return NextResponse.json([], { status: 200 });
+        return NextResponse.json({ projects: [], hasMore: false, totalCount: 0 }, { status: 200 });
       }
     }
 
@@ -135,7 +137,7 @@ export async function GET(req) {
       if (stateDoc) {
         filters.state = stateDoc._id;
       } else {
-        return NextResponse.json([], { status: 200 });
+        return NextResponse.json({ projects: [], hasMore: false, totalCount: 0 }, { status: 200 });
       }
     }
 
@@ -147,7 +149,7 @@ export async function GET(req) {
       if (areaDoc) {
         filters.area = areaDoc._id;
       } else {
-        return NextResponse.json([], { status: 200 });
+        return NextResponse.json({ projects: [], hasMore: false, totalCount: 0 }, { status: 200 });
       }
     }
 

@@ -23,15 +23,36 @@ import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 const CITIES = ["Ahmedabad", "Gandhinagar"];
 const PROPERTY_CATEGORIES = ["Residential", "Commercial", "Weekend Plots"];
 
-const BHK_OPTIONS = [
-  { label: "1 BHK", value: "1BHK" },
-  { label: "2 BHK", value: "2BHK" },
-  { label: "3 BHK", value: "3BHK" },
-  { label: "4 BHK", value: "4BHK" },
-  { label: "5 BHK", value: "5BHK" },
-  { label: "6 BHK", value: "6BHK" },
-  { label: "7 BHK", value: "7BHK" },
-];
+const UNIT_TYPES_BY_CATEGORY = {
+  Residential: [
+    { label: "1 BHK", value: "1BHK" },
+    { label: "2 BHK", value: "2BHK" },
+    { label: "3 BHK", value: "3BHK" },
+    { label: "4 BHK", value: "4BHK" },
+    { label: "5 BHK", value: "5BHK" },
+    { label: "6 BHK", value: "6BHK" },
+    { label: "Villas", value: "Villas" }
+  ],
+  Commercial: [
+    { label: "Shops", value: "Shops" },
+    { label: "Offices", value: "Offices" }
+  ],
+  "Weekend Plots": [
+    { label: "Plots", value: "Plots" }
+  ],
+  "": [
+    { label: "1 BHK", value: "1BHK" },
+    { label: "2 BHK", value: "2BHK" },
+    { label: "3 BHK", value: "3BHK" },
+    { label: "4 BHK", value: "4BHK" },
+    { label: "5 BHK", value: "5BHK" },
+    { label: "6 BHK", value: "6BHK" },
+    { label: "Villas", value: "Villas" },
+    { label: "Shops", value: "Shops" },
+    { label: "Offices", value: "Offices" },
+    { label: "Plots", value: "Plots" }
+  ],
+};
 
 const BUDGET_OPTIONS = [
   { label: "25 Lakh", value: "2500000" },
@@ -312,7 +333,7 @@ function FilterPill({ label, active, onClick }) {
 /* ─────────────────────────────────────────────────────────────
    Filter Modal
 ───────────────────────────────────────────────────────────── */
-function FilterModal({ open, onClose, onApply, initial }) {
+function FilterModal({ open, onClose, onApply, initial, unitOptions }) {
   const [city, setCity] = useState("");
   const [searchText, setSearchText] = useState("");
   const [propertyTypes, setPropertyTypes] = useState([]);
@@ -500,7 +521,7 @@ function FilterModal({ open, onClose, onApply, initial }) {
             <div>
               <div className="flex items-center justify-between mb-3">
                 <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">
-                  BHK
+                  Unit Type
                 </p>
                 {bhks.length > 0 && (
                   <button
@@ -513,7 +534,7 @@ function FilterModal({ open, onClose, onApply, initial }) {
                 )}
               </div>
               <div className="flex flex-wrap gap-2">
-                {BHK_OPTIONS.map((b) => (
+                {unitOptions.map((b) => (
                   <FilterPill
                     key={b.value}
                     label={b.label}
@@ -663,10 +684,19 @@ export default function HomeHeroSection({ data }) {
     ...(modalFilters.possessions || []),
   ].filter(Boolean).length;
 
+  const availableUnitTypes = UNIT_TYPES_BY_CATEGORY[selectedCategory || ""];
+
   // ── Initialise client flag ──
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // ── Reset Unit Type if invalid for category ──
+  useEffect(() => {
+    if (selectedBhk && !availableUnitTypes.some(opt => opt.value === selectedBhk)) {
+      setSelectedBhk("");
+    }
+  }, [selectedCategory, selectedBhk, availableUnitTypes]);
 
   // ── Typing animation effect ──
   useEffect(() => {
@@ -1133,11 +1163,11 @@ export default function HomeHeroSection({ data }) {
                       <div className="grid grid-cols-2 gap-3">
                         <div>
                           <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">
-                            BHK
+                            Unit Type
                           </label>
                           <ModalBudgetDropdown
-                            placeholder="Any BHK"
-                            options={BHK_OPTIONS}
+                            placeholder="Any Unit"
+                            options={availableUnitTypes}
                             value={selectedBhk}
                             onChange={setSelectedBhk}
                           />
@@ -1262,6 +1292,7 @@ export default function HomeHeroSection({ data }) {
         open={filterOpen}
         onClose={() => setFilterOpen(false)}
         onApply={handleModalApply}
+        unitOptions={availableUnitTypes}
         initial={{
           city: selectedCity,
           q: searchBy,
