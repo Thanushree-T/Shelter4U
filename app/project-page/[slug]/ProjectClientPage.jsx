@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { ChevronRight, Home } from "lucide-react";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 import ProjectTabSwitcher from "../Components/ProjectPageTabSwitcher.jsx";
@@ -88,6 +90,67 @@ const ProjectClientPage = ({ project }) => {
 
   return (
     <div className="bg-gray-50">
+      {/* ── Breadcrumbs ── */}
+      <nav
+        aria-label="Breadcrumb"
+        className="w-full bg-gray-50 border-y border-gray-200 shadow-sm px-4 py-2.5"
+      >
+        <ol className="max-w-7xl mx-auto flex flex-wrap items-center gap-1 text-sm text-gray-500">
+          {/* Home */}
+          <li className="flex items-center gap-1">
+            <Link
+              href="/"
+              className="flex items-center gap-1 text-gray-500 hover:text-red-600 transition-colors"
+            >
+              <Home size={14} />
+              <span>Home</span>
+            </Link>
+          </li>
+
+          {/* City crumb */}
+          {project?.city?.name && (
+            <>
+              <li className="text-gray-300"><ChevronRight size={14} /></li>
+              <li>
+                <Link
+                  href={`/search?projectType=${encodeURIComponent(project?.projectType?.[0] || "")}&city=${encodeURIComponent(project.city.name)}`}
+                  className="hover:text-red-600 transition-colors"
+                >
+                  {project?.projectSubType?.[0] === "Apartment" ? "Flat for Sale" : 
+                   project?.projectSubType?.[0] === "Bunglows/Villa/Row House" ? "Villa for Sale" :
+                   project?.projectSubType?.[0] ? `${project.projectSubType[0]} for Sale` :
+                   project?.projectType?.[0] ? `${project.projectType[0]} for Sale` : "Property for Sale"} in {project.city.name}
+                </Link>
+              </li>
+            </>
+          )}
+
+          {/* Area crumb */}
+          {project?.area?.name && (
+            <>
+              <li className="text-gray-300"><ChevronRight size={14} /></li>
+              <li>
+                <Link
+                  href={`/search?projectType=${encodeURIComponent(project?.projectType?.[0] || "")}&area=${encodeURIComponent(project.area.name)}`}
+                  className="hover:text-red-600 transition-colors"
+                >
+                  {project?.projectSubType?.[0] === "Apartment" ? "Flat for Sale" : 
+                   project?.projectSubType?.[0] === "Bunglows/Villa/Row House" ? "Villa for Sale" :
+                   project?.projectSubType?.[0] ? `${project.projectSubType[0]} for Sale` :
+                   project?.projectType?.[0] ? `${project.projectType[0]} for Sale` : "Property for Sale"} in {project.area.name}
+                </Link>
+              </li>
+            </>
+          )}
+
+          {/* Current project (non-clickable) */}
+          <li className="text-gray-300"><ChevronRight size={14} /></li>
+          <li className="font-semibold text-gray-800 truncate max-w-[200px] sm:max-w-xs">
+            {project?.projectName}
+          </li>
+        </ol>
+      </nav>
+
       {/*  Hero Slider at the top */}
       <ProjectHeroSlider
         project={project}

@@ -7,7 +7,7 @@ const ProjectSchema = new Schema({
   projectName: String,
   projectType: {
     type: [String],
-    enum: ["Residential", "Commercial", "Land"],
+    enum: ["Residential", "Commercial", "Land", "Penthouse/Villa"],
   },
   projectSubType: {
     type: [String],

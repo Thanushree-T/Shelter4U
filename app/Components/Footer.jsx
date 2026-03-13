@@ -129,7 +129,7 @@ const Footer = () => {
               PROPERTY BY TYPE
             </p>
             <ul className="space-y-3">
-              {["Residential", "Commercial", "Land"].map((type, index) => (
+              {["Residential", "Commercial", "Land", "Penthouse/Villa"].map((type, index) => (
                 <li key={index} className="flex items-center group">
                   <span className="text-lg mr-2 text-gray-400">›</span>
                   <Link
