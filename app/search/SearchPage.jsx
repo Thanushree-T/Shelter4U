@@ -37,7 +37,7 @@ const CardSkeleton = () => (
 // Static map — lives outside the component so it's never recreated
 const UNIT_TYPES_BY_PROJECT_TYPE = {
   Residential: ["1BHK", "2BHK", "3BHK", "4BHK", "5BHK", "6BHK", "Villas"],
-  Commercial: ["Shops", "Offices"],
+  Commercial: ["Showroom", "Office"],
   Land: ["Plots"],
   "": [
     "1BHK",
@@ -46,8 +46,8 @@ const UNIT_TYPES_BY_PROJECT_TYPE = {
     "4BHK",
     "5BHK",
     "6BHK",
-    "Shops",
-    "Offices",
+    "Showroom",
+    "Office",
     "Villas",
     "Plots",
   ],

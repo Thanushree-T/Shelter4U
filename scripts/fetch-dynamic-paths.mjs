@@ -115,7 +115,7 @@ async function fetchPaths() {
 
     const paths = [
       // All project detail pages
-      ...projects.map((p) => `/project-page/${p.slug}`),
+      ...projects.map((p) => `/project-page/${encodeURIComponent(p.slug)}`),
       // All career detail pages
       ...careers.map((c) => `/about/career/${c._id}`),
       // All search filter URLs
