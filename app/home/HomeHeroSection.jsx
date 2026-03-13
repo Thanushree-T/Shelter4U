@@ -21,7 +21,7 @@ import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
    Static Data
 ───────────────────────────────────────────────────────────── */
 const CITIES = ["Ahmedabad", "Gandhinagar"];
-const PROPERTY_CATEGORIES = ["Residential", "Commercial", "Weekend Plots"];
+const PROPERTY_CATEGORIES = ["Residential", "Commercial", "Weekend Plots", "Penthouse/Villa"];
 
 const UNIT_TYPES_BY_CATEGORY = {
   Residential: [
@@ -38,6 +38,10 @@ const UNIT_TYPES_BY_CATEGORY = {
     { label: "Office", value: "Office" },
   ],
   "Weekend Plots": [{ label: "Plots", value: "Plots" }],
+  "Penthouse/Villa": [
+    { label: "Penthouse", value: "Penthouse" },
+    { label: "Villa", value: "Villa" },
+  ],
   "": [
     { label: "1 BHK", value: "1BHK" },
     { label: "2 BHK", value: "2BHK" },
@@ -49,6 +53,8 @@ const UNIT_TYPES_BY_CATEGORY = {
     { label: "Shops", value: "Shops" },
     { label: "Office", value: "Office" },
     { label: "Plots", value: "Plots" },
+    { label: "Penthouse", value: "Penthouse" },
+    { label: "Villa", value: "Villa" },
   ],
 };
 
@@ -63,7 +69,6 @@ const BUDGET_OPTIONS = [
   { label: "10 Crore", value: "100000000" },
 ];
 
-const PROPERTY_TYPES = ["Flat", "Duplex", "Penthouse", "Villa", "Plot"];
 const POSSESSION_OPTIONS = [
   "Ready to Move",
   "Upto 1 Year",
@@ -504,7 +509,7 @@ function FilterModal({ open, onClose, onApply, initial, unitOptions }) {
                 )}
               </div>
               <div className="flex flex-wrap gap-2">
-                {PROPERTY_TYPES.map((t) => (
+                {PROPERTY_CATEGORIES.map((t) => (
                   <FilterPill
                     key={t}
                     label={t}
@@ -790,7 +795,9 @@ export default function HomeHeroSection({ data }) {
     if (category === "Weekend Plots") defaultProjectType = "Land";
 
     if (propertyTypes?.length) {
-      params.set("projectType", propertyTypes[0]);
+      let selectedType = propertyTypes[0];
+      if (selectedType === "Weekend Plots") selectedType = "Land";
+      params.set("projectType", selectedType);
     } else if (defaultProjectType) {
       params.set("projectType", defaultProjectType);
     }

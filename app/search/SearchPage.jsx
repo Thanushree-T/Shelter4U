@@ -39,6 +39,7 @@ const UNIT_TYPES_BY_PROJECT_TYPE = {
   Residential: ["1BHK", "2BHK", "3BHK", "4BHK", "5BHK", "6BHK", "Villas"],
   Commercial: ["Showroom", "Office"],
   Land: ["Plots"],
+  "Penthouse/Villa": ["Penthouse", "Villa"],
   "": [
     "1BHK",
     "2BHK",
@@ -49,6 +50,8 @@ const UNIT_TYPES_BY_PROJECT_TYPE = {
     "Showroom",
     "Office",
     "Villas",
+    "Penthouse",
+    "Villa",
     "Plots",
   ],
 };
@@ -89,7 +92,7 @@ const SearchPageClient = ({ initialProjects = [] }) => {
     projects: [],
   });
 
-  const projectType = ["Residential", "Commercial", "Land"];
+  const projectType = ["Residential", "Commercial", "Land", "Penthouse/Villa"];
   const projectStatus = ["Under Construction", "Ready to Move"];
 
   // Direct lookup from the stable constant above the component
@@ -394,7 +397,7 @@ const SearchPageClient = ({ initialProjects = [] }) => {
                 <input
                   type="text"
                   value={searchQuery}
-                  placeholder="e.g. 'Luxury Villas in South Delhi'"
+                  placeholder="e.g. 'Luxury Villa's in Ahmedabad'"
                   className="text-sm font-medium text-gray-800 focus:outline-none border-b border-gray-200 pb-1 w-full focus:border-red-500 transition-colors"
                   onFocus={() => setShowSuggestions(true)}
                   onChange={handleAutocompleteChange}
