@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Cards from "../Components/Cards.jsx";
 import CustomPriceDropdown from "./CustomPriceDropdown.jsx";
+import CustomMultiSelectDropdown from "./CustomMultiSelectDropdown.jsx";
 import {
   FiSearch,
   FiMapPin,
@@ -12,6 +13,7 @@ import {
   FiGrid,
   FiTag,
   FiClock,
+  FiLayers,
   FiArrowUp,
 } from "react-icons/fi";
 
@@ -64,6 +66,7 @@ const SearchPageClient = ({ initialProjects = [] }) => {
   const [projects, setProjects] = useState(initialProjects);
   const [filters, setFilters] = useState({
     projectType: searchParams.get("projectType") || "",
+    projectSubType: searchParams.get("projectSubType") || "",
     status: searchParams.get("status") || "",
     minBudget: searchParams.get("minBudget") || "",
     maxBudget: searchParams.get("maxBudget") || "",
@@ -92,8 +95,26 @@ const SearchPageClient = ({ initialProjects = [] }) => {
     projects: [],
   });
 
-  const projectType = ["Residential", "Commercial", "Land", "Penthouse/Villa"];
+  const projectTypeToSubTypes = {
+    Residential: ["Apartment", "Bunglows/Villa/Row House", "Penthouse"],
+    Commercial: [
+      "Office Space",
+      "Shop/Showrooms",
+      "Warehouse",
+      "Industrial Shed",
+    ],
+    Land: ["Plot"],
+  };
+
+  const projectType = ["Residential", "Commercial", "Land"];
   const projectStatus = ["Under Construction", "Ready to Move"];
+
+  const availableSubTypes = useMemo(() => {
+    if (filters.projectType && projectTypeToSubTypes[filters.projectType]) {
+      return projectTypeToSubTypes[filters.projectType];
+    }
+    return Object.values(projectTypeToSubTypes).flat();
+  }, [filters.projectType]);
 
   // Direct lookup from the stable constant above the component
   const availableUnitTypes =
@@ -184,6 +205,7 @@ const SearchPageClient = ({ initialProjects = [] }) => {
   useEffect(() => {
     const newFilters = {
       projectType: searchParams.get("projectType") || "",
+      projectSubType: searchParams.get("projectSubType") || "",
       status: searchParams.get("status") || "",
       minBudget: searchParams.get("minBudget") || "",
       maxBudget: searchParams.get("maxBudget") || "",
@@ -280,6 +302,7 @@ const SearchPageClient = ({ initialProjects = [] }) => {
 
     // When project type changes, reset unitType if it's no longer valid
     if (filterName === "projectType") {
+      newFilters.projectSubType = "";
       const allowed =
         UNIT_TYPES_BY_PROJECT_TYPE[value] ?? UNIT_TYPES_BY_PROJECT_TYPE[""];
       if (newFilters.unitType && !allowed.includes(newFilters.unitType)) {
@@ -296,6 +319,11 @@ const SearchPageClient = ({ initialProjects = [] }) => {
         ...(filterName === "projectType" &&
         newFilters.unitType !== filters.unitType
           ? { unitType: newFilters.unitType }
+          : {}),
+        // also pass cleared projectSubType if it was reset
+        ...(filterName === "projectType" &&
+        newFilters.projectSubType !== filters.projectSubType
+          ? { projectSubType: newFilters.projectSubType }
           : {}),
         q: "",
       });
@@ -456,8 +484,8 @@ const SearchPageClient = ({ initialProjects = [] }) => {
 
           <div className="flex flex-col xl:flex-row p-4 bg-white rounded-2xl shadow-lg border border-gray-100">
             {/* Other Filters */}
-            <div className="flex items-center flex-1 mb-2 xl:mb-0 xl:mr-4">
-              <div className="p-2 bg-red-50 rounded-lg mr-3">
+            <div className="flex items-center flex-1 mb-2 xl:mb-0 xl:mr-2">
+              <div className="p-2 bg-red-50 rounded-lg mr-2">
                 <FiHome className="text-red-600 text-xl" />
               </div>
               <div className="flex flex-col w-full relative">
@@ -482,8 +510,25 @@ const SearchPageClient = ({ initialProjects = [] }) => {
               </div>
             </div>
 
-            <div className="flex items-center flex-1 mb-2 xl:mb-0 xl:mx-4">
-              <div className="p-2 bg-red-50 rounded-lg mr-3">
+            <div className="flex items-center flex-1 mb-2 xl:mb-0 xl:mx-2">
+              <div className="p-2 bg-red-50 rounded-lg mr-2">
+                <FiLayers className="text-red-600 text-xl" />
+              </div>
+              <div className="flex flex-col w-full relative">
+                <label className="text-xs font-medium text-gray-500 mb-1">
+                  Property Sub-Type
+                </label>
+                <CustomMultiSelectDropdown
+                  placeholder="Any"
+                  options={availableSubTypes}
+                  value={filters.projectSubType}
+                  onChange={(value) => handleFilterChange("projectSubType", value)}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center flex-1 mb-2 xl:mb-0 xl:mx-2">
+              <div className="p-2 bg-red-50 rounded-lg mr-2">
                 <FiClock className="text-red-600 text-xl" />
               </div>
               <div className="flex flex-col w-full relative">
@@ -506,8 +551,8 @@ const SearchPageClient = ({ initialProjects = [] }) => {
               </div>
             </div>
 
-            <div className="flex items-center flex-1 mb-2 xl:mb-0 xl:mx-4">
-              <div className="p-2 bg-red-50 rounded-lg mr-3">
+            <div className="flex items-center flex-1 mb-2 xl:mb-0 xl:mx-2">
+              <div className="p-2 bg-red-50 rounded-lg mr-2">
                 <FiGrid className="text-red-600 text-xl" />
               </div>
               <div className="flex flex-col w-full relative">
@@ -533,8 +578,8 @@ const SearchPageClient = ({ initialProjects = [] }) => {
             </div>
 
             {/* UPDATED PRICE RANGE SECTION USING CUSTOM COMPONENT */}
-            <div className="flex items-center flex-2 mb-2 xl:mb-0 xl:ml-4">
-              <div className="p-2 bg-red-50 rounded-lg mr-3">
+            <div className="flex items-center flex-[1.5] mb-2 xl:mb-0 xl:ml-2">
+              <div className="p-2 bg-red-50 rounded-lg mr-2">
                 <FiTag className="text-red-600 text-xl" />
               </div>
               <div className="flex flex-col w-full">

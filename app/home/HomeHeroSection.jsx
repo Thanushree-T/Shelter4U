@@ -797,7 +797,16 @@ export default function HomeHeroSection({ data }) {
     if (propertyTypes?.length) {
       let selectedType = propertyTypes[0];
       if (selectedType === "Weekend Plots") selectedType = "Land";
-      params.set("projectType", selectedType);
+      
+      if (selectedType === "Penthouse/Villa") {
+        params.set("projectType", "Residential");
+        params.set("projectSubType", "Bunglows/Villa/Row House,Penthouse");
+      } else {
+        params.set("projectType", selectedType);
+      }
+    } else if (defaultProjectType === "Penthouse/Villa") {
+      params.set("projectType", "Residential");
+      params.set("projectSubType", "Bunglows/Villa/Row House,Penthouse");
     } else if (defaultProjectType) {
       params.set("projectType", defaultProjectType);
     }
