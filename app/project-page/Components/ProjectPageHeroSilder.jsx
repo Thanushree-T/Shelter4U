@@ -85,6 +85,9 @@ const ProjectHeroSlider = ({
         )}
       </div>
 
+      {/* Subtle bottom gradient for text readability (only covers the bottom half) */}
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />
+
       {/* Text overlay content (bottom area) */}
       <div className="absolute bottom-0 left-0 right-0 px-4 sm:px-6 pb-6 sm:pb-8 max-w-7xl mx-auto">
         <div className="flex flex-col">
@@ -120,12 +123,12 @@ const ProjectHeroSlider = ({
             </div>
 
             {/* Project name — always present for SEO (h1 must not be empty) */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 leading-tight tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 leading-tight tracking-tight drop-shadow-md">
               {project?.projectName || "Property Details"}
             </h1>
 
             {/* Price display */}
-            <div className="text-lg sm:text-xl font-bold text-white mb-1">
+            <div className="text-lg sm:text-xl font-bold text-white mb-1 drop-shadow-md">
               {Array.isArray(project?.projectSpecification) &&
               project?.projectSpecification?.length > 0 ? (
                 <>
@@ -139,7 +142,7 @@ const ProjectHeroSlider = ({
             </div>
 
             {/* Location display */}
-            <div className="flex items-center text-white/90">
+            <div className="flex items-center text-white/90 drop-shadow-md">
               <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2" strokeWidth={2} />
               <span className="text-sm sm:text-base">
                 {project?.area?.name}, {project?.city?.name}
