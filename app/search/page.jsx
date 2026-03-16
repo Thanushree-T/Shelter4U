@@ -39,8 +39,10 @@ async function fetchInitialProjects(searchParams) {
     const get = (key) => params?.[key] || null;
 
     if (get("projectType")) filters.projectType = { $in: [get("projectType")] };
-    if (get("projectSubType"))
-      filters.projectSubType = { $in: [get("projectSubType")] };
+    if (get("projectSubType")) {
+      const subTypes = get("projectSubType").split(",").map(s => s.trim());
+      filters.projectSubType = { $in: subTypes };
+    }
     if (get("status"))
       filters.projectSpecification = { $elemMatch: { status: get("status") } };
     if (get("unitType"))

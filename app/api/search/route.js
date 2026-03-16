@@ -27,7 +27,7 @@ export async function GET(req) {
 
     // Project Sub Type
     if (getParam("projectSubType")) {
-      filters.projectSubType = { $in: [getParam("projectSubType")] };
+      filters.projectSubType = { $in: getParamArray("projectSubType") };
     }
 
     // Status Filter
