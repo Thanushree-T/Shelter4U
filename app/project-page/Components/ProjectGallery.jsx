@@ -6,17 +6,17 @@ import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 const ProjectGallery = ({ galleryImages = [], openImageExpanded }) => {
   return (
     // Container for the entire gallery section
-    <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-      <h2 className="text-2xl font-semibold mb-8 text-gray-900">
+    <div className="bg-white rounded-2xl shadow-sm p-3.5 sm:p-5 border border-gray-100 animate-fade-in">
+      <h2 className="text-xl font-bold mb-2.5 text-gray-900 tracking-tight">
         Project Gallery
       </h2>
 
       {/* Grid layout for displaying images */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {galleryImages.map((image, index) => (
           <div
             key={index}
-            className="relative group rounded-xl overflow-hidden h-64 cursor-pointer"
+            className="relative h-28 sm:h-36 rounded-xl overflow-hidden border border-gray-200 cursor-pointer hover:shadow-md transition-all duration-300 group"
             // Open modal or expand image on click
             onClick={() => openImageExpanded(image)}
           >

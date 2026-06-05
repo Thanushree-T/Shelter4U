@@ -63,8 +63,8 @@ export default function ProjectSpecificationTable({ specifications = [], status 
   };
 
   return (
-    <div className="overflow-x-auto mt-6 space-y-10">
-      <h2 className="text-xl font-bold mb-4">Price Breakup</h2>
+    <div className="overflow-x-auto mt-2 space-y-6">
+      <h2 className="text-lg font-bold mb-3 text-gray-900">Price Breakup</h2>
 
       {/* Table for all non-bungalow specifications */}
       {otherSpecs.length > 0 && (
@@ -83,7 +83,7 @@ export default function ProjectSpecificationTable({ specifications = [], status 
       {/* Table specifically for bungalows, villas, row houses */}
       {bungalowSpecs.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold mb-2">Bungalows / Villas / Row Houses</h3>
+          <h3 className="text-base font-semibold mb-2.5 text-gray-800 mt-2">Bungalows / Villas / Row Houses</h3>
           <DataTable value={bungalowSpecs} className="text-sm" showGridlines>
             <Column field="unitType" header="Units" />
             <Column field="area" header="Area" />

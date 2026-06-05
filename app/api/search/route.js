@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { models, connectToDBs } from "@/lib/connections.js";
-const { Area, Builder, Project, City, State } = models;
+const { Area, Builder, Project, City, State, Property } = models;
 
 export async function GET(req) {
   try {
@@ -16,9 +16,135 @@ export async function GET(req) {
       return val ? val.split(",").map((v) => v.trim()) : [];
     };
 
+    const tab = getParam("tab") || "projects";
+
     const page = parseInt(getParam("page")) || 1;
     const limit = parseInt(getParam("limit")) || 12;
     const skip = (page - 1) * limit;
+
+    if (tab === "properties") {
+      filters.approvalStatus = "Approved";
+
+      // Project/Property Type
+      if (getParam("projectType")) {
+        const pType = getParam("projectType");
+        if (pType === "Residential") {
+          filters.propertyType = { $in: ["Apartment", "House", "Villa"] };
+        } else {
+          filters.propertyType = pType;
+        }
+      }
+
+      // Sub Type
+      if (getParam("projectSubType")) {
+        filters.propertySubtype = { $in: getParamArray("projectSubType") };
+      }
+
+      // Status
+      if (getParam("status")) {
+        filters.propertyStage = getParam("status");
+      }
+
+      // Unit Type
+      if (getParam("unitType")) {
+        filters.bhkType = getParam("unitType");
+      }
+
+      // Price Filters
+      const minBudget = parseFloat(getParam("minBudget"));
+      const maxBudget = parseFloat(getParam("maxBudget"));
+      if (!isNaN(minBudget) || !isNaN(maxBudget)) {
+        filters.price = {};
+        if (!isNaN(minBudget)) filters.price.$gte = minBudget;
+        if (!isNaN(maxBudget)) filters.price.$lte = maxBudget;
+      }
+
+      // City
+      if (getParam("city")) {
+        const cityDoc = await City.findOne({
+          name: { $regex: getParam("city"), $options: "i" },
+        });
+        if (cityDoc) {
+          filters.city = cityDoc._id;
+        } else {
+          return NextResponse.json({ projects: [], hasMore: false, totalCount: 0 }, { status: 200 });
+        }
+      }
+
+      // State
+      if (getParam("state")) {
+        const stateDoc = await State.findOne({
+          name: { $regex: getParam("state"), $options: "i" },
+        });
+        if (stateDoc) {
+          filters.state = stateDoc._id;
+        } else {
+          return NextResponse.json({ projects: [], hasMore: false, totalCount: 0 }, { status: 200 });
+        }
+      }
+
+      // Area
+      if (getParam("area")) {
+        const areaDoc = await Area.findOne({
+          name: { $regex: getParam("area"), $options: "i" },
+        });
+        if (areaDoc) {
+          filters.area = areaDoc._id;
+        } else {
+          return NextResponse.json({ projects: [], hasMore: false, totalCount: 0 }, { status: 200 });
+        }
+      }
+
+      // Amenities
+      const amenities = getParamArray("amenities");
+      if (amenities.length > 0) {
+        filters.amenities = { $all: amenities };
+      }
+
+      // Global Keyword Search
+      if (getParam("q")) {
+        const regex = new RegExp(getParam("q"), "i");
+
+        const [matchingAreas, matchingCities, matchingStates] =
+          await Promise.all([
+            Area.find({ name: regex }).select("_id"),
+            City.find({ name: regex }).select("_id"),
+            State.find({ name: regex }).select("_id"),
+          ]);
+
+        const areaIds = matchingAreas.map((a) => a._id);
+        const cityIds = matchingCities.map((c) => c._id);
+        const stateIds = matchingStates.map((s) => s._id);
+
+        filters.$or = [
+          { title: regex },
+          { description: regex },
+          { societyName: regex },
+          { landmark: regex },
+          { "location.address": regex },
+          ...(areaIds.length > 0 ? [{ area: { $in: areaIds } }] : []),
+          ...(cityIds.length > 0 ? [{ city: { $in: cityIds } }] : []),
+          ...(stateIds.length > 0 ? [{ state: { $in: stateIds } }] : []),
+        ];
+      }
+
+      const totalResults = await Property.countDocuments(filters);
+
+      const properties = await Property.find(filters)
+        .populate("area state city")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+      return NextResponse.json(
+        {
+          projects: properties,
+          hasMore: skip + properties.length < totalResults,
+          totalCount: totalResults,
+        },
+        { status: 200 },
+      );
+    }
 
     // Project Type
     if (getParam("projectType")) {

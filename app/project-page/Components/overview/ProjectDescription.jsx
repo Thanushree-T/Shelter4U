@@ -9,62 +9,64 @@ const AboutProject = ({ project }) => {
   const [showFullUsps, setShowFullUsps] = useState(false);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+    <div className="bg-white rounded-2xl shadow-sm p-3.5 sm:p-5 border border-gray-100">
       {/* Section Heading */}
-      <h2 className="text-2xl font-semibold mb-6 text-gray-900">
+      <h2 className="text-xl font-bold mb-2.5 text-gray-900 tracking-tight">
         About This Project
       </h2>
 
       {/* ---------------- Description ---------------- */}
-      <pre className="text-gray-700 text-base leading-relaxed whitespace-pre-wrap font-main mb-2">
+      <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line mb-1.5">
         {/* Show full description or just first 5 lines */}
         {showFullDescription
           ? project?.description
           : project?.description?.split("\n").slice(0, 5).join("\n") + "…"}
-      </pre>
+      </p>
 
       {/* Toggle Button for Description */}
       {project?.description?.split("\n").length > 5 && (
         <button
           onClick={() => setShowFullDescription(!showFullDescription)}
-          className="mb-6 text-red-600 font-semibold text-sm hover:underline"
+          className="mb-3 text-red-600 font-bold text-sm hover:underline hover:text-red-700 transition cursor-pointer"
         >
           {showFullDescription ? "Read Less" : "Read More"}
         </button>
       )}
 
       {/* ---------------- USPs ---------------- */}
-      <h3 className="text-lg font-semibold mb-5 text-gray-900 font-main">
-        Unique Selling Points
-      </h3>
+      {project?.usps && project.usps.length > 0 && (
+        <>
+          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2 border-t border-gray-50 pt-2.5">
+            Unique Selling Points
+          </h3>
 
-      {/* USP List with conditionally sliced display */}
-      <ul style={{ listStyle: "square" }}>
-        {(showFullUsps ? project?.usps : project?.usps?.slice(0, 3))?.map(
-          (usp) => (
-            <div
-              key={usp}
-              className="flex items-center gap-4 bg-transparent rounded-lg hover:bg-gray-100 transition-colors"
+          {/* USP List with high-density spacing */}
+          <ul className="flex flex-col gap-1.5">
+            {(showFullUsps ? project.usps : project.usps.slice(0, 3)).map(
+              (usp) => (
+                <li
+                  key={usp}
+                  className="flex items-center gap-2 text-sm text-gray-600"
+                >
+                  <div className="w-4.5 h-4.5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100">
+                    <Check className="h-3 w-3" strokeWidth={3} />
+                  </div>
+                  <span className="break-words" title={usp}>{usp}</span>
+                </li>
+              )
+            )}
+          </ul>
+
+          {/* Toggle Button for USPs */}
+          {project.usps.length > 3 && (
+            <button
+              onClick={() => setShowFullUsps(!showFullUsps)}
+              className="mt-2.5 text-red-600 font-bold text-sm hover:underline hover:text-red-700 transition cursor-pointer block"
             >
-              {/* Icon on the left */}
-              <div className="bg-red-100 p-2 rounded-lg m-1">
-                <Check className="h-4 w-4 text-red-600" strokeWidth={3} />
-              </div>
-              {/* USP Text */}
-              <span className="text-gray-700 text-base">{usp}</span>
-            </div>
-          ),
-        )}
-      </ul>
-
-      {/* Toggle Button for USPs */}
-      {project?.usps?.length > 3 && (
-        <button
-          onClick={() => setShowFullUsps(!showFullUsps)}
-          className="mt-4 text-red-600 font-semibold text-sm hover:underline"
-        >
-          {showFullUsps ? "Show Less" : "Show More"}
-        </button>
+              {showFullUsps ? "Show Less" : "Show More"}
+            </button>
+          )}
+        </>
       )}
     </div>
   );

@@ -5,14 +5,14 @@ import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 const LayoutPlans = ({ project, setShowFullForm }) => {
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+    <div className="bg-white rounded-2xl shadow-sm p-3.5 sm:p-5 border border-gray-100">
       {/* Section title */}
-      <h2 className="text-2xl font-semibold mb-8 text-gray-900">
+      <h2 className="text-xl font-bold mb-3 text-gray-900 tracking-tight">
         Layout Plans
       </h2>
 
       {/* Grid for displaying layout plan cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {project?.layoutPlans?.map((plan, index) => (
           <div
             key={index}
@@ -24,7 +24,7 @@ const LayoutPlans = ({ project, setShowFullForm }) => {
             }}
           >
             {/* Image container */}
-            <div className="h-64 relative">
+            <div className="h-44 sm:h-52 md:h-64 relative">
               {/* Plan image */}
               <Image
                 src={
@@ -40,9 +40,9 @@ const LayoutPlans = ({ project, setShowFullForm }) => {
               />
 
               {/* Overlay with plan description */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4 sm:p-5">
                 <div>
-                  <h3 className="font-bold text-white text-lg">
+                  <h3 className="font-bold text-white text-base">
                     {plan?.description}
                   </h3>
                 </div>

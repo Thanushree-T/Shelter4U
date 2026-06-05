@@ -605,6 +605,7 @@ export default function HomeSearchBar() {
   const [minBudget, setMinBudget] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
   const [modalFilters, setModalFilters] = useState({});
+  const [activeSearchTab, setActiveSearchTab] = useState("projects"); // "projects" or "owners"
   const [suggestions, setSuggestions] = useState({
     areas: [],
     projects: [],
@@ -702,6 +703,9 @@ export default function HomeSearchBar() {
           ? "Ready to Move"
           : "Under Construction",
       );
+    if (activeSearchTab === "owners") {
+      params.set("isOwner", "true");
+    }
     window.open(`/search?${params.toString()}`, "_blank");
   };
 
@@ -723,6 +727,9 @@ export default function HomeSearchBar() {
           ? "Ready to Move"
           : "Under Construction",
       );
+    if (activeSearchTab === "owners") {
+      params.set("isOwner", "true");
+    }
     window.open(`/search?${params.toString()}`, "_blank");
   };
 
@@ -751,10 +758,42 @@ export default function HomeSearchBar() {
                 "linear-gradient(135deg, #fff5f5 0%, #ffe4e4 40%, #fecaca 100%)",
             }}
           >
+            {/* ── Search bar Tabs (Vital Space Inspired) ── */}
+            <div className="flex justify-center sm:justify-start gap-6 mb-4 px-2">
+              <button
+                type="button"
+                onClick={() => setActiveSearchTab("projects")}
+                className={`pb-2 text-sm font-bold border-b-2 cursor-pointer transition-all ${
+                  activeSearchTab === "projects"
+                    ? "border-red-600 text-red-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Top Projects
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveSearchTab("owners")}
+                className={`relative pb-2 text-sm font-bold border-b-2 cursor-pointer transition-all ${
+                  activeSearchTab === "owners"
+                    ? "border-red-600 text-red-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Owner Properties
+                <span className="absolute -top-3.5 -right-6 px-1.5 py-0.5 rounded-full bg-amber-500 text-white text-[8px] font-extrabold uppercase shadow-sm">
+                  New
+                </span>
+              </button>
+            </div>
+
             {/* ── Title ── */}
             <h2 className="text-center text-xl sm:text-2xl font-normal text-gray-800 mb-5 tracking-tight">
               Explore <span className="font-extrabold text-red-600">1000+</span>{" "}
-              Verified Properties
+              {activeSearchTab === "owners"
+                ? "Owner Properties"
+                : "Verified Properties"}
             </h2>
 
             {/* ── Search bar card ── */}

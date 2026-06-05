@@ -2,17 +2,17 @@
 
 const ProjectTabSwitcher = ({ activeTab, setActiveTab }) => {
   return (
-    <div className="mb-6">
+    <div className="mb-3">
       {/* Navigation container for tab buttons */}
-      <nav className="flex lg:justify-start overflow-x-auto no-scrollbar space-x-2 bg-gray-100 p-1 rounded-xl md:justify-center">
+      <nav className="flex lg:justify-start overflow-x-auto no-scrollbar space-x-1 bg-gray-100 p-1 rounded-xl md:justify-center">
         {/* Overview Tab Button */}
         <button
           onClick={() => setActiveTab("overview")}
           className={`${
             activeTab === "overview"
               ? "bg-white text-red-600 shadow-sm" // Active tab styling
-              : "text-gray-500 hover:text-gray-700" // Inactive tab styling
-          } whitespace-nowrap py-2 px-4 md:px-6 rounded-lg font-medium text-sm transition-all`}
+              : "text-gray-500 hover:text-gray-800 hover:bg-white/40" // Inactive tab styling
+          } whitespace-nowrap py-1.5 px-3.5 md:py-2 md:px-6 rounded-lg font-semibold text-xs md:text-sm transition-all duration-150`}
         >
           Overview
         </button>
@@ -23,8 +23,8 @@ const ProjectTabSwitcher = ({ activeTab, setActiveTab }) => {
           className={`${
             activeTab === "amenities"
               ? "bg-white text-red-600 shadow-sm"
-              : "text-gray-500 hover:text-gray-700"
-          } whitespace-nowrap py-2 px-4 md:px-6 rounded-lg font-medium text-sm transition-all`}
+              : "text-gray-500 hover:text-gray-800 hover:bg-white/40"
+          } whitespace-nowrap py-1.5 px-3.5 md:py-2 md:px-6 rounded-lg font-semibold text-xs md:text-sm transition-all duration-150`}
         >
           Amenities
         </button>
@@ -35,8 +35,8 @@ const ProjectTabSwitcher = ({ activeTab, setActiveTab }) => {
           className={`${
             activeTab === "gallery"
               ? "bg-white text-red-600 shadow-sm"
-              : "text-gray-500 hover:text-gray-700"
-          } whitespace-nowrap py-2 px-4 md:px-6 rounded-lg font-medium text-sm transition-all`}
+              : "text-gray-500 hover:text-gray-800 hover:bg-white/40"
+          } whitespace-nowrap py-1.5 px-3.5 md:py-2 md:px-6 rounded-lg font-semibold text-xs md:text-sm transition-all duration-150`}
         >
           Gallery
         </button>
@@ -47,8 +47,8 @@ const ProjectTabSwitcher = ({ activeTab, setActiveTab }) => {
           className={`${
             activeTab === "location"
               ? "bg-white text-red-600 shadow-sm"
-              : "text-gray-500 hover:text-gray-700"
-          } whitespace-nowrap py-2 px-4 md:px-6 rounded-lg font-medium text-sm transition-all`}
+              : "text-gray-500 hover:text-gray-800 hover:bg-white/40"
+          } whitespace-nowrap py-1.5 px-3.5 md:py-2 md:px-6 rounded-lg font-semibold text-xs md:text-sm transition-all duration-150`}
         >
           Location
         </button>
@@ -59,8 +59,8 @@ const ProjectTabSwitcher = ({ activeTab, setActiveTab }) => {
           className={`${
             activeTab === "specifications"
               ? "bg-white text-red-600 shadow-sm"
-              : "text-gray-500 hover:text-gray-700"
-          } whitespace-nowrap py-2 px-4 md:px-6 rounded-lg font-medium text-sm transition-all`}
+              : "text-gray-500 hover:text-gray-800 hover:bg-white/40"
+          } whitespace-nowrap py-1.5 px-3.5 md:py-2 md:px-6 rounded-lg font-semibold text-xs md:text-sm transition-all duration-150`}
         >
           Price Breakup
         </button>

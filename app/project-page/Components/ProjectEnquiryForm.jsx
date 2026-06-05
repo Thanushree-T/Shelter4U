@@ -78,52 +78,52 @@ const PropertyEnquiryForm = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-2">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
       {/* Modal container */}
-      <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+      <div className="bg-white rounded-xl max-w-md sm:max-w-lg w-full max-h-[90vh] overflow-y-auto relative">
         {/* Close button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10"
+          className="absolute top-3.5 right-3.5 cursor-pointer text-gray-500 hover:text-gray-700 z-10"
         >
-          <X className="h-6 w-6" />
+          <X className="h-5.5 w-5.5" />
         </button>
 
-        <div className="p-8">
+        <div className="p-5 sm:p-7 md:p-8">
           {/* Modal header */}
-          <div className="text-center mb-6">
-            <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-1">
-              <MessageSquare className="h-6 w-6 text-red-600" />
+          <div className="text-center mb-4.5">
+            <div className="bg-red-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
+              <MessageSquare className="h-5 w-5 text-red-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
               Enquire About This Property
             </h2>
           </div>
 
           {/* Show success message after form submission */}
           {formSubmitted ? (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-8 text-center">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="h-8 w-8 text-green-600" />
+            <div className="bg-green-50 border border-green-200 rounded-lg p-5 sm:p-7 md:p-8 text-center">
+              <div className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Check className="h-6 w-6 text-green-600" />
               </div>
-              <h3 className="font-bold text-xl text-green-800 mb-2">
+              <h3 className="font-bold text-lg sm:text-xl text-green-800 mb-1.5">
                 Thank you for your enquiry!
               </h3>
-              <p className="text-green-600 mb-4">
+              <p className="text-sm text-green-600 mb-3.5">
                 Our agent will contact you shortly.
               </p>
               <button
                 onClick={handleClose}
-                className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg"
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-5 rounded-lg text-sm sm:text-base cursor-pointer"
               >
                 Close
               </button>
             </div>
           ) : (
             // Show enquiry form if not submitted
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-gray-700">
                   Full Name *
                 </label>
                 <input
@@ -133,13 +133,13 @@ const PropertyEnquiryForm = ({
                   onChange={handleChange}
                   required
                   disabled={isSubmitting}
-                  className="w-full px-4 py-3 border rounded-lg disabled:bg-gray-100"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-2.5 border border-gray-300 rounded-lg disabled:bg-gray-100 text-sm focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                   placeholder="Enter your name"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-gray-700">
                   Email *
                 </label>
                 <input
@@ -149,13 +149,13 @@ const PropertyEnquiryForm = ({
                   onChange={handleChange}
                   required
                   disabled={isSubmitting}
-                  className="w-full px-4 py-3 border rounded-lg disabled:bg-gray-100"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-2.5 border border-gray-300 rounded-lg disabled:bg-gray-100 text-sm focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                   placeholder="Enter your email"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-gray-700">
                   Phone *
                 </label>
                 <input
@@ -165,22 +165,22 @@ const PropertyEnquiryForm = ({
                   onChange={handleChange}
                   required
                   disabled={isSubmitting}
-                  className="w-full px-4 py-3 border rounded-lg disabled:bg-gray-100"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-2.5 border border-gray-300 rounded-lg disabled:bg-gray-100 text-sm focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                   placeholder="Enter your phone number"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-gray-700">
                   Message
                 </label>
                 <textarea
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  rows={3}
+                  rows={2}
                   disabled={isSubmitting}
-                  className="w-full px-4 py-3 border rounded-lg disabled:bg-gray-100"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-2.5 border border-gray-300 rounded-lg disabled:bg-gray-100 text-sm focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                   placeholder="Any specific questions?"
                 ></textarea>
               </div>
@@ -189,7 +189,7 @@ const PropertyEnquiryForm = ({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg disabled:bg-gray-400"
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-2.5 px-4 rounded-lg font-semibold text-sm sm:text-base disabled:bg-gray-400 cursor-pointer mt-1"
               >
                 {isSubmitting ? "Submitting..." : "Submit Enquiry"}
               </button>

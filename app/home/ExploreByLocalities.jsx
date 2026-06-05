@@ -25,7 +25,7 @@ export default function ExploreByLocalities({ localityData = [] }) {
       id="explore-localities"
       className="py-10 px-4 sm:px-6 lg:px-8 bg-white"
     >
-      <div className="max-w-7xl mx-auto rounded-xl pb-6 sm:p-8">
+      <div className="max-w-7xl mx-auto rounded-xl pb-6">
         {/* Section heading */}
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5">
           Explore Projects by Location

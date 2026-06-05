@@ -1,4 +1,4 @@
-import { models } from "@/lib/connections.js";
+import { models, connectToDBs } from "@/lib/connections.js";
 import { serializeMongo } from "@/lib/utils";
 
 import HomeHeroSection from "./home/HomeHeroSection.jsx";
@@ -14,23 +14,53 @@ import { Suspense } from "react";
 
 // Skeleton shown only while Recommended listings are loading
 const RecommendedSkeleton = () => (
-  <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
+  <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white select-none">
     <div className="max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-        <div className="h-4 bg-gray-300 rounded w-1/3 animate-pulse" />
-        <div className="h-4 bg-gray-300 rounded w-1/6 mt-2 md:mt-0 animate-pulse" />
+      {/* Tab Navigation Skeleton */}
+      <div className="flex border-b border-gray-200 gap-6 mb-5 relative">
+        <div className="pb-2 text-base font-extrabold border-b-2 border-slate-900 text-slate-900">
+          New Projects
+        </div>
+        <div className="pb-2 text-base font-extrabold border-b-2 border-transparent text-slate-300">
+          Owner Properties
+        </div>
       </div>
-      <div className="h-8 bg-gray-400 rounded w-1/2 mb-6 animate-pulse" />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[...Array(3)].map((_, i) => (
+
+      {/* Description row skeleton */}
+      <div className="flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between mb-5">
+        <div className="h-3.5 bg-gray-200 rounded w-1/3 animate-pulse" />
+        <div className="h-3.5 bg-gray-200 rounded w-20 animate-pulse" />
+      </div>
+
+      {/* Grid of 4 Horizontal Card Skeletons */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+        {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="bg-white rounded-xl shadow-lg p-4 space-y-4 animate-pulse"
+            className="relative flex flex-col sm:flex-row bg-white rounded-2xl overflow-hidden w-full border border-gray-100 h-full animate-pulse min-h-[180px]"
           >
-            <div className="h-48 bg-gray-200 rounded-lg" />
-            <div className="h-6 bg-gray-300 rounded w-3/4" />
-            <div className="h-4 bg-gray-300 rounded w-1/2" />
-            <div className="h-4 bg-gray-300 rounded w-1/3" />
+            {/* Left Section (Image placeholder) */}
+            <div className="w-full sm:w-[40%] shrink-0 h-44 sm:h-auto bg-gray-200 min-h-[160px]" />
+
+            {/* Right Section (Details placeholders) */}
+            <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between">
+              <div className="space-y-3">
+                {/* Badge/Tag */}
+                <div className="h-3.5 bg-gray-200 rounded w-16" />
+                {/* Title */}
+                <div className="h-4.5 bg-gray-300 rounded w-3/4" />
+                {/* Locality info lines */}
+                <div className="space-y-2 pt-1">
+                  <div className="h-3 bg-gray-200 rounded w-1/2" />
+                  <div className="h-3 bg-gray-200 rounded w-2/3" />
+                </div>
+              </div>
+              {/* Footer */}
+              <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+                <div className="h-4.5 bg-gray-300 rounded w-1/4" />
+                <div className="h-3 bg-gray-300 rounded w-12" />
+              </div>
+            </div>
           </div>
         ))}
       </div>
@@ -38,8 +68,8 @@ const RecommendedSkeleton = () => (
   </section>
 );
 
-// Page revalidates every hour — triggers ISR for listings
-export const revalidate = 3600;
+// Force dynamic rendering so that new direct owner property approvals are visible in real-time
+export const dynamic = "force-dynamic";
 
 const {
   HomeFirstSection: HomeFirstSectionModel,
@@ -88,6 +118,7 @@ export const metadata = {
 
 // Main Home Page — all DB queries run in parallel, ISR (1 hour)
 export default async function HomePage() {
+  await connectToDBs();
   let homeFirstSectionData = null;
   let homeSecondSectionData = null;
   let homeThirdSectionData = null;
@@ -95,6 +126,7 @@ export default async function HomePage() {
   let homeFifthSectionData = [];
   let recommendedProjects = [];
   let topLocalityData = [];
+  let ownerProperties = [];
 
   try {
     const [
@@ -105,6 +137,7 @@ export default async function HomePage() {
       homeFifthArr,
       recommended,
       topAreaIds,
+      ownerProps,
     ] = await Promise.all([
       // Static sections — fetched once per ISR cycle, served from static cache
       HomeFirstSectionModel.findOne().lean(),
@@ -127,6 +160,12 @@ export default async function HomePage() {
         { $sort: { count: -1 } },
         { $limit: 6 },
       ]),
+      models.Property.find({ approvalStatus: "Approved" })
+        .populate("area", ["_id", "name"])
+        .populate("city", ["_id", "name"])
+        .populate("state", ["_id", "name"])
+        .sort({ createdAt: -1 })
+        .lean(),
     ]);
 
     homeFirstSectionData = serializeMongo(homeFirstArr || null);
@@ -135,6 +174,7 @@ export default async function HomePage() {
     homeFourthSectionData = serializeMongo(homeFourthArr || null);
     homeFifthSectionData = serializeMongo(homeFifthArr ?? []);
     recommendedProjects = serializeMongo(recommended ?? []);
+    ownerProperties = serializeMongo(ownerProps ?? []);
 
     // Build locality data: for each top area, fetch area name + its projects
     if (topAreaIds && topAreaIds.length > 0) {
@@ -180,7 +220,7 @@ export default async function HomePage() {
     <>
       <HomeHeroSection data={homeFirstSectionData} />
       <Suspense fallback={<RecommendedSkeleton />}>
-        <Recommended projects={recommendedProjects} />
+        <Recommended projects={recommendedProjects} properties={ownerProperties} />
       </Suspense>
       <ExploreByLocalities localityData={topLocalityData} />
       <PropertyOptions />

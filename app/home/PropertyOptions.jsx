@@ -104,7 +104,7 @@ export default function PropertyOptions() {
       id="property-options"
       className="pb-10 px-4 sm:px-6 lg:px-8 bg-white"
     >
-      <div className="max-w-7xl mx-auto pb-6 sm:p-8">
+      <div className="max-w-7xl mx-auto pb-6">
         {/* Heading */}
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">
           Quick Property Search in {CITY}
