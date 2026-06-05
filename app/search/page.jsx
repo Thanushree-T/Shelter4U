@@ -262,5 +262,11 @@ async function fetchInitialProjects(searchParams) {
 
 export default async function SearchPage({ searchParams }) {
   const initialProjects = await fetchInitialProjects(searchParams);
-  return <SearchPageClient initialProjects={serializeMongo(initialProjects)} />;
+  const ownerPropertiesCount = await models.Property.countDocuments({ approvalStatus: "Approved" });
+  return (
+    <SearchPageClient 
+      initialProjects={serializeMongo(initialProjects)} 
+      ownerPropertiesCount={ownerPropertiesCount} 
+    />
+  );
 }

@@ -8,19 +8,19 @@ export default function HomeSecondSection({ data }) {
   const router = useRouter(); // Router hook to programmatically navigate between pages
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="py-6 md:py-0 md:min-h-screen flex items-center justify-center bg-gray-100">
       {/* Wrapper container for layout and padding */}
-      <div className="mx-auto px-6 sm:px-20 py-12 sm:py-16 flex flex-col md:flex-row items-center justify-around sm:gap-10 max-w-8xl">
+      <div className="mx-auto px-6 sm:px-20 py-4 md:py-16 flex flex-col md:flex-row items-center justify-around sm:gap-10 max-w-8xl">
         {/* Left Section - Text Content */}
-        <div className="w-full md:w-2/5 text-center md:text-left px-2 sm:px-4 pb-10">
+        <div className="w-full md:w-2/5 text-center md:text-left px-2 sm:px-4 pb-4 md:pb-10">
           {/* Main Heading */}
-          <h1 className="text-3xl sm:text-3xl md:text-5xl font-bold text-gray-800 mb-4 leading-snug">
+          <h1 className="text-3xl sm:text-3xl md:text-5xl font-bold text-gray-800 mb-2 md:mb-4 leading-tight md:leading-snug">
             {/* Dynamically inject title and redTitle from props */}
             {data?.title} <span className="text-red-600">{data?.redTitle}</span>
           </h1>
 
           {/* Supporting paragraph */}
-          <p className="text-gray-500 mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base">
+          <p className="text-gray-500 mb-4 md:mb-8 leading-normal md:leading-relaxed text-sm sm:text-base">
             {data?.para}
           </p>
 
@@ -34,7 +34,7 @@ export default function HomeSecondSection({ data }) {
         </div>
 
         {/* Right Section - Image Display */}
-        <div className="w-full md:w-1/2 relative flex justify-center md:justify-end px-2 sm:px-0">
+        <div className="hidden md:flex w-full md:w-1/2 relative justify-center md:justify-end px-2 sm:px-0">
           {/* Main Big Image Container */}
           <div className="relative w-full max-w-[300px] sm:max-w-[400px] h-[350px] sm:h-[400px] md:h-[550px] mr-0 sm:mr-4 md:mr-[90px]">
             {data?.bigImg && (

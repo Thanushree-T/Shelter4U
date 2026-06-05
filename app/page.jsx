@@ -13,7 +13,7 @@ import FAQ from "./home/FAQ.jsx";
 import { Suspense } from "react";
 
 // Skeleton shown only while Recommended listings are loading
-const RecommendedSkeleton = () => (
+const RecommendedSkeleton = ({ showOwnerTab = true }) => (
   <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white select-none">
     <div className="max-w-7xl mx-auto">
       {/* Tab Navigation Skeleton */}
@@ -21,9 +21,11 @@ const RecommendedSkeleton = () => (
         <div className="pb-2 text-base font-extrabold border-b-2 border-slate-900 text-slate-900">
           New Projects
         </div>
-        <div className="pb-2 text-base font-extrabold border-b-2 border-transparent text-slate-300">
-          Owner Properties
-        </div>
+        {showOwnerTab && (
+          <div className="pb-2 text-base font-extrabold border-b-2 border-transparent text-slate-300">
+            Owner Properties
+          </div>
+        )}
       </div>
 
       {/* Description row skeleton */}
@@ -219,8 +221,15 @@ export default async function HomePage() {
   return (
     <>
       <HomeHeroSection data={homeFirstSectionData} />
-      <Suspense fallback={<RecommendedSkeleton />}>
-        <Recommended projects={recommendedProjects} properties={ownerProperties} />
+      <Suspense
+        fallback={
+          <RecommendedSkeleton showOwnerTab={ownerProperties.length > 0} />
+        }
+      >
+        <Recommended
+          projects={recommendedProjects}
+          properties={ownerProperties}
+        />
       </Suspense>
       <ExploreByLocalities localityData={topLocalityData} />
       <PropertyOptions />

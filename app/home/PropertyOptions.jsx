@@ -102,16 +102,16 @@ export default function PropertyOptions() {
   return (
     <section
       id="property-options"
-      className="pb-10 px-4 sm:px-6 lg:px-8 bg-white"
+      className="pb-4 md:pb-10 px-4 sm:px-6 lg:px-8 bg-white"
     >
       <div className="max-w-7xl mx-auto pb-6">
         {/* Heading */}
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
           Quick Property Search in {CITY}
         </h2>
 
         {/* 4-column grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-1 md:gap-6">
           {columns.map((col) => (
             <div key={col.heading}>
               {/* <p className="text-sm font-semibold text-gray-900 mb-3">

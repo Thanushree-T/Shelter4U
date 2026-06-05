@@ -420,7 +420,7 @@ function FilterModal({ open, onClose, onApply, initial, unitOptions }) {
 
   return (
     <div
-      className="fixed inset-0 z-[999] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[999] flex items-center justify-center p-0 md:p-4"
       aria-modal="true"
       role="dialog"
     >
@@ -430,8 +430,7 @@ function FilterModal({ open, onClose, onApply, initial, unitOptions }) {
         aria-hidden="true"
       />
       <div
-        className="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl flex flex-col overflow-hidden"
-        style={{ maxHeight: "min(90vh, 700px)" }}
+        className="relative bg-white w-full md:max-w-lg flex flex-col overflow-hidden filter-modal-card"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -876,7 +875,7 @@ export default function HomeHeroSection({ data }) {
       {/* ═══════════════════════════════════════════════════════
           HERO — background image + headline + stats
       ═══════════════════════════════════════════════════════ */}
-      <section className="relative w-full" style={{ minHeight: "92vh" }}>
+      <section className="hidden md:block relative w-full" style={{ minHeight: "92vh" }}>
         {/* Background image */}
         {data?.img && (
           <div className="absolute inset-0">
@@ -1525,6 +1524,62 @@ export default function HomeHeroSection({ data }) {
         </div>
       </section>
 
+      {/* Mobile homepage welcome & search card section (visible only on mobile) */}
+      <section className="block md:hidden bg-gradient-to-br from-red-50/50 via-white to-gray-50/30 px-4 pt-6 pb-4 border-b border-gray-100 select-none">
+        <div className="w-full max-w-xl mx-auto space-y-4">
+          {/* Welcome Text */}
+          <div>
+            <h1 className="text-xl font-extrabold text-gray-900 leading-tight">
+              Find Your <span className="text-red-600">Dream</span> Property
+            </h1>
+            <p className="text-xs text-gray-500 mt-1 font-medium">
+              Explore verified zero brokerage listings in Ahmedabad & Gandhinagar
+            </p>
+          </div>
+
+          {/* Search bar input placeholder opening filter modal */}
+          <div 
+            onClick={() => setFilterOpen(true)}
+            className="flex items-center gap-2.5 bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-sm active:scale-[0.99] transition-all cursor-pointer"
+          >
+            <FiSearch size={16} className="text-red-600 shrink-0" />
+            <div className="flex-1 text-left min-w-0">
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider leading-none">Search</p>
+              <p className="text-xs text-gray-500 font-medium truncate mt-0.5 leading-none">
+                Search Locality, Project, Area...
+              </p>
+            </div>
+            <div className="bg-red-50 p-1.5 rounded-lg text-red-600 shrink-0">
+              <FiSliders size={14} />
+            </div>
+          </div>
+
+          {/* Popular Localities Quick Links */}
+          <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div className="flex items-center gap-1.5 whitespace-nowrap py-1">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0 mr-1">
+                Popular:
+              </span>
+              {POPULAR_LOCALITIES.map((loc) => (
+                <button
+                  key={loc}
+                  type="button"
+                  onClick={() =>
+                    window.open(
+                      `/search?q=${encodeURIComponent(loc)}`,
+                      "_blank",
+                    )
+                  }
+                  className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-red-600 hover:text-white hover:border-red-600 text-[10px] font-semibold text-gray-600 transition-all duration-150 cursor-pointer shadow-sm"
+                >
+                  {loc}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Filter Modal */}
       <FilterModal
         open={filterOpen}
@@ -1543,7 +1598,7 @@ export default function HomeHeroSection({ data }) {
         }}
       />
 
-      {/* Cursor animation style */}
+      {/* Cursor & Filter modal styling */}
       <style jsx global>{`
         .typing-cursor {
           display: inline-block;
@@ -1556,6 +1611,21 @@ export default function HomeHeroSection({ data }) {
           }
           50% {
             opacity: 0;
+          }
+        }
+        .filter-modal-card {
+          width: 100%;
+          height: 100vh;
+          height: 100dvh;
+          max-height: 100vh;
+          max-height: 100dvh;
+          border-radius: 0;
+        }
+        @media (min-width: 768px) {
+          .filter-modal-card {
+            height: auto;
+            max-height: min(90vh, 700px);
+            border-radius: 1rem;
           }
         }
       `}</style>

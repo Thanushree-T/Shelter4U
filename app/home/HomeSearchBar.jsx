@@ -361,7 +361,7 @@ function FilterModal({ open, onClose, onApply, initial }) {
 
   return (
     <div
-      className="fixed inset-0 z-[999] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[999] flex items-center justify-center p-0 md:p-4"
       aria-modal="true"
       role="dialog"
     >
@@ -374,8 +374,7 @@ function FilterModal({ open, onClose, onApply, initial }) {
 
       {/* Panel */}
       <div
-        className="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl flex flex-col overflow-hidden"
-        style={{ maxHeight: "min(90vh, 700px)" }}
+        className="relative bg-white w-full md:max-w-lg flex flex-col overflow-hidden filter-modal-card"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -606,6 +605,25 @@ export default function HomeSearchBar() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [modalFilters, setModalFilters] = useState({});
   const [activeSearchTab, setActiveSearchTab] = useState("projects"); // "projects" or "owners"
+  const [showOwnerTab, setShowOwnerTab] = useState(true);
+
+  useEffect(() => {
+    const fetchOwnerCount = async () => {
+      try {
+        const res = await fetch("/api/search?tab=properties&limit=1");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.totalCount === 0) {
+            setShowOwnerTab(false);
+            setActiveSearchTab("projects");
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching owner properties count:", err);
+      }
+    };
+    fetchOwnerCount();
+  }, []);
   const [suggestions, setSuggestions] = useState({
     areas: [],
     projects: [],
@@ -772,20 +790,22 @@ export default function HomeSearchBar() {
                 Top Projects
               </button>
 
-              <button
-                type="button"
-                onClick={() => setActiveSearchTab("owners")}
-                className={`relative pb-2 text-sm font-bold border-b-2 cursor-pointer transition-all ${
-                  activeSearchTab === "owners"
-                    ? "border-red-600 text-red-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                Owner Properties
-                <span className="absolute -top-3.5 -right-6 px-1.5 py-0.5 rounded-full bg-amber-500 text-white text-[8px] font-extrabold uppercase shadow-sm">
-                  New
-                </span>
-              </button>
+              {showOwnerTab && (
+                <button
+                  type="button"
+                  onClick={() => setActiveSearchTab("owners")}
+                  className={`relative pb-2 text-sm font-bold border-b-2 cursor-pointer transition-all ${
+                    activeSearchTab === "owners"
+                      ? "border-red-600 text-red-600"
+                      : "border-transparent text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  Owner Properties
+                  <span className="absolute -top-3.5 -right-6 px-1.5 py-0.5 rounded-full bg-amber-500 text-white text-[8px] font-extrabold uppercase shadow-sm">
+                    New
+                  </span>
+                </button>
+              )}
             </div>
 
             {/* ── Title ── */}
@@ -994,9 +1014,26 @@ export default function HomeSearchBar() {
           maxBudget: "",
           propertyTypes: [],
           possessions: [],
-          ...modalFilters,
-        }}
       />
+
+      {/* CSS style for full page modal on mobile */}
+      <style jsx global>{`
+        .filter-modal-card {
+          width: 100%;
+          height: 100vh;
+          height: 100dvh;
+          max-height: 100vh;
+          max-height: 100dvh;
+          border-radius: 0;
+        }
+        @media (min-width: 768px) {
+          .filter-modal-card {
+            height: auto;
+            max-height: min(90vh, 700px);
+            border-radius: 1rem;
+          }
+        }
+      `}</style>
     </>
   );
 }

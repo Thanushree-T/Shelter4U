@@ -23,7 +23,7 @@ export default function ExploreByLocalities({ localityData = [] }) {
   return (
     <section
       id="explore-localities"
-      className="py-10 px-4 sm:px-6 lg:px-8 bg-white"
+      className="py-4 md:py-10 px-4 sm:px-6 lg:px-8 bg-white"
     >
       <div className="max-w-7xl mx-auto rounded-xl pb-6">
         {/* Section heading */}
@@ -57,7 +57,7 @@ export default function ExploreByLocalities({ localityData = [] }) {
                 href={`/project-page/${encodeURIComponent(project.slug)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`text-sm font-medium leading-snug truncate cursor-pointer hover:underline transition-colors ${"text-gray-700 hover:text-red-600"}`}
+                className="text-sm font-medium leading-snug whitespace-normal md:truncate cursor-pointer hover:underline transition-colors text-gray-700 hover:text-red-600"
                 title={project.projectName}
               >
                 {project.projectName}

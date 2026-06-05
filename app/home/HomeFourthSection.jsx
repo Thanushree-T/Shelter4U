@@ -5,11 +5,10 @@ import { FaQuoteRight, FaUserAlt } from "react-icons/fa";
 
 const HomeFourthSection = ({ data }) => {
   return (
-    <div className="w-full bg-gray-100 py-16 px-4 md:px-16">
-      <div className="max-w-7xl mx-auto grid gap-12 items-center px-4 lg:grid-cols-2">
-        
+    <div className="w-full bg-gray-100 py-6 md:py-16 px-4 md:px-16">
+      <div className="max-w-7xl mx-auto grid gap-6 md:gap-12 items-center px-4 lg:grid-cols-2">
         {/* Left Side - Testimonials List */}
-        <div className="space-y-6 order-2 md:order-1 flex flex-col items-start">
+        <div className="space-y-3 md:space-y-6 order-2 md:order-1 flex flex-col items-start">
           {data?.section.map((testimonial, index) => {
             // Highlight the second testimonial (index === 1)
             const isActive = index === 1;
@@ -17,7 +16,7 @@ const HomeFourthSection = ({ data }) => {
             return (
               <div
                 key={index}
-                className={`relative flex items-start space-x-4 p-4 w-full md:w-[70%] transition-all duration-300
+                className={`relative flex items-start space-x-3 md:space-x-4 p-3 md:p-4 w-full md:w-[70%] transition-all duration-300
                 ${
                   isActive
                     ? "bg-white shadow-lg border-l-[6px] border-red-500 translate-x-0 md:translate-x-24"
@@ -32,7 +31,7 @@ const HomeFourthSection = ({ data }) => {
                 />
 
                 {/* User Avatar Icon */}
-                <FaUserAlt className="text-white bg-red-500 border border-red-500 w-20 h-20 md:w-[88px] md:h-[88px] rounded-full flex-shrink-0 p-4" />
+                <FaUserAlt className="text-white bg-red-500 border border-red-500 w-14 h-14 md:w-[88px] md:h-[88px] rounded-full flex-shrink-0 p-3 md:p-4" />
 
                 {/* Testimonial Text Block */}
                 <div>
@@ -49,11 +48,11 @@ const HomeFourthSection = ({ data }) => {
         </div>
 
         {/* Right Side - Section Title & Description */}
-        <div className="space-y-6 order-1 md:order-2 text-center md:text-left">
-          <p className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
+        <div className="space-y-3 md:space-y-6 order-1 md:order-2 text-center md:text-left">
+          <p className="text-2xl md:text-5xl font-extrabold text-gray-900 leading-tight">
             {data?.title}
           </p>
-          <p className="text-gray-600">{data?.para}</p>
+          <p className="text-gray-600 sm:leading-tight">{data?.para}</p>
         </div>
       </div>
     </div>
@@ -61,3 +60,4 @@ const HomeFourthSection = ({ data }) => {
 };
 
 export default HomeFourthSection;
+

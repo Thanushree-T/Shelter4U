@@ -445,7 +445,7 @@ export default function Recommended({ projects = [], properties = [] }) {
   }
 
   return (
-    <section className="pt-8 px-4 sm:px-6 lg:px-8 bg-white select-none">
+    <section className="pt-4 md:pt-8 px-4 sm:px-6 lg:px-8 bg-white select-none">
       <div className="max-w-7xl mx-auto">
         {/* ── Unified Tab Navigation (Inspired by Vital Space) ── */}
         <div className="flex border-b border-gray-200 gap-6 mb-5 relative">

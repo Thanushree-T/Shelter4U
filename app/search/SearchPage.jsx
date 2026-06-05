@@ -269,13 +269,13 @@ const DynamicSidebar = ({ projects = [], router }) => {
   );
 };
 
-const SearchPageClient = ({ initialProjects = [] }) => {
+const SearchPageClient = ({ initialProjects = [], ownerPropertiesCount = 0 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const [activeTab, setActiveTab] = useState(
-    searchParams.get("tab") === "properties" ||
-      searchParams.get("isOwner") === "true"
+    (searchParams.get("tab") === "properties" ||
+      searchParams.get("isOwner") === "true") && ownerPropertiesCount > 0
       ? "properties"
       : "projects",
   );
@@ -486,12 +486,12 @@ const SearchPageClient = ({ initialProjects = [] }) => {
     setFilters(newFilters);
     setSearchQuery(searchParams.get("q") || "");
     const tabFromUrl =
-      searchParams.get("tab") === "properties" ||
-      searchParams.get("isOwner") === "true"
+      (searchParams.get("tab") === "properties" ||
+        searchParams.get("isOwner") === "true") && ownerPropertiesCount > 0
         ? "properties"
         : "projects";
     setActiveTab(tabFromUrl);
-  }, [searchParams]);
+  }, [searchParams, ownerPropertiesCount]);
 
   // Load more when page changes
   useEffect(() => {
@@ -917,20 +917,22 @@ const SearchPageClient = ({ initialProjects = [] }) => {
             Trending Projects
           </button>
 
-          <button
-            type="button"
-            onClick={() => handleTabChange("properties")}
-            className={`pb-3 text-sm md:text-lg font-bold border-b-2 cursor-pointer transition-all duration-200 flex items-center gap-1.5 ${
-              activeTab === "properties"
-                ? "border-slate-900 text-slate-900 font-extrabold"
-                : "border-transparent text-slate-400 hover:text-slate-600"
-            }`}
-          >
-            <span>Owner Properties</span>
-            <span className="px-1.5 py-0.5 rounded bg-amber-500 text-white text-[8px] font-extrabold uppercase shadow-sm tracking-wide shrink-0">
-              New
-            </span>
-          </button>
+          {ownerPropertiesCount > 0 && (
+            <button
+              type="button"
+              onClick={() => handleTabChange("properties")}
+              className={`pb-3 text-sm md:text-lg font-bold border-b-2 cursor-pointer transition-all duration-200 flex items-center gap-1.5 ${
+                activeTab === "properties"
+                  ? "border-slate-900 text-slate-900 font-extrabold"
+                  : "border-transparent text-slate-400 hover:text-slate-600"
+              }`}
+            >
+              <span>Owner Properties</span>
+              <span className="px-1.5 py-0.5 rounded bg-amber-500 text-white text-[8px] font-extrabold uppercase shadow-sm tracking-wide shrink-0">
+                New
+              </span>
+            </button>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
