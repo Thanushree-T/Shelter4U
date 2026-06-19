@@ -397,10 +397,12 @@ const ProjectClientPage = ({ project }) => {
                 <ProjectDescription project={project} />
 
                 {/* Layout Plans Section */}
-                <ProjectLayoutPlans
-                  project={project}
-                  setShowFullForm={setShowFullForm}
-                />
+                {project?.layoutPlan?.length > 0 && (
+                  <ProjectLayoutPlans
+                    project={project}
+                    setShowFullForm={setShowFullForm}
+                  />
+                )}
               </>
             )}
 

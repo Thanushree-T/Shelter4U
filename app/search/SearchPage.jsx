@@ -36,7 +36,7 @@ const CardSkeleton = ({ layout = "grid" }) => {
     return (
       <div className="animate-pulse flex flex-row bg-white rounded-2xl overflow-hidden w-full border border-gray-100 shadow-sm min-h-[120px] md:h-auto">
         {/* Left Section: Cover Image placeholder */}
-        <div className="w-28 shrink-0 bg-gray-200 border-r border-gray-100 min-h-[120px] md:min-h-0" />
+        <div className="w-28 md:w-[260px] lg:w-[280px] shrink-0 bg-gray-200 border-r border-gray-100 min-h-[120px] md:min-h-0" />
 
         {/* Middle Section: Details placeholder */}
         <div className="flex-1 min-w-0 p-3 md:p-6 flex flex-col pr-4 md:pr-14 justify-between text-left">
