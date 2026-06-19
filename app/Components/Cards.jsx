@@ -517,8 +517,8 @@ const Cards = ({ project, layout = "grid", priority = false }) => {
           </div>
 
           {/* Bottom Section: RERA status & View Details */}
-          <div className="hidden md:flex mt-auto pt-4 border-t border-gray-100 flex-wrap items-center justify-between gap-x-4 gap-y-2">
-            {project.reraNumber ? (
+          <div className="hidden md:flex mt-auto pt-4 border-t border-gray-100 flex-wrap items-center justify-start gap-x-4 gap-y-2">
+            {project.reraNumber && (
               <div className="flex items-center gap-1.5 text-emerald-600 font-extrabold text-xs shrink-0">
                 <svg
                   className="w-4 h-4 fill-current shrink-0"
@@ -534,8 +534,6 @@ const Cards = ({ project, layout = "grid", priority = false }) => {
                   RERA Registered (No. {project.reraNumber})
                 </span>
               </div>
-            ) : (
-              <div />
             )}
 
             <Link
