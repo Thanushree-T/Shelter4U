@@ -65,13 +65,13 @@ export default function FAQ() {
   const toggle = (idx) => setOpenIndex(openIndex === idx ? null : idx);
 
   return (
-    <section id="faq" className="pb-10 px-4 sm:px-6 lg:px-8 bg-white">
+    <section id="faq" className="pb-4 md:pb-10 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="max-w-7xl mx-auto px-6 pb-6 sm:p-8">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
           Frequently asked questions
         </h2>
 
-        <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-2 gap-3">
           {faqs.map((faq, idx) => (
             <div
               key={idx}

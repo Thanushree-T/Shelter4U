@@ -31,34 +31,32 @@ export default function SimilarProject({ id }) {
   }, [id]); // Run effect when ID changes
 
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* If there are similar projects, render them in grid */}
-        {Array.isArray(projects) && projects.length > 0 ? (
-          <>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Similar Projects
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {projects.slice(0, 3).map((project) => (
-                <div
-                  key={project._id}
-                  className="hover:shadow-md bg-white rounded-xl shadow-lg"
-                >
-                  <Cards project={project} />
-                </div>
-              ))}
-            </div>
-          </>
-        ) : (
-          // If no similar projects found, show message
-          <div className="text-center py-6">
-            <p className="text-lg font-medium text-gray-600 italic tracking-wide mt-10">
-              No similar projects
-            </p>
+    <div className="mt-8 pt-6 border-t border-gray-100">
+      {/* If there are similar projects, render them in grid */}
+      {Array.isArray(projects) && projects.length > 0 ? (
+        <>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
+            Similar Projects
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {projects.slice(0, 3).map((project) => (
+              <div
+                key={project._id}
+                className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
+              >
+                <Cards project={project} />
+              </div>
+            ))}
           </div>
-        )}
-      </div>
-    </section>
+        </>
+      ) : (
+        // If no similar projects found, show message
+        <div className="text-center py-4">
+          <p className="text-base font-medium text-gray-400 italic tracking-wide mt-4">
+            No similar projects
+          </p>
+        </div>
+      )}
+    </div>
   );
 }

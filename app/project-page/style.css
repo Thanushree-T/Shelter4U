@@ -140,23 +140,31 @@
 }
 
 .p-datatable th {
-  padding: 1rem;
-  font-size: medium;
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
   text-align: center;
   justify-items: center;
+  border-bottom: 2px solid #e2e8f0;
 }
 
 .p-datatable td {
-  font-size: small;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
   text-align: center;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .p-datatable .p-datatable-thead > tr > th {
-  
-  background-color: #e53935;
-  color: white;
-  font-weight: 500;
-  /* border: 1px solid black; */
+  background-color: #f8fafc;
+  color: #0f172a;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.p-datatable-tbody > tr:hover {
+  background-color: #f8fafc;
+  transition: background-color 0.15s ease;
 }
 
 .p-inputtextarea {
@@ -219,4 +227,26 @@
 
 .p-checkbox input{
   background-color: black;
+}
+
+/* Responsive adjustments for DataTable on mobile */
+@media (max-w: 640px) {
+  .p-datatable th {
+    padding: 0.5rem 0.25rem !important;
+    font-size: 11px !important;
+  }
+  .p-datatable td {
+    padding: 0.5rem 0.25rem !important;
+    font-size: 11px !important;
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }

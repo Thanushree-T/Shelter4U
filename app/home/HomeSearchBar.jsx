@@ -361,7 +361,7 @@ function FilterModal({ open, onClose, onApply, initial }) {
 
   return (
     <div
-      className="fixed inset-0 z-[999] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[999] flex items-center justify-center p-0 md:p-4"
       aria-modal="true"
       role="dialog"
     >
@@ -374,8 +374,7 @@ function FilterModal({ open, onClose, onApply, initial }) {
 
       {/* Panel */}
       <div
-        className="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl flex flex-col overflow-hidden"
-        style={{ maxHeight: "min(90vh, 700px)" }}
+        className="relative bg-white w-full md:max-w-lg flex flex-col overflow-hidden filter-modal-card"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -605,6 +604,26 @@ export default function HomeSearchBar() {
   const [minBudget, setMinBudget] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
   const [modalFilters, setModalFilters] = useState({});
+  const [activeSearchTab, setActiveSearchTab] = useState("projects"); // "projects" or "owners"
+  const [showOwnerTab, setShowOwnerTab] = useState(true);
+
+  useEffect(() => {
+    const fetchOwnerCount = async () => {
+      try {
+        const res = await fetch("/api/search?tab=properties&limit=1");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.totalCount === 0) {
+            setShowOwnerTab(false);
+            setActiveSearchTab("projects");
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching owner properties count:", err);
+      }
+    };
+    fetchOwnerCount();
+  }, []);
   const [suggestions, setSuggestions] = useState({
     areas: [],
     projects: [],
@@ -702,6 +721,9 @@ export default function HomeSearchBar() {
           ? "Ready to Move"
           : "Under Construction",
       );
+    if (activeSearchTab === "owners") {
+      params.set("isOwner", "true");
+    }
     window.open(`/search?${params.toString()}`, "_blank");
   };
 
@@ -723,6 +745,9 @@ export default function HomeSearchBar() {
           ? "Ready to Move"
           : "Under Construction",
       );
+    if (activeSearchTab === "owners") {
+      params.set("isOwner", "true");
+    }
     window.open(`/search?${params.toString()}`, "_blank");
   };
 
@@ -751,10 +776,44 @@ export default function HomeSearchBar() {
                 "linear-gradient(135deg, #fff5f5 0%, #ffe4e4 40%, #fecaca 100%)",
             }}
           >
+            {/* ── Search bar Tabs (Vital Space Inspired) ── */}
+            <div className="flex justify-center sm:justify-start gap-6 mb-4 px-2">
+              <button
+                type="button"
+                onClick={() => setActiveSearchTab("projects")}
+                className={`pb-2 text-sm font-bold border-b-2 cursor-pointer transition-all ${
+                  activeSearchTab === "projects"
+                    ? "border-red-600 text-red-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Top Projects
+              </button>
+
+              {showOwnerTab && (
+                <button
+                  type="button"
+                  onClick={() => setActiveSearchTab("owners")}
+                  className={`relative pb-2 text-sm font-bold border-b-2 cursor-pointer transition-all ${
+                    activeSearchTab === "owners"
+                      ? "border-red-600 text-red-600"
+                      : "border-transparent text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  Owner Properties
+                  <span className="absolute -top-3.5 -right-6 px-1.5 py-0.5 rounded-full bg-amber-500 text-white text-[8px] font-extrabold uppercase shadow-sm">
+                    New
+                  </span>
+                </button>
+              )}
+            </div>
+
             {/* ── Title ── */}
             <h2 className="text-center text-xl sm:text-2xl font-normal text-gray-800 mb-5 tracking-tight">
               Explore <span className="font-extrabold text-red-600">1000+</span>{" "}
-              Verified Properties
+              {activeSearchTab === "owners"
+                ? "Owner Properties"
+                : "Verified Properties"}
             </h2>
 
             {/* ── Search bar card ── */}
@@ -955,9 +1014,26 @@ export default function HomeSearchBar() {
           maxBudget: "",
           propertyTypes: [],
           possessions: [],
-          ...modalFilters,
-        }}
       />
+
+      {/* CSS style for full page modal on mobile */}
+      <style jsx global>{`
+        .filter-modal-card {
+          width: 100%;
+          height: 100vh;
+          height: 100dvh;
+          max-height: 100vh;
+          max-height: 100dvh;
+          border-radius: 0;
+        }
+        @media (min-width: 768px) {
+          .filter-modal-card {
+            height: auto;
+            max-height: min(90vh, 700px);
+            border-radius: 1rem;
+          }
+        }
+      `}</style>
     </>
   );
 }

@@ -34,9 +34,105 @@ const { Project, City, State, Area, Builder } = models;
 async function fetchInitialProjects(searchParams) {
   try {
     const params = await searchParams;
-    const filters = {};
-
     const get = (key) => params?.[key] || null;
+
+    if (get("isOwner") === "true" || get("tab") === "properties") {
+      const propertyFilters = { approvalStatus: "Approved" };
+      
+      if (get("city")) {
+        const cityDoc = await City.findOne({
+          name: { $regex: get("city"), $options: "i" },
+        }).lean();
+        if (cityDoc) propertyFilters.city = cityDoc._id;
+        else return [];
+      }
+      
+      if (get("area")) {
+        const areaDoc = await Area.findOne({
+          name: { $regex: get("area"), $options: "i" },
+        }).lean();
+        if (areaDoc) propertyFilters.area = areaDoc._id;
+        else return [];
+      }
+
+      if (get("unitType")) {
+        propertyFilters.bhkType = get("unitType");
+      }
+
+      if (get("projectType")) {
+        propertyFilters.propertyType = get("projectType");
+      }
+
+      const properties = await models.Property.find(propertyFilters)
+        .populate("area city state")
+        .sort({ createdAt: -1 })
+        .limit(12)
+        .lean();
+
+      return properties.map((p) => ({
+        _id: p._id,
+        projectName: p.title,
+        minPrice: p.price,
+        maxPrice: p.price,
+        projectType: [p.propertyType || "Apartment"],
+        projectSpecification: [
+          {
+            unitType: p.bhkType,
+            size: String(p.size),
+            price: String(p.price),
+            measurementUnit: "sqft",
+          },
+        ],
+        minSize: String(p.size),
+        maxSize: String(p.size),
+        coverImages: p.images && p.images.length > 0 ? p.images : [{ url: "" }],
+        area: p.area,
+        city: p.city,
+        state: p.state,
+        builder: { name: p.ownerName || "Direct Owner" },
+        slug: p._id.toString(),
+        reraNumber: "Zero Brokerage",
+        
+        // Direct Owner Property payload fields
+        isDirectOwner: true,
+        title: p.title,
+        description: p.description,
+        bhkType: p.bhkType,
+        price: p.price,
+        size: p.size,
+        bedrooms: p.bedrooms,
+        bathrooms: p.bathrooms,
+        amenities: p.amenities,
+        images: p.images,
+        propertyType: p.propertyType,
+        propertySubtype: p.propertySubtype,
+        propertyStage: p.propertyStage,
+        furnishingStatus: p.furnishingStatus,
+        ageOfConstruction: p.ageOfConstruction,
+        societyName: p.societyName,
+        floorNo: p.floorNo,
+        totalFloors: p.totalFloors,
+        landmark: p.landmark,
+        pinCode: p.pinCode,
+        areaType: p.areaType,
+        areaUnit: p.areaUnit,
+        priceNegotiable: p.priceNegotiable,
+        maintenanceCharges: p.maintenanceCharges,
+        maintenanceType: p.maintenanceType,
+        ownershipType: p.ownershipType,
+        balconies: p.balconies,
+        parkingSpaces: p.parkingSpaces,
+        liftsOnFloor: p.liftsOnFloor,
+        unitsOnFloor: p.unitsOnFloor,
+        overlookingView: p.overlookingView,
+        videoLink: p.videoLink,
+        ownerName: p.ownerName,
+        ownerPhone: p.ownerPhone,
+        ownerEmail: p.ownerEmail,
+      }));
+    }
+
+    const filters = {};
 
     if (get("projectType")) filters.projectType = { $in: [get("projectType")] };
     if (get("projectSubType")) {
@@ -166,5 +262,11 @@ async function fetchInitialProjects(searchParams) {
 
 export default async function SearchPage({ searchParams }) {
   const initialProjects = await fetchInitialProjects(searchParams);
-  return <SearchPageClient initialProjects={serializeMongo(initialProjects)} />;
+  const ownerPropertiesCount = await models.Property.countDocuments({ approvalStatus: "Approved" });
+  return (
+    <SearchPageClient 
+      initialProjects={serializeMongo(initialProjects)} 
+      ownerPropertiesCount={ownerPropertiesCount} 
+    />
+  );
 }

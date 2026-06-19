@@ -21,7 +21,12 @@ import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
    Static Data
 ───────────────────────────────────────────────────────────── */
 const CITIES = ["Ahmedabad", "Gandhinagar"];
-const PROPERTY_CATEGORIES = ["Residential", "Commercial", "Weekend Plots", "Penthouse/Villa"];
+const PROPERTY_CATEGORIES = [
+  "Residential",
+  "Commercial",
+  "Weekend Plots",
+  "Penthouse/Villa",
+];
 
 const UNIT_TYPES_BY_CATEGORY = {
   Residential: [
@@ -415,7 +420,7 @@ function FilterModal({ open, onClose, onApply, initial, unitOptions }) {
 
   return (
     <div
-      className="fixed inset-0 z-[999] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[999] flex items-center justify-center p-0 md:p-4"
       aria-modal="true"
       role="dialog"
     >
@@ -425,8 +430,7 @@ function FilterModal({ open, onClose, onApply, initial, unitOptions }) {
         aria-hidden="true"
       />
       <div
-        className="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl flex flex-col overflow-hidden"
-        style={{ maxHeight: "min(90vh, 700px)" }}
+        className="relative bg-white w-full md:max-w-lg flex flex-col overflow-hidden filter-modal-card"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -676,6 +680,7 @@ export default function HomeHeroSection({ data }) {
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchRef = useRef(null);
+  const mobileSearchRef = useRef(null);
 
   // ── Active filter count ──
   const activeFilterCount = [
@@ -736,7 +741,11 @@ export default function HomeHeroSection({ data }) {
   // ── Close autocomplete on outside click ──
   useEffect(() => {
     const handler = (e) => {
-      if (searchRef.current && !searchRef.current.contains(e.target)) {
+      const clickedOutsideDesktop =
+        !searchRef.current || !searchRef.current.contains(e.target);
+      const clickedOutsideMobile =
+        !mobileSearchRef.current || !mobileSearchRef.current.contains(e.target);
+      if (clickedOutsideDesktop && clickedOutsideMobile) {
         setShowSuggestions(false);
       }
     };
@@ -797,7 +806,7 @@ export default function HomeHeroSection({ data }) {
     if (propertyTypes?.length) {
       let selectedType = propertyTypes[0];
       if (selectedType === "Weekend Plots") selectedType = "Land";
-      
+
       if (selectedType === "Penthouse/Villa") {
         params.set("projectType", "Residential");
         params.set("projectSubType", "Bunglows/Villa/Row House,Penthouse");
@@ -866,7 +875,7 @@ export default function HomeHeroSection({ data }) {
       {/* ═══════════════════════════════════════════════════════
           HERO — background image + headline + stats
       ═══════════════════════════════════════════════════════ */}
-      <section className="relative w-full" style={{ minHeight: "92vh" }}>
+      <section className="hidden md:block relative w-full" style={{ minHeight: "92vh" }}>
         {/* Background image */}
         {data?.img && (
           <div className="absolute inset-0">
@@ -896,7 +905,7 @@ export default function HomeHeroSection({ data }) {
         >
           {/* Top area — headline + search card */}
           <div className="flex-1 flex items-center">
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 pt-24 pb-10">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 pt-8 md:pt-16 lg:pt-24 pb-10">
               <div className="grid lg:grid-cols-2 gap-10 items-center">
                 {/* ── LEFT: Headline + paragraphs ── */}
                 <div className="space-y-6">
@@ -918,15 +927,6 @@ export default function HomeHeroSection({ data }) {
                       transition={{ duration: 0.4, delay: 0.08 }}
                     >
                       <button
-                        type="button"
-                        onClick={() => router.push("/search")}
-                        className="inline-flex items-center gap-2 bg-red-600/90 text-white text-xs font-bold px-4 py-1.5 rounded-full backdrop-blur-sm shadow hover:bg-red-600 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse flex-shrink-0" />
-                        Zero Brokerage Charges
-                      </button>
-                    </motion.div>
-                  </div> */}
                   {/* Typing headline */}
                   <motion.div
                     className="h-[130px] sm:h-[200px] lg:h-[240px] flex items-start"
@@ -939,8 +939,6 @@ export default function HomeHeroSection({ data }) {
                       <span className="typing-cursor inline-block w-[2px] h-[1em] align-middle bg-red-400 ml-1" />
                     </h1>
                   </motion.div>
-
-                  {/* Zero Brokerage Badge */}
 
                   {/* Paragraphs */}
                   <motion.div
@@ -967,9 +965,10 @@ export default function HomeHeroSection({ data }) {
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.15 }}
-                  className="w-full"
+                  className="w-full min-w-0"
                 >
-                  <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-8 border border-white/60">
+                  {/* Desktop Search Card */}
+                  <div className="hidden md:block bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-8 border border-white/60">
                     {/* Card header */}
                     <div className="mb-5">
                       <h2 className="text-xl font-bold text-gray-900 mb-0.5">
@@ -1084,20 +1083,6 @@ export default function HomeHeroSection({ data }) {
                               className="absolute top-full left-0 mt-2 w-full z-[9999] bg-white shadow-2xl rounded-xl max-h-56 overflow-y-auto border border-gray-100"
                               onScroll={(e) => e.stopPropagation()}
                             >
-                              {/* General search option */}
-                              {/* {suggestions.value && (
-                                <button
-                                  type="button"
-                                  className="w-full text-left px-4 py-2.5 hover:bg-gray-100 text-sm text-gray-700 transition-colors cursor-pointer"
-                                  onClick={() => {
-                                    setSearchBy(suggestions.value);
-                                    setShowSuggestions(false);
-                                  }}
-                                >
-                                  Search for "{suggestions.value}"
-                                </button>
-                              )} */}
-
                               {/* Areas suggestions section */}
                               {suggestions.areas?.length > 0 && (
                                 <>
@@ -1261,6 +1246,241 @@ export default function HomeHeroSection({ data }) {
                       </div>
                     </div>
                   </div>
+
+                  {/* Mobile Search Card */}
+                  <div className="block md:hidden bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl p-4 border border-white/60 w-full max-w-full overflow-hidden">
+                    {/* Card header */}
+                    <div className="mb-3">
+                      <h2 className="text-base font-bold text-gray-900">
+                        Find Your Dream Home
+                      </h2>
+                    </div>
+
+                    <form onSubmit={handleSearch} className="space-y-3">
+                      {/* City toggle */}
+                      <div className="flex bg-gray-100/80 p-1 rounded-xl">
+                        {CITIES.map((c) => (
+                          <button
+                            key={c}
+                            type="button"
+                            onClick={() =>
+                              setSelectedCity(selectedCity === c ? "" : c)
+                            }
+                            className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 cursor-pointer ${
+                              selectedCity === c
+                                ? "bg-white text-red-600 shadow-sm"
+                                : "text-gray-500 hover:text-gray-800"
+                            }`}
+                          >
+                            {c}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Category Selector Scrollable */}
+                      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none snap-x -mx-1 px-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                        {PROPERTY_CATEGORIES.map((c) => (
+                          <button
+                            key={c}
+                            type="button"
+                            onClick={() =>
+                              setSelectedCategory(
+                                selectedCategory === c ? "" : c,
+                              )
+                            }
+                            className={`snap-start shrink-0 px-3.5 py-1.5 text-[11px] font-semibold rounded-full border transition-all duration-150 cursor-pointer ${
+                              selectedCategory === c
+                                ? "bg-red-600 text-white border-red-600 shadow-sm"
+                                : "bg-white text-gray-600 border-gray-200 hover:border-red-300 hover:text-red-600"
+                            }`}
+                          >
+                            {c}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Search Location Input Bar */}
+                      <div ref={mobileSearchRef} className="relative">
+                        <div className="flex items-center gap-2 bg-gray-50 border-2 border-gray-200 rounded-xl px-3 py-2.5 focus-within:border-red-500 focus-within:bg-white transition-all duration-200">
+                          <FiSearch
+                            size={16}
+                            className="text-gray-400 shrink-0"
+                          />
+                          <input
+                            type="text"
+                            value={searchBy}
+                            onChange={handleSearchByChange}
+                            onFocus={() => {
+                              if (
+                                suggestions.areas?.length > 0 ||
+                                suggestions.projects?.length > 0 ||
+                                suggestions.cities?.length > 0 ||
+                                suggestions.value
+                              ) {
+                                setShowSuggestions(true);
+                              }
+                            }}
+                            placeholder="Search Locality, Project..."
+                            className="flex-1 min-w-0 text-xs text-gray-800 focus:outline-none placeholder-gray-400 bg-transparent"
+                          />
+                          {searchBy && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSearchBy("");
+                                setShowSuggestions(false);
+                              }}
+                              className="text-gray-400 hover:text-gray-600 cursor-pointer p-0.5 shrink-0"
+                            >
+                              <FiX size={14} />
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setFilterOpen(true)}
+                            className="relative flex items-center justify-center p-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 hover:border-red-400 hover:text-red-600 transition-all duration-150 cursor-pointer shrink-0"
+                          >
+                            <FiSliders size={14} />
+                            {activeFilterCount > 0 && (
+                              <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold flex items-center justify-center">
+                                {activeFilterCount}
+                              </span>
+                            )}
+                          </button>
+                        </div>
+
+                        {/* Autocomplete Suggestions */}
+                        {showSuggestions &&
+                          (suggestions.areas?.length > 0 ||
+                            suggestions.projects?.length > 0 ||
+                            suggestions.cities?.length > 0 ||
+                            suggestions.value) && (
+                            <div
+                              className="absolute top-full left-0 mt-1 w-full z-[9999] bg-white shadow-2xl rounded-xl max-h-52 overflow-y-auto border border-gray-100"
+                              onScroll={(e) => e.stopPropagation()}
+                            >
+                              {/* Areas suggestions section */}
+                              {suggestions.areas?.length > 0 && (
+                                <>
+                                  <div className="px-4 py-1.5 border-t border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50/50">
+                                    Areas
+                                  </div>
+                                  {suggestions.areas.map((area) => (
+                                    <button
+                                      key={area._id}
+                                      type="button"
+                                      className="w-full text-left px-4 py-2 hover:bg-red-50 text-xs text-gray-700 flex items-center gap-2 transition-colors hover:text-red-600 cursor-pointer"
+                                      onClick={() => {
+                                        setSearchBy(area.name);
+                                        setShowSuggestions(false);
+                                      }}
+                                    >
+                                      <FiMapPin
+                                        size={11}
+                                        className="text-gray-400 flex-shrink-0"
+                                      />
+                                      {area.name}
+                                    </button>
+                                  ))}
+                                </>
+                              )}
+
+                              {/* Cities suggestions section */}
+                              {suggestions.cities?.length > 0 && (
+                                <>
+                                  <div className="px-4 py-1.5 border-t border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50/50">
+                                    Cities
+                                  </div>
+                                  {suggestions.cities.map((city) => (
+                                    <button
+                                      key={city._id}
+                                      type="button"
+                                      className="w-full text-left px-4 py-2 hover:bg-red-50 text-xs text-gray-700 transition-colors hover:text-red-600 cursor-pointer"
+                                      onClick={() => {
+                                        setSelectedCity(city.name);
+                                        setShowSuggestions(false);
+                                      }}
+                                    >
+                                      {city.name}
+                                    </button>
+                                  ))}
+                                </>
+                              )}
+
+                              {/* Projects suggestions section */}
+                              {suggestions.projects?.length > 0 && (
+                                <>
+                                  <div className="px-4 py-1.5 border-t border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50/50">
+                                    Projects
+                                  </div>
+                                  {suggestions.projects.map((project) => (
+                                    <button
+                                      key={project._id}
+                                      type="button"
+                                      className="w-full text-left px-4 py-2 hover:bg-red-50 text-xs text-gray-700 transition-colors hover:text-red-600 cursor-pointer"
+                                      onClick={() => {
+                                        setIsSearching(true);
+                                        router.push(
+                                          `/project-page/${encodeURIComponent(
+                                            project.slug || project._id,
+                                          )}`,
+                                        );
+                                        setShowSuggestions(false);
+                                      }}
+                                    >
+                                      {project.projectName}
+                                    </button>
+                                  ))}
+                                </>
+                              )}
+                            </div>
+                          )}
+                      </div>
+
+                      {/* Action Search Button */}
+                      <button
+                        type="submit"
+                        disabled={isSearching}
+                        className="w-full bg-red-600 cursor-pointer hover:bg-red-700 disabled:opacity-75 disabled:cursor-not-allowed active:scale-[0.98] text-white text-xs font-bold py-3 rounded-xl transition-all duration-150 flex items-center justify-center gap-2 shadow-lg shadow-red-600/30"
+                      >
+                        {isSearching ? (
+                          <>
+                            <div className="w-3.5 h-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                            Finding...
+                          </>
+                        ) : (
+                          <>
+                            <FiSearch size={14} />
+                            Search Properties
+                          </>
+                        )}
+                      </button>
+                    </form>
+
+                    {/* Popular Localities Row */}
+                    <div className="mt-3 pt-3 border-t border-gray-100 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                      <div className="flex items-center gap-1.5 whitespace-nowrap">
+                        <span className="text-[10px] font-semibold text-gray-400 flex items-center gap-0.5 shrink-0">
+                          <FiMapPin size={9} /> Popular:
+                        </span>
+                        {POPULAR_LOCALITIES.map((loc) => (
+                          <button
+                            key={loc}
+                            type="button"
+                            onClick={() =>
+                              window.open(
+                                `/search?q=${encodeURIComponent(loc)}`,
+                                "_blank",
+                              )
+                            }
+                            className="px-2.5 py-1 rounded-full border border-red-100 bg-red-50/50 hover:bg-red-600 hover:text-white hover:border-red-600 text-[10px] font-medium text-red-700 transition-all duration-150 cursor-pointer"
+                          >
+                            {loc}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
               </div>
             </div>
@@ -1270,7 +1490,7 @@ export default function HomeHeroSection({ data }) {
           {data?.counts && data.counts.length > 0 && (
             <div className="w-full bg-black/40 backdrop-blur-sm border-t border-white/10">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div className="grid grid-cols-3 gap-3 sm:gap-6 text-center">
                   {data.counts.map((item, index) => (
                     <motion.div
                       key={index}
@@ -1278,7 +1498,7 @@ export default function HomeHeroSection({ data }) {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
                     >
-                      <div className="text-2xl md:text-3xl font-extrabold text-white">
+                      <div className="text-lg sm:text-2xl md:text-3xl font-extrabold text-white">
                         {isClient ? (
                           <CountUp
                             start={item.start || 0}
@@ -1292,7 +1512,7 @@ export default function HomeHeroSection({ data }) {
                         )}
                         <span className="text-red-400">+</span>
                       </div>
-                      <p className="text-xs md:text-sm text-white/70 mt-0.5 font-medium">
+                      <p className="text-[10px] sm:text-xs md:text-sm text-white/70 mt-0.5 font-medium leading-tight">
                         {item.title}
                       </p>
                     </motion.div>
@@ -1301,6 +1521,62 @@ export default function HomeHeroSection({ data }) {
               </div>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Mobile homepage welcome & search card section (visible only on mobile) */}
+      <section className="block md:hidden bg-gradient-to-br from-red-50/50 via-white to-gray-50/30 px-4 pt-6 pb-4 border-b border-gray-100 select-none">
+        <div className="w-full max-w-xl mx-auto space-y-4">
+          {/* Welcome Text */}
+          <div>
+            <h1 className="text-xl font-extrabold text-gray-900 leading-tight">
+              Find Your <span className="text-red-600">Dream</span> Property
+            </h1>
+            <p className="text-xs text-gray-500 mt-1 font-medium">
+              Explore verified zero brokerage listings in Ahmedabad & Gandhinagar
+            </p>
+          </div>
+
+          {/* Search bar input placeholder opening filter modal */}
+          <div 
+            onClick={() => setFilterOpen(true)}
+            className="flex items-center gap-2.5 bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-sm active:scale-[0.99] transition-all cursor-pointer"
+          >
+            <FiSearch size={16} className="text-red-600 shrink-0" />
+            <div className="flex-1 text-left min-w-0">
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider leading-none">Search</p>
+              <p className="text-xs text-gray-500 font-medium truncate mt-0.5 leading-none">
+                Search Locality, Project, Area...
+              </p>
+            </div>
+            <div className="bg-red-50 p-1.5 rounded-lg text-red-600 shrink-0">
+              <FiSliders size={14} />
+            </div>
+          </div>
+
+          {/* Popular Localities Quick Links */}
+          <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div className="flex items-center gap-1.5 whitespace-nowrap py-1">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0 mr-1">
+                Popular:
+              </span>
+              {POPULAR_LOCALITIES.map((loc) => (
+                <button
+                  key={loc}
+                  type="button"
+                  onClick={() =>
+                    window.open(
+                      `/search?q=${encodeURIComponent(loc)}`,
+                      "_blank",
+                    )
+                  }
+                  className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-red-600 hover:text-white hover:border-red-600 text-[10px] font-semibold text-gray-600 transition-all duration-150 cursor-pointer shadow-sm"
+                >
+                  {loc}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1322,7 +1598,7 @@ export default function HomeHeroSection({ data }) {
         }}
       />
 
-      {/* Cursor animation style */}
+      {/* Cursor & Filter modal styling */}
       <style jsx global>{`
         .typing-cursor {
           display: inline-block;
@@ -1335,6 +1611,21 @@ export default function HomeHeroSection({ data }) {
           }
           50% {
             opacity: 0;
+          }
+        }
+        .filter-modal-card {
+          width: 100%;
+          height: 100vh;
+          height: 100dvh;
+          max-height: 100vh;
+          max-height: 100dvh;
+          border-radius: 0;
+        }
+        @media (min-width: 768px) {
+          .filter-modal-card {
+            height: auto;
+            max-height: min(90vh, 700px);
+            border-radius: 1rem;
           }
         }
       `}</style>

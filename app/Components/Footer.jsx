@@ -33,12 +33,12 @@ const Footer = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-900 to-transparent opacity-20" />
 
       {/* Main content wrapper */}
-      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 py-4 md:py-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-10">
           {/* Contact Information Section */}
           <div>
-            <p className="text-2xl font-bold mb-6 text-white">CONTACT US</p>
-            <div className="space-y-4">
+            <p className="text-lg md:text-2xl font-bold mb-2 md:mb-6 text-white">CONTACT US</p>
+            <div className="space-y-2 md:space-y-4">
               {/* Address */}
               <div className="flex items-start group">
                 <MapPin className="h-12 w-12 mr-2 -mt-2 text-gray-400 group-hover:text-purple-400" />
@@ -77,8 +77,8 @@ const Footer = () => {
 
           {/* Menu Links Section */}
           <div>
-            <p className="text-2xl font-bold mb-6 text-gray-100">MENU</p>
-            <ul className="space-y-3">
+            <p className="text-lg md:text-2xl font-bold mb-2 md:mb-6 text-gray-100">MENU</p>
+            <ul className="space-y-1.5 md:space-y-3">
               {[
                 { name: "Home", path: "/" },
                 { name: "Loans For NRIs", path: "/others/loansForNRI" },
@@ -105,10 +105,10 @@ const Footer = () => {
 
           {/* Property by Location Section */}
           <div>
-            <p className="text-2xl font-bold mb-6 text-gray-100">
+            <p className="text-lg md:text-2xl font-bold mb-2 md:mb-6 text-gray-100">
               PROPERTY BY LOCATION
             </p>
-            <ul className="space-y-3">
+            <ul className="space-y-1.5 md:space-y-3">
               {["Ahmedabad", "Gandhinagar"].map((city, index) => (
                 <li key={index} className="flex items-center group">
                   <span className="text-lg mr-2 text-gray-400">›</span>
@@ -125,10 +125,10 @@ const Footer = () => {
 
           {/* Property by Type Section */}
           <div>
-            <p className="text-2xl font-bold mb-6 text-gray-100">
+            <p className="text-lg md:text-2xl font-bold mb-2 md:mb-6 text-gray-100">
               PROPERTY BY TYPE
             </p>
-            <ul className="space-y-3">
+            <ul className="space-y-1.5 md:space-y-3">
               {["Residential", "Commercial", "Land", "Penthouse/Villa"].map((type, index) => (
                 <li key={index} className="flex items-center group">
                   <span className="text-lg mr-2 text-gray-400">›</span>
@@ -145,7 +145,7 @@ const Footer = () => {
         </div>
 
         {/* Disclaimer and RERA Info */}
-        <div className="mt-12 mb-6 border-t border-gray-800 pt-8 text-sm text-gray-400">
+        <div className="mt-6 mb-4 border-t border-gray-800 pt-4 md:mt-12 md:mb-6 md:pt-8 text-sm text-gray-400">
           <p className="mb-4">
             <span className="font-bold text-gray-200">Disclaimer:</span>{" "}
             {footerData.disclaimer}

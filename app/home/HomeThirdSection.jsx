@@ -16,7 +16,7 @@ const CustomAccordion = ({ items }) => {
   }
 
   return (
-    <div className="mt-8 space-y-5">
+    <div className="mt-4 md:mt-8 space-y-3 md:space-y-5">
       {items.section.map((item, i) => (
         <div
           key={i}
@@ -26,8 +26,8 @@ const CustomAccordion = ({ items }) => {
         >
           {/* Accordion Header */}
           <button
-            className="w-full flex items-center p-4 cursor-pointer hover:bg-gray-50 transition-colors"
-            onClick={() => setOpenIndex(i)} // Set current item as open
+            className="w-full flex items-center p-3 md:p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+            onClick={() => setOpenIndex(openIndex === i ? null : i)} // Toggle accordion open/closed
           >
             {/* Left Icon */}
             <div className="p-2 bg-red-50 rounded-lg">
@@ -52,7 +52,7 @@ const CustomAccordion = ({ items }) => {
 
           {/* Accordion Body - Conditionally Rendered */}
           {i === openIndex && (
-            <div className="p-4 text-sm sm:text-base text-gray-600">
+            <div className="p-3 md:p-4 text-sm sm:text-base text-gray-600">
               {item?.text}
             </div>
           )}
@@ -65,10 +65,10 @@ const CustomAccordion = ({ items }) => {
 // Main section component
 export default function HomeThirdSection({ data }) {
   return (
-    <section className="w-full mt-10 mb-10 py-8 px-4 sm:px-6 lg:px-8">
+    <section className="w-full mt-4 mb-4 md:mt-10 md:mb-10 py-4 md:py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-8">
         {/* Image Section (Right on large screens) */}
-        <div className="w-full lg:w-1/2 custom-center">
+        <div className="hidden md:block w-full lg:w-1/2 custom-center">
           <motion.div
             initial={{ x: "7rem", opacity: 0 }} // Start animation off-screen
             animate={{ x: 0, opacity: 1 }} // Animate to visible state
@@ -95,7 +95,7 @@ export default function HomeThirdSection({ data }) {
         </div>
 
         {/* Text + Accordion Section (Left on large screens) */}
-        <div className="w-full lg:w-1/2 flex flex-col gap-4">
+        <div className="w-full lg:w-1/2 flex flex-col gap-2 md:gap-4">
           {/* Title */}
           <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
             <span className="text-red-600">{data?.redTxt}</span>{" "}

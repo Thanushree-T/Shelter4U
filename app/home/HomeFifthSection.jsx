@@ -10,11 +10,11 @@ const HomeFifthSection = ({ data }) => {
   const safeData = Array.isArray(data) ? data : [];
 
   return (
-    <div className="py-16 px-4 sm:px-6 overflow-hidden">
+    <div className="py-4 md:py-16 px-4 sm:px-6 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Section Heading */}
-        <div className="flex flex-col items-center justify-center mb-12">
-          <p className="text-3xl font-bold text-gray-800 sm:text-4xl mb-2 text-center">
+        <div className="flex flex-col items-center justify-center mb-6 md:mb-12">
+          <p className="text-xl md:text-3xl font-bold text-gray-800 sm:text-4xl mb-2 text-center">
             Authorized Channel Partners Of
           </p>
         </div>
@@ -27,7 +27,7 @@ const HomeFifthSection = ({ data }) => {
               className="inline-flex items-center justify-center mx-2"
             >
               {/* Logo Image Container */}
-              <div className="relative h-32 w-56">
+              <div className="relative h-20 w-36 md:h-32 md:w-56">
                 {partner?.img && (
                   <Image
                     src={optimizeCloudinaryUrl(partner.img, {
@@ -38,7 +38,7 @@ const HomeFifthSection = ({ data }) => {
                     alt={partner?.title || `partner-${index}`} // Accessible alt text
                     fill // Uses layout fill to cover the container
                     className="object-contain" // Maintains image aspect ratio
-                    sizes="224px" // Fixed width container (w-56 = 14rem = 224px)
+                    sizes="(max-width: 768px) 144px, 224px" // Fixed width container (w-56 = 14rem = 224px)
                   />
                 )}
               </div>
