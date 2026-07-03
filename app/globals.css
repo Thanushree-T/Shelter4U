@@ -11,7 +11,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono); */
 
-  --font-main: var(--font-poppins);
+  --font-main: var(--font-open-sans);
 }
 
 /* @media (prefers-color-scheme: dark) {
