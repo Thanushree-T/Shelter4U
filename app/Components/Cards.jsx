@@ -264,48 +264,67 @@ const Cards = ({ project, layout = "grid", priority = false }) => {
               </div>
             </div>
 
-            {/* Specifications - Mobile inline list */}
-            <div className="block md:hidden text-[9px] text-gray-400 font-bold mt-0.5">
-              {minSize || maxSize ? `${minSize}-${maxSize} sqft` : ""}
-              {unitTypes && ` • ${unitTypes.split(",")[0]}`}
-            </div>
           </div>
 
-          {/* Pricing & View Details footer */}
-          <div className="mt-0.5 md:mt-3 md:pt-3 md:border-t md:border-gray-100 flex items-center justify-between gap-1 w-full">
-            {/* Price display */}
-            <div className="text-left">
-              <span className="text-xs md:text-base font-black text-gray-900 tracking-tight leading-none block">
+          {/* Footer: 2 rows — price then buttons */}
+          <div className="mt-2 pt-2.5 border-t border-gray-100">
+            {/* Row 1: Price */}
+            <div className="mb-2">
+              <span className="text-xs md:text-sm font-black text-gray-900 tracking-tight">
                 {minPriceFormatted === "On Request" ? (
-                  "Price On Request"
+                  <span className="text-gray-500">On Request</span>
                 ) : (
                   <>
                     {minPriceFormatted}
-                    {maxPriceFormatted && ` - ${maxPriceFormatted}`}
-                    {!maxPriceFormatted && (
-                      <span className="text-[8px] md:text-[10px] text-gray-500 font-semibold ml-0.5 inline-block">
-                        onwards
-                      </span>
+                    {maxPriceFormatted ? (
+                      <span className="text-gray-500 font-semibold text-xs"> – {maxPriceFormatted}</span>
+                    ) : (
+                      <span className="text-red-500 font-bold text-[10px] ml-0.5">+</span>
                     )}
                   </>
                 )}
               </span>
             </div>
 
-            {/* Action CTAs - Desktop Grid */}
-            <div className="hidden md:grid grid-cols-2 gap-2 w-full sm:w-auto shrink-0">
+            {/* Row 2: Buttons — desktop only */}
+            <div className="hidden md:flex items-center gap-1.5">
+              {/* WhatsApp */}
+              <a
+                href={`https://wa.me/919714512452?text=${encodeURIComponent(`Hi, I am interested in ${projectName} Project`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                title="WhatsApp"
+                className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-200 bg-white hover:border-green-400 hover:bg-green-50 transition-all duration-200 active:scale-90 shadow-sm shrink-0"
+              >
+                <svg viewBox="0 0 32 32" className="w-4.5 h-4.5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.668 4.61 1.828 6.5L4 29l7.703-1.797A11.94 11.94 0 0016 27c6.627 0 12-5.373 12-12S22.627 3 16 3z" fill="#25D366"/>
+                  <path d="M21.5 18.9c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.79-1.68-2.09-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.87 1.22 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.27.5 1.7.64.72.23 1.37.2 1.89.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z" fill="white"/>
+                </svg>
+              </a>
+              {/* Call */}
+              <a
+                href="tel:+919714512452"
+                onClick={(e) => e.stopPropagation()}
+                title="Call Us"
+                className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-200 bg-white hover:border-red-300 hover:bg-red-50 transition-all duration-200 active:scale-90 shadow-sm shrink-0"
+              >
+                <svg viewBox="0 0 24 24" className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                </svg>
+              </a>
+              {/* View Details */}
               <Link
                 href={`/project-page/${encodeURIComponent(slug)}`}
-                className="bg-white hover:bg-slate-50 text-gray-700 hover:text-red-600 font-extrabold text-[10px] uppercase tracking-wider py-2 px-2.5 rounded-lg border border-gray-200 hover:border-red-200 transition active:scale-[0.97] cursor-pointer shadow-sm duration-150 text-center flex items-center justify-center"
+                onClick={(e) => { if (window.innerWidth < 768) e.preventDefault(); }}
+                className="whitespace-nowrap bg-white hover:bg-slate-50 text-gray-700 hover:text-red-600 font-extrabold text-[10px] uppercase tracking-wider py-2 px-2.5 rounded-lg border border-gray-200 hover:border-red-200 transition active:scale-[0.97] shadow-sm duration-150 flex items-center justify-center"
               >
                 View Details
               </Link>
+              {/* Enquire Now */}
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsModalOpen(true);
-                }}
-                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-extrabold text-[10px] uppercase tracking-wider py-2 px-2.5 rounded-lg transition active:scale-[0.97] cursor-pointer shadow-sm hover:shadow-red-500/10 duration-150 text-center flex items-center justify-center"
+                onClick={(e) => { e.stopPropagation(); setIsModalOpen(true); }}
+                className="whitespace-nowrap bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-extrabold text-[10px] uppercase tracking-wider py-2 px-2.5 rounded-lg transition active:scale-[0.97] shadow-sm duration-150 flex items-center justify-center cursor-pointer"
               >
                 Enquire Now
               </button>
@@ -349,19 +368,6 @@ const Cards = ({ project, layout = "grid", priority = false }) => {
         onClick={handleCardClick}
         className="relative flex flex-row bg-white rounded-2xl overflow-hidden w-full border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group min-h-[120px] md:h-auto cursor-pointer"
       >
-        {/* Floating Share Button in Top-Right */}
-        <div className="absolute top-4 right-4 z-40 hidden md:block">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleShare(e, slug);
-            }}
-            className="p-2 bg-white hover:bg-gray-50 text-gray-500 hover:text-red-600 rounded-full border border-gray-200/80 shadow-sm transition-all duration-200 active:scale-90 cursor-pointer flex items-center justify-center"
-            title="Share Property"
-          >
-            <FiShare2 className="w-4.5 h-4.5" />
-          </button>
-        </div>
 
         {/* Left Section: Cover Image with dynamic overlays */}
         <div className="relative w-28 md:w-[260px] lg:w-[280px] shrink-0 overflow-hidden group/img bg-gray-50 border-r border-gray-100 min-h-[120px] md:min-h-0">
@@ -567,8 +573,17 @@ const Cards = ({ project, layout = "grid", priority = false }) => {
           </div>
         </div>
 
-        {/* Right Section: Pricing & Call buttons (Divider desktop, vertical alignment) */}
+        {/* Right Section: Pricing & Call buttons */}
         <div className="hidden md:flex border-t md:border-t-0 md:border-l border-gray-100 flex-col justify-center items-center p-5 w-full md:w-[200px] shrink-0 text-center bg-gray-50/15 relative">
+          {/* Share button — scoped inside right panel, top-right */}
+          <button
+            onClick={(e) => { e.stopPropagation(); handleShare(e, slug); }}
+            className="absolute top-3 right-3 p-1.5 bg-white hover:bg-gray-50 text-gray-400 hover:text-red-600 rounded-full border border-gray-200/80 shadow-sm transition-all duration-200 active:scale-90 cursor-pointer flex items-center justify-center"
+            title="Share Property"
+          >
+            <FiShare2 className="w-3.5 h-3.5" />
+          </button>
+
           {/* Price display */}
           <div className="mb-4 flex flex-col items-center">
             <span className="text-2xl font-black text-gray-900 tracking-tight leading-tight block">
@@ -599,6 +614,32 @@ const Cards = ({ project, layout = "grid", priority = false }) => {
             </p>
           </div>
 
+          {/* Icon Buttons: WhatsApp + Call — centered */}
+          <div className="flex items-center justify-center gap-3 w-full mb-4">
+            <a
+              href={`https://wa.me/919714512452?text=${encodeURIComponent(`Hi, I am interested in ${projectName} Project`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              title="WhatsApp"
+              className="flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 bg-white hover:border-green-400 hover:bg-green-50 transition-all duration-200 active:scale-90 shadow-sm"
+            >
+              <svg viewBox="0 0 32 32" className="w-5 h-5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.668 4.61 1.828 6.5L4 29l7.703-1.797A11.94 11.94 0 0016 27c6.627 0 12-5.373 12-12S22.627 3 16 3z" fill="#25D366"/>
+                <path d="M21.5 18.9c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.79-1.68-2.09-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.87 1.22 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.27.5 1.7.64.72.23 1.37.2 1.89.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z" fill="white"/>
+              </svg>
+            </a>
+            <a
+              href="tel:+919714512452"
+              onClick={(e) => e.stopPropagation()}
+              title="Call Us"
+              className="flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 bg-white hover:border-red-300 hover:bg-red-50 transition-all duration-200 active:scale-90 shadow-sm"
+            >
+              <svg viewBox="0 0 24 24" className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+              </svg>
+            </a>
+          </div>
           {/* Solid Red CTA: Enquire Now */}
           <button
             onClick={(e) => {
@@ -691,87 +732,91 @@ const Cards = ({ project, layout = "grid", priority = false }) => {
           </div>
 
           {/* Project information section */}
-          <div className="p-5 pb-3 flex-1">
-            <div className="flex justify-between items-start">
-              {/* Project title */}
-              <div className="min-h-[3.5rem] w-full mr-4">
-                <h3 className="text-gray-900 text-xl font-bold line-clamp-2 h-full">
+          <div className="p-4 flex-1 flex flex-col">
+            {/* Title + Price row */}
+            <div className="flex justify-between items-start gap-3 mb-2">
+              <div className="min-w-0 flex-1">
+                <h3 className="text-gray-900 text-base font-bold line-clamp-2 leading-snug">
                   {projectName}
                 </h3>
-              </div>
-
-              {/* Price display */}
-              <div className="text-right flex-shrink-0">
-                <div className="text-red-600 text-2xl font-bold flex items-center justify-end">
-                  <span>
-                    {price === "On Request" ? (
-                      "On Request"
-                    ) : (
-                      <div>
-                        {price}
-                        <p className="text-sm ml-1">onwards</p>
-                      </div>
-                    )}
-                  </span>
+                <div className="flex flex-wrap items-center gap-x-3 mt-1 text-xs text-gray-500">
+                  {builder && (
+                    <span className="flex items-center gap-0.5">
+                      <FiGlobe className="h-3 w-3 text-red-500 shrink-0" />
+                      <span className="truncate max-w-[100px]">{builder.name}</span>
+                    </span>
+                  )}
+                  {area && (
+                    <span className="flex items-center gap-0.5">
+                      <FiMapPin className="h-3 w-3 text-red-600 shrink-0" />
+                      <span className="truncate max-w-[100px]">{area.name}</span>
+                    </span>
+                  )}
                 </div>
+              </div>
+              <div className="text-right shrink-0">
+                <p className="text-red-600 text-lg font-black leading-tight">{price === "On Request" ? "On Request" : price}</p>
+                {price !== "On Request" && <p className="text-[10px] text-gray-400 font-semibold">onwards</p>}
               </div>
             </div>
 
-            {/* Builder and location */}
-            <div className="grid grid-cols-2 mb-5">
-              <div className="mt-3 flex items-center text-gray-600">
-                <FiGlobe className="h-4 w-4 text-red-600 mr-1" />
-                <span className="text-sm">
-                  {builder ? builder.name : "Unknown"}
+            {/* Specs bar: 3 columns */}
+            <div className="grid grid-cols-3 bg-gray-50 border border-gray-100 rounded-xl py-2 px-1 text-xs divide-x divide-gray-200 mt-2">
+              <div className="flex flex-col items-center justify-center px-1 text-center">
+                <p className="text-[8px] text-gray-400 font-extrabold uppercase tracking-wider leading-none mb-0.5">Size</p>
+                <p className="text-[10px] font-black text-gray-800 leading-tight truncate w-full text-center">
+                  {minSize && maxSize ? `${minSize}–${maxSize}` : minSize || "–"}
+                </p>
+                <p className="text-[8px] text-gray-400 font-semibold leading-none mt-0.5">{projectSpecification?.[0]?.measurementUnit || "sqft"}</p>
+              </div>
+              <div className="flex flex-col items-center justify-center px-1 text-center">
+                <p className="text-[8px] text-gray-400 font-extrabold uppercase tracking-wider leading-none mb-0.5">Config</p>
+                <p className="text-[10px] font-black text-gray-800 leading-tight truncate w-full text-center">{unitTypes || "–"}</p>
+              </div>
+              <div className="flex flex-col items-center justify-center px-1 text-center">
+                <p className="text-[8px] text-gray-400 font-extrabold uppercase tracking-wider leading-none mb-0.5">Type</p>
+                <p className="text-[10px] font-black text-gray-800 leading-tight truncate w-full text-center">{projectType?.[0] || "Residential"}</p>
+              </div>
+            </div>
+
+            {/* Status tag */}
+            {status && (
+              <div className="mt-2">
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full">
+                  <FiCheckCircle className="w-3 h-3 shrink-0" />
+                  {status}
                 </span>
               </div>
-              <div className="mt-3 flex items-center justify-end text-gray-600">
-                <FiMapPin className="h-4 w-4 text-red-600 mr-1" />
-                <span className="text-sm">{area ? area.name : "Unknown"}</span>
-              </div>
-            </div>
-
-            {/* Details grid: size, units, type */}
-            <div className="grid grid-cols-1 gap-5 mt-4">
-              {/* Size */}
-              <div className="flex items-center">
-                <FiLayers className="h-4 w-4 text-red-600 mr-2" />
-                <div>
-                  <p className="text-xs text-gray-500">Size</p>
-                  <p className="text-sm font-medium">
-                    {minSize} - {maxSize}{" "}
-                    {projectSpecification?.[0]?.measurementUnit || ""}
-                  </p>
-                </div>
-              </div>
-
-              {/* Units */}
-              <div className="flex items-center">
-                <FiGrid className="h-4 w-4 text-red-600 mr-2" />
-                <div>
-                  <p className="text-xs text-gray-500">Units</p>
-                  <p className="text-sm font-medium">{unitTypes || "-"}</p>
-                </div>
-              </div>
-
-              {/* Property Type */}
-              <div className="flex items-start space-x-2">
-                <div className="shrink-0 mt-1">
-                  <FiHome className="h-4 w-4 text-red-600" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs text-gray-500">Type</p>
-                  <p className="text-sm font-medium break-words">
-                    {projectType?.map((pType) => pType).join(", ") ||
-                      "Residential"}
-                  </p>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
 
-          {/* Action buttons: Centered View Details button */}
-          <div className="px-5 pb-5 pt-3 border-t border-gray-100 flex justify-center">
+          {/* Action buttons: WhatsApp + Call + View Details */}
+          <div className="px-5 pb-5 pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              {/* WhatsApp */}
+              <a
+                href={`https://wa.me/919714512452?text=${encodeURIComponent(`Hi, I am interested in ${projectName} Project`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="WhatsApp"
+                className="flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 bg-white hover:border-green-400 hover:bg-green-50 transition-all duration-200 active:scale-90 shadow-sm"
+              >
+                <svg viewBox="0 0 32 32" className="w-5 h-5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.668 4.61 1.828 6.5L4 29l7.703-1.797A11.94 11.94 0 0016 27c6.627 0 12-5.373 12-12S22.627 3 16 3z" fill="#25D366"/>
+                  <path d="M21.5 18.9c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.79-1.68-2.09-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.87 1.22 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.27.5 1.7.64.72.23 1.37.2 1.89.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z" fill="white"/>
+                </svg>
+              </a>
+              {/* Call */}
+              <a
+                href="tel:+919714512452"
+                title="Call Us"
+                className="flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 bg-white hover:border-red-300 hover:bg-red-50 transition-all duration-200 active:scale-90 shadow-sm"
+              >
+                <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                </svg>
+              </a>
+            </div>
             <Link
               href={`/project-page/${encodeURIComponent(slug)}`}
               className="text-red-600 text-sm font-bold flex items-center hover:text-red-800 transition-colors gap-1 uppercase tracking-wider"

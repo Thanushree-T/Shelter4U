@@ -3,15 +3,15 @@ import NextTopLoader from "nextjs-toploader";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-import { Poppins } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import Whatsapp from "./Components/Whatsapp";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const openSans = Open_Sans({
+  variable: "--font-open-sans",
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata = {
@@ -71,7 +71,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={poppins.className} suppressHydrationWarning>
+    <html lang="en" className={openSans.className} suppressHydrationWarning>
       <body className="font-main">
         <NextTopLoader showSpinner={false} />
         <Header />
