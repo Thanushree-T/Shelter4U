@@ -13,6 +13,8 @@
     "postbuild": "node scripts/fetch-dynamic-paths.mjs && next-sitemap"
   },
   "dependencies": {
+    "@next/swc-win32-x64-msvc": "^16.2.10",
+    "@tailwindcss/typography": "^0.5.20",
     "axios": "^1.10.0",
     "cloudinary": "^2.7.0",
     "clsx": "^2.1.1",
@@ -28,7 +30,7 @@
     "nextjs-toploader": "^3.9.17",
     "nodemailer": "^7.0.3",
     "primeicons": "^7.0.0",
-    "primereact": "^10.9.6",
+    "primereact": "^10.9.8",
     "react": "^19.0.0",
     "react-countup": "^6.5.3",
     "react-dom": "^19.0.0",

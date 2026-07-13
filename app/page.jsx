@@ -11,6 +11,8 @@ import ExploreByLocalities from "./home/ExploreByLocalities.jsx";
 import PropertyOptions from "./home/PropertyOptions.jsx";
 import FAQ from "./home/FAQ.jsx";
 import { Suspense } from "react";
+import { headers } from "next/headers";
+import BlogSection from "./home/BlogSection";
 
 // Skeleton shown only while Recommended listings are loading
 const RecommendedSkeleton = ({ showOwnerTab = true }) => (
@@ -120,6 +122,14 @@ export const metadata = {
 
 // Main Home Page — all DB queries run in parallel, ISR (1 hour)
 export default async function HomePage() {
+  const host = (await headers()).get("host");
+  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+
+  const res = await fetch(`${protocol}://${host}/json/blog.json`, {
+    cache: "no-store",
+  });
+
+  const blogs = await res.json();
   await connectToDBs();
   let homeFirstSectionData = null;
   let homeSecondSectionData = null;
@@ -234,6 +244,7 @@ export default async function HomePage() {
       <ExploreByLocalities localityData={topLocalityData} />
       <PropertyOptions />
       {/* <FAQ /> */}
+      <BlogSection blogs={blogs} />
       <HomeSecondSection data={homeSecondSectionData} />
       <HomeThirdSection data={homeThirdSectionData} />
       <HomeFourthSection data={homeFourthSectionData} />
